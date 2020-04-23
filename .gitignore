@@ -1,0 +1,6 @@
+*.lprof
+*__pycache__
+.idea
+simulation_results/
+Kram Marcel/26062018-Zeeman/C1--2606--noSlower--00000.txt
+Kram Marcel/26062018-Zeeman/C2--2606--noSlower--00000.txt
