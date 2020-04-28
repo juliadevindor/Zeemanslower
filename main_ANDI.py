@@ -301,7 +301,7 @@ def timestep(atom_count, p_max, v_min, v_max, x_min, x_max, y_min, y_max, exciti
                                                                     current_groundstate],
                                                                 wavevector_x, wavevector_y,
                                                                 wavevector_z, wavelength)
-                        if quantum_numbers_excited_state[a] - ground_state_quantum_numbders[current_groundstate] == 0 or \
+                        if quantum_numbers_excited_state[a] - ground_state_quantum_numbers[current_groundstate] == 0 or \
                                 quantum_numbers_excited_state[a] - ground_state_quantum_numbers[
                             current_groundstate] == 1 or quantum_numbers_excited_state[a] - \
                                 ground_state_quantum_numbers[current_groundstate] == -1:

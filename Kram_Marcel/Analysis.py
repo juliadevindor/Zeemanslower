@@ -106,7 +106,10 @@ if __name__ == '__main__':
     frequency = const.speed_of_light/wavelength
     f = np.linspace(frequency-1e9, frequency+0.25e9,1000)
     p = doubleSpectrum(f, frequency, 700, 94/180*const.pi, 3, 1)
-    plt.plot(t_M1_00000, V_M1_00000)
-    plt.plot(t_C2_00000, V_C2_00000)
-    plt.plot(t_C3_00000, V_C3_00000)
+    plt.plot(t_M1_00000, V_M1_00000,label="unslowed atom beam")
+    plt.plot(t_C2_00000, V_C2_00000,label="ramp voltage")
+    plt.plot(t_C3_00000, V_C3_00000,label="real measurement")
+    plt.xlabel("time")
+    plt.ylabel("voltage")
+    plt.legend()
     plt.show()

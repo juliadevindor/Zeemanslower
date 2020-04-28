@@ -6,11 +6,11 @@ from light_atom_interaction import lorentzian_probability
 import math
 import scipy.constants as scc
 
-with open("sim_setup/example_magnetic_field.txt", "r") as f:
+with open("sim_setup/example_magnetic_field_ANDI.txt", "r") as f:
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #plt.plot(x+0.5, y)
+    plt.plot(x+0.5, y)
 
 #with open("sim_setup/B(z)_spinflip.txt", "r") as f:
 #    lines = f.readlines()
@@ -18,10 +18,11 @@ with open("sim_setup/example_magnetic_field.txt", "r") as f:
 #    y = np.asarray([float(line.split(";")[1]) for line in lines])
 #    plt.plot(x+0.5, y,".")
 
-#plt.xlabel("Pos in m")
-#plt.ylabel("B in Gauss")
-#plt.grid()
-#plt.show()
+plt.xlabel("Position in m", fontsize=15)
+plt.ylabel("Magnetic field in Gauss", fontsize=15)
+
+plt.grid()
+plt.show()
 
 colors = ["black", "red", "green", "cyan", "blue", "orange", "brown", "grey", "peru", "navy", "violet", "purple",
           "pink", "olive"]
@@ -47,13 +48,13 @@ for line_gs in range(0,6):
                 det_array[i]=det
                 det+=4000e6/num
 
-            plt.plot(det_array*1e-6,exc_prob,label="GS:{} ES:{}".format(line_gs, line_exc), color=colors[color])
+            #plt.plot(det_array*1e-6,exc_prob,label="GS:{} ES:{}".format(line_gs, line_exc), color=colors[color])
             color+=1
 
-plt.xlabel("Detuning in MHz", fontsize=15)
-plt.ylabel("excitation rate in a.u.", fontsize=15)
+#plt.xlabel("Detuning in MHz", fontsize=15)
+#plt.ylabel("excitation rate in a.u.", fontsize=15)
 #plt.xlabel("Position in meters", fontsize=15)
 #plt.ylabel("Magnetic field in Gauss", fontsize=15)
 #plt.legend(fontsize=11)
-plt.grid()
-plt.show()
+#plt.grid()
+#plt.show()

@@ -22,7 +22,7 @@ def slower_field(pos, L0,v0,wavelength,omega, omega0):
     B = np.empty(len(pos))
 
     for i in range(0,len(pos)):
-        print(pos[i])
+        #print(pos[i])
         #if pos[i]<0.0:
         #    B[i]=0
         if 1-pos[i]/L0 < 0: # to avoid "nan"
@@ -57,7 +57,7 @@ Gamma=2*np.pi*5.87*1e6 #Hz
 m_Li=6.015*1.66*1e-27 #kg
 mu_0=4*np.pi*1e-7 # magnetic field constant
 
-num=1000
+num=10000
 sample_count=0
 R= 0.043 # inner radius of Zeeman-coils in m (not approved)
 d_wire=0.001# thickness of the wire in m
@@ -100,6 +100,7 @@ B_9tot = np.empty([num])  # magnetic field of the first additional coil
 B_10tot = np.empty([num])  # magnetic field of the second additional coil
 B_11tot = np.empty([num])  # magnetic field of the third additional coil
 B_12tot = np.empty([num])  # magnetic field of the third additional coil
+B_13tot = np.empty([num])  # magnetic field of the third additional coil
 N_wires = np.empty([coils])  # number of wires per layer for each coil
 M = np.empty([coils])  # number of wire layers for each coil
 L = np.empty([coils])  # length of coils
@@ -107,9 +108,9 @@ array_coils = np.array([coils])  # write coil number to array for file name
 
 L_slower = (coils-2) * dist_coils_small + 2 * dist_coils_large + dist_oven_slower#+dist_slower_MOT#  total length
 print("L_slower w/o L_coils",L_slower)
-N = np.array([900,800,700,650,550,450,350,300,250, 200,150,200,350]) # field like the one that has been measured
+N = np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
 I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8, 4.8,4.8,4.8,-4.8,-4.8,-4.8]) # field like the one that has been measured
-L = np.array([0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06,0.06, 0.06,0.06, 0.06])  # real length values for Zeeman coils
+L = np.array([0.04, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06,0.06, 0.06,0.06, 0.04])  # real length values for Zeeman coils
 
 for p in range(0, coils): # loop over all Zeeman slower coils to obtain the length of all coils
     N_wires[p] = L[p]/d_wire # number of wires in each layer
@@ -172,14 +173,16 @@ for o in range(0, num):  # loop over z (along the beam axis)
                 B_11tot[o] += B_coil(I[j], N_wires[j], L[j], R + mi * d_wire, z0[j], z[o])
             if j == 11:
                 B_12tot[o] += B_coil(I[j], N_wires[j], L[j], R + mi * d_wire, z0[j], z[o])
+            if j == 12:
+                B_13tot[o] += B_coil(I[j], N_wires[j], L[j], R + mi * d_wire, z0[j], z[o])
             ##
     for mi_HH in range(0,M_HH): # loop over all layers of HH coils
         B_HHtot[o] += (B_HHcoils(z[o], z0_HH, R_HH+24*d_wire_HH, I_HH, N_HH/M_HH, d_HH) + B_HHcoils(z[o], z0_HH, R_HH+24*d_wire_HH, -I_HH, N_HH/M_HH, -d_HH))  # calculating HH field
 
     #B+= B_HHtot[o] # add HH coils to total magnetic field
 
-    #if z[o]>L_slower:
-    #    B_tot[o]=0.0
+   # if z[o]>L_slower:
+   #     B_tot[o]=0.0
     #else:
     B_tot[o] = B  # store total magnetic field in B_tot
 
@@ -203,18 +206,19 @@ file.close()
   #                      hey=1
 
 print("plotting")
-#plt.plot(z,B_1tot*1e4, color="orange")
-#plt.plot(z,B_2tot*1e4, color="orange")
-#plt.plot(z,B_3tot*1e4, color="orange")
-#plt.plot(z,B_4tot*1e4, color="orange")
-#plt.plot(z,B_5tot*1e4, color="orange")
-#plt.plot(z,B_6tot*1e4, color="orange")
-#plt.plot(z,B_7tot*1e4, color="orange")
-#plt.plot(z,B_8tot*1e4, color="orange")
-#plt.plot(z,B_9tot*1e4, color="orange")
-#plt.plot(z,B_10tot*1e4, color="orange")
-#plt.plot(z,B_11tot*1e4, color="orange")
-#plt.plot(z,B_12tot*1e4, color="orange")
+#plt.plot(z-0.5,B_1tot*1e4, color="orange")
+#plt.plot(z-0.5,B_2tot*1e4, color="orange")
+#plt.plot(z-0.5,B_3tot*1e4, color="orange")
+#plt.plot(z-0.5,B_4tot*1e4, color="orange")
+#plt.plot(z-0.5,B_5tot*1e4, color="orange")
+#plt.plot(z-0.5,B_6tot*1e4, color="orange")
+#plt.plot(z-0.5,B_7tot*1e4, color="orange")
+#plt.plot(z-0.5,B_8tot*1e4, color="orange")
+#plt.plot(z-0.5,B_9tot*1e4, color="orange")
+#plt.plot(z-0.5,B_10tot*1e4, color="orange")
+#plt.plot(z-0.5,B_11tot*1e4, color="orange")
+#plt.plot(z-0.5,B_12tot*1e4, color="orange")
+#plt.plot(z-0.5,B_13tot*1e4, color="orange")
 
 #plt.plot(z-0.5,B_HHtot*1e4, color="orange")
 #plt.plot(z-L_ges,np.gradient(B_HHtot*1e4, z-L_ges), color="green", label="ha")
@@ -223,17 +227,17 @@ print("plotting")
 #print("MAX", max(np.gradient(B_HHtot*1e4, z-L_ges)), min(np.gradient(B_HHtot*1e4, z-L_ges)))
 #print("z", z[np.where(np.gradient(B_HHtot*1e4, z-L_ges)==max(np.gradient(B_HHtot*1e4, z-L_ges)))]-0.5, z[np.where(np.gradient(B_HHtot*1e4, z-L_ges)==min(np.gradient(B_HHtot*1e4, z-L_ges)))]-0.5)
 
-with open( "magnetic_field_real.txt", 'r') as f:
+with open("magnetic_field_real.txt", 'r') as f:
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    plt.plot(x,y,".",label="calculated field")
+    plt.plot(x,y,label="calculated field")
 
 with open("sim_setup/example_magnetic_field.txt","r") as g: # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    plt.plot(xnew, ynew, label="old field", color="black") #x+0.6093
+    #plt.plot(xnew, ynew, label="perfect field", color="black") #x+0.6093
 
 L0=0.828#m
 v0_0=1500 #m/s
@@ -248,8 +252,10 @@ B = np.empty(len(pos))
 B=slower_field(pos,L0,v0_1,wavelength,omega,omega0)
 #plt.plot(pos-0.4,B*1e4,".",label="v0=1000m/s")
 
+plt.xlabel("Position in m", fontsize=15)
+plt.ylabel("Magnetic field in Gauss", fontsize=15)
 plt.grid()
-plt.legend(prop={'size': 6})
+plt.legend(prop={'size': 15})
 plt.show()
 
 

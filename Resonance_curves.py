@@ -30,7 +30,7 @@ for line_gs in range(0,6):
                 det_array[i]=det
                 det+=400e6/num
 
-            #plt.plot(det_array*1e-6,exc_prob,label="GS:{} ES:{}".format(line_gs, line_exc), color=colors[color])
+            plt.plot(det_array*1e-6,exc_prob,label="GS:{} ES:{}".format(line_gs, line_exc), color=colors[color])
             color+=1
 
 
@@ -45,7 +45,7 @@ for a in range(0,2):
         exc_prob_2[i]=(lorentzian_probability_2(446799978232118.25-shift[a], 446799900000000, det_2, 2 * math.pi * 5.87E6, 0.11, 0.11/5))
         det_array_2[i]=det_2
         det_2+=350e6/num
-    plt.plot(det_array_2*1e-6,exc_prob_2,label=label[a])
+    #plt.plot(det_array_2*1e-6,exc_prob_2,label=label[a])
 
 plt.xlabel("Detuning in MHz", fontsize=15)
 plt.ylabel("excitation rate in a.u.", fontsize=15)

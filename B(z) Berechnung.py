@@ -29,7 +29,7 @@ def slower_field(pos, L0,v0,wavelength,omega, omega0):
     return B
 
 L0=0.828#m
-v0_0=1500 #m/s
+v0_0=1200 #m/s
 v0_1=800 #m/s
 v0_2=500 #m/s
 wavelength=670.992e-9 #m (Gehm)
@@ -38,23 +38,23 @@ omega0=446.7896e12 #Hz (Gehm)
 
 pos=np.linspace(-0.0,L0+0.2,num=1000)
 B = np.empty(len(pos))
-B=slower_field(pos,L0,v0_1,wavelength,omega,omega0)
+B=slower_field(pos,L0,v0_0,wavelength,omega,omega0)
 file=open("B(z).txt","w+")
 for i in range(len(pos)):
     file.write("{};{}\n".format(pos[i]-0.5,B[i]*1e4))
 file.close()
 
 fig, ax = plt.subplots()
-with open("sim_setup/example_magnetic_field_ANDI.txt","r") as g:
+with open("B(z)_1m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x+0.6,y,label="andi")
-with open("sim_setup/B(z)_spinflip.txt","r") as f: # plot measured magnetic field
+    ax.plot(x+0.6,y,label="andi")
+with open("B(z).txt","r") as f: # plot measured magnetic field
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x+0.6,y, label="PLOT", color="black")
+    ax.plot(x+0.6,y, label="PLOT", color="black")
 ax.plot(pos+0.1,B*1e4,label="v0=1000m/s")
 plt.annotate("z in m", xy=(1.01, 0), ha='left', va='top', xycoords='axes fraction', fontsize=15)
 plt.annotate("B in Gauss", xy=(-0.05, 1.05), ha='left', va='top', xycoords='axes fraction', fontsize=15)
