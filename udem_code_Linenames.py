@@ -171,8 +171,8 @@ if __name__ == '__main__':
     Bfieldarray1 = np.linspace(0,1e-4,num=1000) #np.linspace(0,1e-4,num=100)#
     Bfieldarray2 = np.linspace(1e-4,10e-4,num=1000) #np.linspace(1e-4,10e-4,num=100) #
     Bfieldarray3 = np.linspace(10e-4,0.1,num=2000) #np.linspace(10e-4,0.5,num=100) #
-    Bfieldarray = np.concatenate((Bfieldarray1,Bfieldarray2),axis=0) #np.linspace(0,2e-4,num=500)
-    Bfieldarray = np.concatenate((Bfieldarray, Bfieldarray3), axis=0) #np.linspace(-1e-2,1e-2,num=500)#
+    Bfieldarray = np.linspace(0,1e-4,num=2000)#np.concatenate((Bfieldarray1,Bfieldarray2),axis=0) #np.linspace(0,2e-4,num=500)
+    #Bfieldarray = np.concatenate((Bfieldarray, Bfieldarray3), axis=0) #np.linspace(-1e-2,1e-2,num=500)#
     num_lines_exc=12
     num_lines_gs=6
 
@@ -202,16 +202,16 @@ if __name__ == '__main__':
     colors = ["black", "red", "green", "yellow", "blue", "orange", "brown", "grey", "cyan", "pink", "violet", "purple",
               "pink", "olive", "goldenrod", "cyan"]
 
-    #for line_exc in range(0,12):
-    #    plt.plot(1e4*numberarray,1e-9*Ees[line_exc],".",markersize=2,color="black")
+    for line_exc in range(0,12):
+        plt.plot(1e4*numberarray,1e-9*Ees[line_exc],".",markersize=2,color="black")
         #plt.plot(numberarray,yval[line_exc],color=colors[line_exc])
 
-    for line_gs in range(num_lines_gs):
-        plt.plot(1e4*numberarray,1e-9*Egs[line_gs], ".",markersize=2,color="black")
+    #for line_gs in range(num_lines_gs):
+    #    plt.plot(1e4*numberarray,1e-9*Egs[line_gs], ".",markersize=2,color="black")
 
     #plt.legend()
     plt.grid()
-    plt.xlabel("B in Gauss")
-    plt.ylabel("E in GHz")
+    plt.xlabel("B in Gauss", fontsize=15)
+    plt.ylabel("E in GHz", fontsize=15)
     #plt.xlim(0,10e-4)
     plt.show()
