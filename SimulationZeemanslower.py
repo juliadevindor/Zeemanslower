@@ -198,9 +198,9 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
             initial_state = 1
             GS_quantum_number = 5
 
-        #initial_state=1
-        #current_groundstate=1
-        #GS_quantum_number=5
+        initial_state=1
+        current_groundstate=1
+        GS_quantum_number=5
 
         if i == 3:
             observing_specific_atoms.append(z_velocity)
@@ -212,17 +212,12 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
 
         # if the atom is not dead do the steps
         while atom_dead != 0:
-
-            if pos_index==1:
-                pos_value=0.1
-            elif pos_index==2:
-                pos_value=0.3
-            elif pos_index==3:
-                pos_value=0.35
-            elif pos_index==4:
-                pos_value=0.4
-            elif pos_index==5:
-                pos_value=0.495
+            for iii in range(0,18):
+                #print(iii)
+                if iii==pos_index:
+                    pos_value=plane_slice_pos[iii+1]
+                    break
+                    #print(pos_value)
 
             current_excitation_freq = [0.0, 0.0, 0.0, 0.0]
             loop_counter += 1
@@ -279,6 +274,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                         z_pos_histo_binning=z_pos
 
                     if z_pos>=pos_value and z_pos_histo[GS_quantum_number][pos_index]==0.0:
+                        #print(i, pos_value)
                         z_pos_histo[GS_quantum_number][pos_index]=pos_value
                         vel_z_histo[GS_quantum_number][pos_index].append(z_velocity_new)
                         pos_index+=1
@@ -482,7 +478,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.85 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.74 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -490,7 +486,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -930e6 #-990e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -920e6 #-990e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -505,6 +501,10 @@ if __name__ == '__main__':
     slicing_positions = [0.0]
     for i in range(0,17):
         slicing_positions.append(slicing_positions[i]+0.05)
+
+    slicing_positions[15]=0.72
+    slicing_positions[16]=0.73
+    slicing_positions[17]=0.74
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']

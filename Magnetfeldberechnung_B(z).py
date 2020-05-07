@@ -108,9 +108,9 @@ array_coils = np.array([coils])  # write coil number to array for file name
 
 L_slower = (coils-2) * dist_coils_small + 2 * dist_coils_large + dist_oven_slower#+dist_slower_MOT#  total length
 print("L_slower w/o L_coils",L_slower)
-N = np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
+N = np.array([750,700,600,550,500,400,300,250,200,150, 50,100,650]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
 I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8, 4.8,4.8,4.8,-4.8,-4.8,-4.8]) # field like the one that has been measured
-L = np.array([0.04, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06,0.06, 0.06,0.06, 0.04])  # real length values for Zeeman coils
+L = np.array([0.04, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05, 0.05,0.05, 0.04])  # real length values for Zeeman coils
 
 for p in range(0, coils): # loop over all Zeeman slower coils to obtain the length of all coils
     N_wires[p] = L[p]/d_wire # number of wires in each layer
