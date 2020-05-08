@@ -198,9 +198,9 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
             initial_state = 1
             GS_quantum_number = 5
 
-        initial_state=1
-        current_groundstate=1
-        GS_quantum_number=5
+        #initial_state=1
+        #current_groundstate=1
+        #GS_quantum_number=5
 
         if i == 3:
             observing_specific_atoms.append(z_velocity)
@@ -212,12 +212,11 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
 
         # if the atom is not dead do the steps
         while atom_dead != 0:
-            for iii in range(0,18):
+            for iii in range(0,19):
                 #print(iii)
                 if iii==pos_index:
-                    pos_value=plane_slice_pos[iii+1]
+                    pos_value=plane_slice_pos[iii]
                     break
-                    #print(pos_value)
 
             current_excitation_freq = [0.0, 0.0, 0.0, 0.0]
             loop_counter += 1
@@ -274,7 +273,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                         z_pos_histo_binning=z_pos
 
                     if z_pos>=pos_value and z_pos_histo[GS_quantum_number][pos_index]==0.0:
-                        #print(i, pos_value)
                         z_pos_histo[GS_quantum_number][pos_index]=pos_value
                         vel_z_histo[GS_quantum_number][pos_index].append(z_velocity_new)
                         pos_index+=1
@@ -450,7 +448,7 @@ if __name__ == '__main__':
     # necessary excitment wavelength of the atom to excite it from ground to excited state
     exciting_wavelength = Lithium_6.wavelength_ground_excited
     # necessary excitment frequency of the atom to excite it from ground to excited state
-    #exciting_freq = scc.c / exciting_wavelength + 76E6
+    exciting_freq = scc.c / exciting_wavelength + 76E6
     # some constants
     bohr_magnetron = scc.physical_constants['Bohr magneton'][0]
     boltzman_constant = 1.38064852E-23
@@ -541,6 +539,16 @@ if __name__ == '__main__':
                                     spline_fit, target_radius, intensity,max_step_length_file, slicing_positions,
                                     capture_vel, ground_state_quantum_numbers, exc_state_quantum_numbers)
 
+    file = open("velocity_atom.txt", "w+")  # open file
+    for vel in range(len(vel_x_atoms_in_mot)):
+        file.write(str(vel_x_atoms_in_mot[vel]))
+        file.write("\t")
+        file.write(str(vel_y_atoms_in_mot[vel]))
+        file.write("\t")
+        file.write(str(vel_z_atoms_in_mot[vel]))
+        file.write("\n")
+    file.close()
+
     pathlib.Path('simulation_results/GS_distr').mkdir(parents=True, exist_ok=True)
     for GS in range(0,6):
         z_histo[GS]=z_histo[GS][1:]
@@ -560,7 +568,9 @@ if __name__ == '__main__':
         pos_i = 0
         for pos in positions:
             plt.hist(v_z_histo[GS][pos_i],bins=100,facecolor='green', edgecolor='black', linewidth=1.2)
-            plt.ylim(0,1800)
+            #print(GS,pos_i)
+            #print(v_z_histo[GS][pos_i])
+            plt.ylim(0,2500)
             plt.xlim(0,1010)
             plt.xlabel("v_z in m/s",fontsize=15)
             plt.ylabel("Atoms in GS",fontsize=15)

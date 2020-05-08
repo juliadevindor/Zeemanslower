@@ -154,7 +154,7 @@ def slice_plotting(slice_positions, slice_pos_vel_upper_gs, slice_pos_vel_lower_
             fig, ax1 = plt.subplots()
             fig.subplots_adjust(top=0.75)
             ax1.set_xlim(-115, 800)
-            ax1.set_ylim(0,7000)#(0, 0.05 * number_of_atoms)
+            ax1.set_ylim(0,2500)#(0, 0.05 * number_of_atoms)
             ax1.xaxis.set_tick_params(labelsize=labelsize_dist_plot)
             ax1.yaxis.set_tick_params(labelsize=labelsize_dist_plot)
             # ax1.set_title(str(str_plane_slice_pos[i]) + " m", fontweight='bold')
