@@ -13,7 +13,7 @@ def slower_field(pos, L0,v0,wavelength,omega, omega0):
   # length of slower L0 in m
     B0 = hPlanck*v0/(wavelength*muB) #0.08 #0.19185 # y-Achsenabschnitt
     #print(B0)
-    Bbias = -5e-2 #0#(hPlanck/(2*np.pi))*(omega-omega0)/(muB)#-1.478*1e-9  # shiftet nur den Plot nach oben/ unten
+    Bbias = 0#-5e-2 #0#(hPlanck/(2*np.pi))*(omega-omega0)/(muB)#-1.478*1e-9  # shiftet nur den Plot nach oben/ unten
     B = np.empty(len(pos))
 
     for i in range(0,len(pos)):
@@ -28,7 +28,7 @@ def slower_field(pos, L0,v0,wavelength,omega, omega0):
             B[i] = B0 * np.sqrt(1-pos[i]/L0) + Bbias
     return B
 
-L0=0.828#m
+L0=0.74#m
 v0_0=1200 #m/s
 v0_1=800 #m/s
 v0_2=500 #m/s
@@ -45,17 +45,17 @@ for i in range(len(pos)):
 file.close()
 
 fig, ax = plt.subplots()
-with open("B(z)_1m.txt","r") as g:
-    lines = g.readlines()
-    x = np.asarray([float(line.split(";")[0]) for line in lines])
-    y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.6,y,label="andi")
+#with open("B(z)_SF.txt","r") as g:
+#    lines = g.readlines()
+#    x = np.asarray([float(line.split(";")[0]) for line in lines])
+#    y = np.asarray([float(line.split(";")[1]) for line in lines])
+#    ax.plot(x+0.6,y,label="SF")
 with open("B(z).txt","r") as f: # plot measured magnetic field
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.6,y, label="PLOT", color="black")
-ax.plot(pos+0.1,B*1e4,label="v0=1000m/s")
+    ax.plot(x+0.6,y, label="normal", color="black")
+#ax.plot(pos+0.1,B*1e4,label="v0=1000m/s")
 plt.annotate("z in m", xy=(1.01, 0), ha='left', va='top', xycoords='axes fraction', fontsize=15)
 plt.annotate("B in Gauss", xy=(-0.05, 1.05), ha='left', va='top', xycoords='axes fraction', fontsize=15)
 #plt.hlines(0,pos[0]+0.1,pos[-1]+0.1)

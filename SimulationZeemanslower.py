@@ -154,7 +154,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
             ###z_velocity<=1000m/s###
             while 0!=1: #try as long as "break" is reached
                 z_velocity_try=number_sampling(1, p_max, v_min, v_max, mass_lithium_6, temperature)
-                if z_velocity_try<=1250:
+                if z_velocity_try<=1450:
                     z_velocity=z_velocity_try
                     break
 
@@ -455,7 +455,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 10000 #sim_param_data['particle_number']
+    n = 100 #sim_param_data['particle_number']
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
     # maximal considered velocity
@@ -476,7 +476,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.74 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.74#0.828 #0.74 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -500,9 +500,9 @@ if __name__ == '__main__':
     for i in range(0,17):
         slicing_positions.append(slicing_positions[i]+0.05)
 
-    slicing_positions[15]=0.72
-    slicing_positions[16]=0.73
-    slicing_positions[17]=0.74
+    slicing_positions[15]=0.71
+    slicing_positions[16]=0.72
+    slicing_positions[17]=0.82
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']
@@ -625,7 +625,7 @@ if __name__ == '__main__':
     print("target center", target_center_z)
     #if n<=100:
     line_plotting(observing_z_position, observing_z_velocity, 'z position', 'z velocity', 0.0,
-            target_center_z+0.05,0.0, 1250.0, startTime, False)
+            target_center_z+0.05,0.0, 1450.0, startTime, False)
 
     #elif n>100:
     slice_plotting(slicing_positions, vel_z_plane_slices_upper_gs, vel_z_plane_slices_lower_gs, v_min, v_max,
