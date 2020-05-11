@@ -6,11 +6,11 @@ from light_atom_interaction import lorentzian_probability
 import math
 import scipy.constants as scc
 
-with open("sim_setup/example_magnetic_field_ANDI.txt", "r") as f:
-    lines = f.readlines()
-    x = np.asarray([float(line.split(";")[0]) for line in lines])
-    y = np.asarray([float(line.split(";")[1]) for line in lines])
-    plt.plot(x+0.5, y)
+#with open("sim_setup/example_magnetic_field_ANDI.txt", "r") as f:
+#    lines = f.readlines()
+#    x = np.asarray([float(line.split(";")[0]) for line in lines])
+#    y = np.asarray([float(line.split(";")[1]) for line in lines])
+#    plt.plot(x+0.5, y)
 
 #with open("sim_setup/B(z)_spinflip.txt", "r") as f:
 #    lines = f.readlines()

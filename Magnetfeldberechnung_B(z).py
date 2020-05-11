@@ -108,8 +108,8 @@ array_coils = np.array([coils])  # write coil number to array for file name
 
 L_slower = (coils-2) * dist_coils_small + 2 * dist_coils_large + dist_oven_slower#+dist_slower_MOT#  total length
 print("L_slower w/o L_coils",L_slower)
-N = np.array([750,700,600,550,500,400,300,250,200,150, 50,100,650]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
-I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8, 4.8,4.8,4.8,-4.8,-4.8,-4.8]) # field like the one that has been measured
+N = np.array([1300,1000,900,700,600,500,400,300,250,150, 50,50,10]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
+I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8, 4.8,4.8,4.8,4.8,4.8,4.8]) # field like the one that has been measured
 L = np.array([0.04, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05, 0.05,0.05, 0.04])  # real length values for Zeeman coils
 
 for p in range(0, coils): # loop over all Zeeman slower coils to obtain the length of all coils
@@ -231,13 +231,13 @@ with open("magnetic_field_real.txt", 'r') as f:
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    plt.plot(x,y,label="calculated field")
+    plt.plot(x,y,label="Normal field")
 
-with open("sim_setup/example_magnetic_field.txt","r") as g: # plot measured magnetic field
+with open("sim_setup/example_magnetic_field_spinflip.txt","r") as g: # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    #plt.plot(xnew, ynew, label="perfect field", color="black") #x+0.6093
+    plt.plot(xnew, ynew, label="Flip field", color="black") #x+0.6093
 
 L0=0.828#m
 v0_0=1500 #m/s
