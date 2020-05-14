@@ -40,24 +40,27 @@ pos=np.linspace(-0.0,L0+0.2,num=1000)
 B = np.empty(len(pos))
 B=slower_field(pos,L0,v0_0,wavelength,omega,omega0)
 file=open("B(z).txt","w+")
+
 for i in range(len(pos)):
-    file.write("{};{}\n".format(pos[i]-0.5,B[i]*1e4))
+    if B[i]!=0:
+        file.write("{};{}\n".format(pos[i]-0.5,B[i]*1e4))
 file.close()
 
 fig, ax = plt.subplots()
-#with open("B(z)_SF.txt","r") as g:
-#    lines = g.readlines()
-#    x = np.asarray([float(line.split(";")[0]) for line in lines])
-#    y = np.asarray([float(line.split(";")[1]) for line in lines])
-#    ax.plot(x+0.6,y,label="SF")
+
+with open("B(z)_SF.txt","r") as g:
+    lines = g.readlines()
+    x = np.asarray([float(line.split(";")[0]) for line in lines])
+    y = np.asarray([float(line.split(";")[1]) for line in lines])
+    ax.plot(x+0.5,y,label="Spin-flip slower")
 with open("B(z).txt","r") as f: # plot measured magnetic field
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.6,y, label="normal", color="black")
+    ax.plot(x+0.5,y, label="Decreasing-field slower", color="black")
 #ax.plot(pos+0.1,B*1e4,label="v0=1000m/s")
-plt.annotate("z in m", xy=(1.01, 0), ha='left', va='top', xycoords='axes fraction', fontsize=15)
-plt.annotate("B in Gauss", xy=(-0.05, 1.05), ha='left', va='top', xycoords='axes fraction', fontsize=15)
+plt.annotate("z in m", xy=(1.01, 0), ha='left', va='top', xycoords='axes fraction', fontsize=22)
+plt.annotate("B in Gauss", xy=(-0.05, 1.05), ha='left', va='top', xycoords='axes fraction', fontsize=22)
 #plt.hlines(0,pos[0]+0.1,pos[-1]+0.1)
 ax.spines['left'].set_position('zero')
 # set the y-spine
@@ -65,6 +68,10 @@ ax.spines['bottom'].set_position('zero')
 #plt.xlabel("Position / m")
 plt.rcParams.update({'font.size': 22})
 #plt.ylabel("B / T")
+xticks = ax.xaxis.get_major_ticks()
+xticks[1].set_visible(False)
+plt.xticks(fontsize=22)
+plt.yticks(fontsize=22)
 plt.legend()
 plt.grid()
 plt.show()

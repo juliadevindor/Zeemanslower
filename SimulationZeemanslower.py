@@ -10,6 +10,8 @@ import random
 # argparse is used for parsing command line arguments
 import argparse
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
+rcParams.update({'figure.autolayout': True})
 
 # import of self written modules, first one handles the needed calculations around the Maxwell Boltzmann disribution
 from distributions import number_sampling
@@ -160,7 +162,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
 
 
         else:
-            z_velocity=1250-i*12.5
+            z_velocity=1450-i*14.5
 
         start_x_velocity = x_velocity
         start_y_velocity = y_velocity
@@ -455,7 +457,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 100 #sim_param_data['particle_number']
+    n = 10000 #sim_param_data['particle_number']
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
     # maximal considered velocity
@@ -484,7 +486,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -380e6 #-990e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -300e6 #-990e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -500,9 +502,9 @@ if __name__ == '__main__':
     for i in range(0,17):
         slicing_positions.append(slicing_positions[i]+0.05)
 
-    slicing_positions[15]=0.71
-    slicing_positions[16]=0.72
-    slicing_positions[17]=0.82
+    slicing_positions[15]=0.72
+    slicing_positions[16]=0.73
+    slicing_positions[17]=0.74
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']
@@ -564,20 +566,40 @@ if __name__ == '__main__':
     pathlib.Path('simulation_results/v_distr').mkdir(parents=True, exist_ok=True)
     positions=slicing_positions
 
-    for GS in range(0,6):
-        pos_i = 0
-        for pos in positions:
-            plt.hist(v_z_histo[GS][pos_i],bins=100,facecolor='green', edgecolor='black', linewidth=1.2)
-            #print(GS,pos_i)
-            #print(v_z_histo[GS][pos_i])
-            plt.ylim(0,2500)
-            plt.xlim(0,1010)
-            plt.xlabel("v_z in m/s",fontsize=15)
-            plt.ylabel("Atoms in GS",fontsize=15)
-            plt.title("Atoms in GS{} at z={}m".format(GS,pos))
-            plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(pos).replace('.', '_') + "_GS" + str(GS) + ".png")
-            plt.close()
-            pos_i+=1
+    pos_i=0
+    for pos in positions:
+        #plt.figure()
+        labels=["GS 0","GS 1","GS 2","GS 3","GS 4","GS 5",]
+        plt.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=100, stacked=True, label=labels)
+        plt.legend(loc="upper right",fontsize=22)
+        plt.ylim(0, 1000)
+        plt.xlabel("v_z in m/s", fontsize=22)
+        plt.ylabel("Atoms in GS", fontsize=22)
+        plt.title("Atoms at z={}m".format(pos),fontsize=22)
+        plt.rcParams.update({'font.size': 22})
+        plt.xticks(fontsize=22)
+        plt.yticks(fontsize=22)
+        figure = plt.gcf()  # get current figure
+        figure.set_size_inches(12, 10)
+        #plt.show()
+        plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(pos).replace('.', '_') + "_allGS" + ".png")
+        plt.close()
+        pos_i+=1
+
+   # for GS in range(0,6):
+   #     pos_i = 0
+   #     for pos in positions:
+   #         plt.hist(v_z_histo[GS][pos_i],bins=100,facecolor='green', edgecolor='black', linewidth=1.2)
+   #         #print(GS,pos_i)
+   #         #print(v_z_histo[GS][pos_i])
+    #        plt.ylim(0,2500)
+    #        plt.xlim(0,1010)
+    #        plt.xlabel("v_z in m/s",fontsize=15)
+    #        plt.ylabel("Atoms in GS",fontsize=15)
+    #        plt.title("Atoms in GS{} at z={}m".format(GS,pos))
+    #        plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(pos).replace('.', '_') + "_GS" + str(GS) + ".png")
+    #        plt.close()
+    #        pos_i+=1
 
     runtime = datetime.now() - startTime
     print(runtime)
