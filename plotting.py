@@ -154,7 +154,7 @@ def slice_plotting(slice_positions, slice_pos_vel_upper_gs, slice_pos_vel_lower_
             fig, ax1 = plt.subplots()
             fig.subplots_adjust(top=0.75)
             ax1.set_xlim(-115, 800)
-            ax1.set_ylim(0,2500)#(0, 0.05 * number_of_atoms)
+            ax1.set_ylim(0,4000)#(0, 0.05 * number_of_atoms)
             ax1.xaxis.set_tick_params(labelsize=labelsize_dist_plot)
             ax1.yaxis.set_tick_params(labelsize=labelsize_dist_plot)
             # ax1.set_title(str(str_plane_slice_pos[i]) + " m", fontweight='bold')
@@ -193,7 +193,7 @@ def slice_plotting(slice_positions, slice_pos_vel_upper_gs, slice_pos_vel_lower_
             # plt.show()
             pdf.savefig()
             plt.savefig('simulation_results/' + str(starting_time.strftime(
-                "%Y_%m_%d %H_%M_%S")) + "/" + "distribution_development_" + str(slice_positions[i]).replace('.', '_') + "_m.png")
+                "%Y_%m_%d %H_%M_%S")) + "/" + str(i)+"_distribution_development_" + str(slice_positions[i]).replace('.', '_') + "_m.png")
             plt.close()
 
             # plt.hist(vel_dead_atoms_upper, alpha=0.5, bins=np.linspace(v_min-100, v_max, 2*bin_count+2), label='Dead atoms upper groundstate')

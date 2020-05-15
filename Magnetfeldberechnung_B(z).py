@@ -233,11 +233,11 @@ with open("magnetic_field_real.txt", 'r') as f:
     y = np.asarray([float(line.split(";")[1]) for line in lines])
     plt.plot(x,y,label="Normal field")
 
-with open("sim_setup/example_magnetic_field_spinflip.txt","r") as g: # plot measured magnetic field
+with open("sim_setup/example_magnetic_field_ANDI.txt","r") as g: # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    plt.plot(xnew, ynew, label="Flip field", color="black") #x+0.6093
+    plt.plot(xnew, ynew, label="Ideal real field", color="black") #x+0.6093
 
 L0=0.828#m
 v0_0=1500 #m/s
