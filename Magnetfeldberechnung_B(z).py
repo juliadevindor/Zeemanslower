@@ -80,7 +80,7 @@ dist_slower_MOT=0.1 # not approved
 dist_coils_small=0.002
 dist_coils_large=0.004
 
-coils = 13 #randrange(8, 13)  # random number of coils
+coils = 8#13 #randrange(8, 13)  # random number of coils
 print("Number of coils:", coils)
 
 # initialize arrays
@@ -108,9 +108,12 @@ array_coils = np.array([coils])  # write coil number to array for file name
 
 L_slower = (coils-2) * dist_coils_small + 2 * dist_coils_large + dist_oven_slower#+dist_slower_MOT#  total length
 print("L_slower w/o L_coils",L_slower)
-N = np.array([1300,1000,900,700,600,500,400,300,250,150, 50,50,10]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
-I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8, 4.8,4.8,4.8,4.8,4.8,4.8]) # field like the one that has been measured
-L = np.array([0.04, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05, 0.05,0.05, 0.04])  # real length values for Zeeman coils
+N = np.array([1100,900,800,700,600,500,300,100]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
+I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8, 4.8]) # field like the one that has been measured
+L = np.array([0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05])  # real length values for Zeeman coils
+#N = np.array([1300,1000,900,700,600,500,400,300,250,150, 50,50,10]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
+#I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8, 4.8,4.8,4.8,4.8,4.8,4.8]) # field like the one that has been measured
+#L = np.array([0.04, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05, 0.05,0.05, 0.04])  # real length values for Zeeman coils
 
 for p in range(0, coils): # loop over all Zeeman slower coils to obtain the length of all coils
     N_wires[p] = L[p]/d_wire # number of wires in each layer
@@ -122,7 +125,7 @@ for q in range(0, coils): # loop over coils to determine the total length and th
 
 z0_HH = L_slower+dist_slower_MOT  # center of the HH coils (not approved as the distance MOT-slower is missing)
 dist = np.array([round(L_slower,4)])
-L_ges=L_slower+dist_slower_MOT+L_MOT
+L_ges=L_slower#+L_MOT+dist_slower_MOT
 print("Length of slower: ",L_slower, "total length of field", L_ges)
 
 
@@ -206,14 +209,14 @@ file.close()
   #                      hey=1
 
 print("plotting")
-#plt.plot(z-0.5,B_1tot*1e4, color="orange")
-#plt.plot(z-0.5,B_2tot*1e4, color="orange")
-#plt.plot(z-0.5,B_3tot*1e4, color="orange")
-#plt.plot(z-0.5,B_4tot*1e4, color="orange")
-#plt.plot(z-0.5,B_5tot*1e4, color="orange")
-#plt.plot(z-0.5,B_6tot*1e4, color="orange")
-#plt.plot(z-0.5,B_7tot*1e4, color="orange")
-#plt.plot(z-0.5,B_8tot*1e4, color="orange")
+#plt.plot(z,B_1tot*1e4, color="orange")
+#plt.plot(z,B_2tot*1e4, color="orange")
+#plt.plot(z,B_3tot*1e4, color="orange")
+#plt.plot(z,B_4tot*1e4, color="orange")
+#plt.plot(z,B_5tot*1e4, color="orange")
+#plt.plot(z,B_6tot*1e4, color="orange")
+#plt.plot(z,B_7tot*1e4, color="orange")
+#plt.plot(z,B_8tot*1e4, color="orange")
 #plt.plot(z-0.5,B_9tot*1e4, color="orange")
 #plt.plot(z-0.5,B_10tot*1e4, color="orange")
 #plt.plot(z-0.5,B_11tot*1e4, color="orange")
@@ -231,14 +234,20 @@ with open("magnetic_field_real.txt", 'r') as f:
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    plt.plot(x,y,label="Normal field")
+    plt.plot(x,y,label="normal field with length L=0.7m")
+
+with open("magnetic_field_real_0_5m.txt", 'r') as f:
+    lines = f.readlines()
+    x = np.asarray([float(line.split(";")[0]) for line in lines])
+    y = np.asarray([float(line.split(";")[1]) for line in lines])
+    plt.plot(x,y,label="normal field with length L=0.5m")
 
 with open("sim_setup/example_magnetic_field_ANDI.txt","r") as g: # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    plt.plot(xnew, ynew, label="Ideal real field", color="black") #x+0.6093
-
+    #plt.plot(xnew+0.5, ynew, label="Ideal real field incl. MOT", color="black") #x+0.6093
+#plt.xlim(0,0.8)
 L0=0.828#m
 v0_0=1500 #m/s
 v0_1=800 #m/s
@@ -247,7 +256,7 @@ wavelength=670.992e-9 #m (Gehm)
 omega=446799923264221.4 #Hz (mein Wert) #446799900000000 #Hz (Andis Wert)
 omega0=446.7896e12 #Hz (Gehm)
 
-pos=np.linspace(0.0,L0+0.2,num=100)
+pos=np.linspace(0.0,L0,num=100)
 B = np.empty(len(pos))
 B=slower_field(pos,L0,v0_1,wavelength,omega,omega0)
 #plt.plot(pos-0.4,B*1e4,".",label="v0=1000m/s")
