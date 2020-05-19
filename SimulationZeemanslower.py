@@ -471,7 +471,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 10000 #sim_param_data['particle_number']
+    n = 100 #sim_param_data['particle_number']
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
     # maximal considered velocity
@@ -492,7 +492,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.5#0.74#0.828 #0.74 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.702#0.74#0.828 #0.74 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -500,7 +500,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -230e6 #-990e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -780e6 #-990e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -512,7 +512,7 @@ if __name__ == '__main__':
     laser_beam_radius = sim_param_data['slower_laser_diameter'] / 2
     probe_laser_angle = sim_param_data['probe_laser_angle']
     #slicing_positions = [0.0, 0.1, 0.3, 0.35, target_center_z-0.1,target_center_z-0.05,target_center_z-0.01,target_center_z-0.005,target_center_z-0.002]#sim_param_data['positions_for_slicing']
-    slicing_positions = [0.0, 0.05, 0.1,0.15,0.2,0.25, 0.3, 0.35, 0.4,0.45,0.49,0.495,0.5,0.55,0.56,0.57,0.58]
+    slicing_positions = [0.0, 0.05, 0.1,0.15,0.2,0.25, 0.3, 0.35, 0.4,0.45,0.5,0.55,0.6,0.65,0.695,0.7,0.704]
     #slicing_positions = [0.0]
     #for i in range(0,17):
     #    slicing_positions.append(slicing_positions[i]+0.05)
@@ -559,7 +559,7 @@ if __name__ == '__main__':
     #plot dead atoms
     plt.hist(dead_pos, bins=100)
     print("number of dead atoms", len(dead_pos))
-    plt.ylim(0, 300)
+    plt.ylim(0, 1000)
     plt.xlabel("Position in m", fontsize=22)
     plt.ylabel("Number of dead atoms", fontsize=22)
     plt.title("Total number of dead atoms: {} of {}".format(len(dead_pos),n),fontsize=22)
@@ -569,7 +569,7 @@ if __name__ == '__main__':
     plt.show()
     labels = ["v_x", "v_y", "v_z"]
     plt.hist([dead_vx,dead_vy,dead_vz], bins=100, stacked=True, label=labels)
-    plt.ylim(0, 300)
+    plt.ylim(0, 1000)
     plt.legend(loc="upper right", fontsize=22)
     plt.xlabel("Velocity in m/s", fontsize=22)
     plt.ylabel("Number of dead atoms", fontsize=22)
@@ -620,10 +620,11 @@ if __name__ == '__main__':
     pos_i=0
     for pos in positions:
         #plt.figure()
-        labels=["GS 0","GS 1","GS 2","GS 3","GS 4","GS 5",]
-        plt.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=100, stacked=True, label=labels)
+        labels=["GS 0","GS 1","GS 2","GS 3","GS 4","GS 5"]
+        colors=["red","cyan","darkred","blue","cornflowerblue","navy"]
+        plt.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=100, stacked=True,color=colors, label=labels)
         plt.legend(loc="upper right",fontsize=22)
-        plt.ylim(0, 3000)
+        plt.ylim(0, 3500)
         plt.xlabel("v_z in m/s", fontsize=22)
         plt.ylabel("Atoms in GS", fontsize=22)
         plt.title("Atoms at z={}m".format(pos),fontsize=22)
