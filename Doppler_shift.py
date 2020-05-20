@@ -20,7 +20,7 @@ def Dopplershift(nu , alpha , vx , vy , vz ) :
 def Probability(nu , nu_res , Gamma , I , I_sat):
     return 0.5 * (I / I_sat) * (Gamma**2) / (4 * (nu - nu_res)**2 + (Gamma ** 2) * (1 + I/I_sat))
 
-with open("velocity_atom_start_SF.txt", 'r') as f:
+with open("velocity_atom_slowed_SF.txt", 'r') as f:
     lines = f.readlines()
     vx = np.asarray([float(line.split()[0]) for line in lines])
     vy = np.asarray([float(line.split()[1]) for line in lines])
@@ -43,14 +43,14 @@ sat=1 #I/I_sat
 laser_intensity=sat
 laser_sat_intensity=sat
 init_freq= np.array([446799978232118.25 , 446799978232118.25-228e6])#excitation_frequency -freq_shift_splitting[current_groundstate]-->0 oder -228E6
-alpha_0=0*math.pi/180 #degree to rad
+alpha_0=6*math.pi/180 #degree to rad
 
 nu0 = 446799978232118.25 #2*math.pi*446799900000000 #in Hz
 Gamma = natural_line_width #in Hz
-nu = np.linspace(nu0 - 450*Gamma , nu0 + 10*Gamma , 50000)
+nu = np.linspace(nu0 - 350*Gamma , nu0 + 50*Gamma , 50000)
 spectrum = np.zeros(nu.size)
 
-for i in range(1):#range(len(vx)):
+for i in range(len(vx)):
     #nu_shifted = Dopplershift(nu, alpha_0, vx[i], vy[i], vz[i])
     nu_shifted=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i],wavelength)
     prob = Probability(nu_shifted, init_freq[gs[i]], Gamma , sat, sat)
@@ -63,7 +63,7 @@ ax.plot(nu*1e-12,spectrum,".")
 plt.xlabel("Laser Frequency in THz", fontsize=22)
 plt.ylabel("Sum of Lorentzian Probabilities", fontsize=22)
 plt.grid()
-#plt.ylim(-10,2300)
+plt.ylim(-1,16)
 ax = plt.gca()
 ax.ticklabel_format(useOffset=False)
 

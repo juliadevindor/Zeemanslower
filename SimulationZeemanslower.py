@@ -206,9 +206,9 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
             initial_state = 1
             GS_quantum_number = 5
 
-        initial_state=1
-        current_groundstate=1
-        GS_quantum_number=5
+        #initial_state=1
+        #current_groundstate=1
+        #GS_quantum_number=5
         groundstate_upper_lower_start.append(current_groundstate)
 
         if i == 3:
@@ -492,7 +492,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.702#0.74#0.828 #0.74 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.74#0.828 #0.74 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -500,7 +500,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -780e6 #-990e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -990e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -512,14 +512,14 @@ if __name__ == '__main__':
     laser_beam_radius = sim_param_data['slower_laser_diameter'] / 2
     probe_laser_angle = sim_param_data['probe_laser_angle']
     #slicing_positions = [0.0, 0.1, 0.3, 0.35, target_center_z-0.1,target_center_z-0.05,target_center_z-0.01,target_center_z-0.005,target_center_z-0.002]#sim_param_data['positions_for_slicing']
-    slicing_positions = [0.0, 0.05, 0.1,0.15,0.2,0.25, 0.3, 0.35, 0.4,0.45,0.5,0.55,0.6,0.65,0.695,0.7,0.704]
-    #slicing_positions = [0.0]
-    #for i in range(0,17):
-    #    slicing_positions.append(slicing_positions[i]+0.05)
+    #slicing_positions = [0.0, 0.05, 0.1,0.15,0.2,0.25, 0.3, 0.35, 0.4,0.45,0.5,0.55,0.6,0.65,0.695,0.7,0.704]
+    slicing_positions = [0.0]
+    for i in range(0,17):
+        slicing_positions.append(slicing_positions[i]+0.05)
 
-    #slicing_positions[10]=0.49
-    #slicing_positions[11]=0.495
-    #slicing_positions[17]=0.74
+    slicing_positions[10]=0.73
+    slicing_positions[11]=0.735
+    slicing_positions[17]=0.739
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']
