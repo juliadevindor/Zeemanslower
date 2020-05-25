@@ -125,6 +125,7 @@ if __name__ == '__main__':
     h_Planck = h_bar*2*np.pi
     i=0
     state="es" #state, whose energy levels one wants to plot
+    fig, ax = plt.subplots()
 
     Brange_gs = np.arange(0, 160e-4, 10e-4) #range of Bfield for ground state
     Jgs=1/2
@@ -308,7 +309,7 @@ if __name__ == '__main__':
                 line_gs == 2 and line_exc == 6 or line_gs == 3 and line_exc == 6 or \
                 line_gs == 5 and line_exc == 7 or line_gs == 5 and line_exc == 8 or \
                 line_gs == 5 and line_exc == 9 or line_gs == 4 and line_exc == 10:
-                    plt.plot(numberarray, Position[line_exc][line_gs], ".",color=colors[k], label="{}, {}".format(line_exc, line_gs))
+                    #ax.plot(numberarray, Position[line_exc][line_gs], ".",color=colors[k], label="{}, {}".format(line_exc, line_gs))
                     #plt.plot(numberarray,findpt,color=colors[k], label="{}, {}".format(line_exc, line_gs))
                     #plt.plot(numberarray, Intensity_min[line_exc][line_gs],".",label="{}, {}".format(line_exc,line_gs))
                     k+=1
@@ -336,11 +337,18 @@ if __name__ == '__main__':
     #for item in Intensity_pi[9][4]:
     #    if item>10e-10:
     #        print(item)
-    for i in range(len(findpt_all)-1):
-        plt.plot(numberarray, findpt_all[i+1], color=colors[i],label=i+1)
+    #for i in range(len(findpt_all)-1):
+        #plt.plot(numberarray, findpt_all[i+1], color=colors[i],label=i+1)
 
     plt.legend()
     plt.grid()
+    plt.rcParams.update({'font.size': 22})
+    xticks = ax.xaxis.get_major_ticks()
+    xticks[1].set_visible(False)
+    plt.xticks(fontsize=22)
+    plt.yticks(fontsize=22)
+    plt.xlabel("Magnetic field in Gauss", fontsize=22)
+    plt.ylabel("delta E in Hz", fontsize=22)
     plt.show()
     #print("INDEX")
     #print(indexpt_all)

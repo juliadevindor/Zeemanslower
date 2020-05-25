@@ -168,11 +168,11 @@ if __name__ == '__main__':
 
     position=np.empty([6,12]) #(2J+1)*(2I+1)
     intensity=np.empty([3,6,12]) #(2J+1)*(2I+1)
-    Bfieldarray1 = np.linspace(0,1e-4,num=1000) #np.linspace(0,1e-4,num=100)#
-    Bfieldarray2 = np.linspace(1e-4,10e-4,num=1000) #np.linspace(1e-4,10e-4,num=100) #
+    Bfieldarray1 = np.linspace(0,1e-4,num=2000) #np.linspace(0,1e-4,num=100)#
+    Bfieldarray2 = np.linspace(1e-4,10e-4,num=2000) #np.linspace(1e-4,10e-4,num=100) #
     Bfieldarray3 = np.linspace(10e-4,0.1,num=2000) #np.linspace(10e-4,0.5,num=100) #
-    Bfieldarray = np.linspace(0,1e-4,num=2000)#np.concatenate((Bfieldarray1,Bfieldarray2),axis=0) #np.linspace(0,2e-4,num=500)
-    #Bfieldarray = np.concatenate((Bfieldarray, Bfieldarray3), axis=0) #np.linspace(-1e-2,1e-2,num=500)#
+    Bfieldarray = np.linspace(0,1e-4,num=2000) #np.concatenate((Bfieldarray1,Bfieldarray2),axis=0)##np.linspace(0,2e-4,num=500)
+   # Bfieldarray = np.concatenate((Bfieldarray, Bfieldarray3), axis=0) #np.linspace(-1e-2,1e-2,num=500)#
     num_lines_exc=12
     num_lines_gs=6
 
@@ -201,17 +201,22 @@ if __name__ == '__main__':
 
     colors = ["black", "red", "green", "yellow", "blue", "orange", "brown", "grey", "cyan", "pink", "violet", "purple",
               "pink", "olive", "goldenrod", "cyan"]
+    fig, ax = plt.subplots()
 
     for line_exc in range(0,12):
-        plt.plot(1e4*numberarray,1e-9*Ees[line_exc],".",markersize=2,color="black")
+        ax.plot(1e4*numberarray,1e-9*Ees[line_exc],".",markersize=1,color="black")
         #plt.plot(numberarray,yval[line_exc],color=colors[line_exc])
 
     #for line_gs in range(num_lines_gs):
-    #    plt.plot(1e4*numberarray,1e-9*Egs[line_gs], ".",markersize=2,color="black")
+    #    ax.plot(1e4*numberarray,1e-9*Egs[line_gs], color="black")
 
     #plt.legend()
     plt.grid()
-    plt.xlabel("B in Gauss", fontsize=15)
-    plt.ylabel("E in GHz", fontsize=15)
-    #plt.xlim(0,10e-4)
+    plt.rcParams.update({'font.size': 22})
+    xticks = ax.xaxis.get_major_ticks()
+    xticks[1].set_visible(False)
+    plt.xticks(fontsize=22)
+    plt.yticks(fontsize=22)
+    plt.xlabel("B in Gauss", fontsize=22)
+    plt.ylabel("E in GHz", fontsize=22)
     plt.show()

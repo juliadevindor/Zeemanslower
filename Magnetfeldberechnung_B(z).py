@@ -108,7 +108,8 @@ array_coils = np.array([coils])  # write coil number to array for file name
 
 L_slower = (coils-2) * dist_coils_small + 2 * dist_coils_large + dist_oven_slower#+dist_slower_MOT#  total length
 print("L_slower w/o L_coils",L_slower)
-N = np.array([1500,1400,1100,1000,1000,900,800,700,600,500,300,100]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
+#N = np.array([1000,700,600,500,450,400,350,300,100,50,150,300]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
+N = np.array([1100,900,800,700,600,500,400,300,200,50,150,300]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
 I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8, -4.8,-4.8,-4.8]) # field like the one that has been measured
 L = np.array([0.05,0.05,0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05,0.05])  # real length values for Zeeman coils
 #N = np.array([1300,1000,900,700,600,500,400,300,250,150, 50,50,10]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
@@ -184,8 +185,8 @@ for o in range(0, num):  # loop over z (along the beam axis)
 
     #B+= B_HHtot[o] # add HH coils to total magnetic field
 
-   # if z[o]>L_slower:
-   #     B_tot[o]=0.0
+    #if z[o]>0.6:
+    #    B_tot[o]=0.0
     #else:
     B_tot[o] = B  # store total magnetic field in B_tot
 
@@ -208,19 +209,21 @@ file.close()
   #                  if B_tot[i] > B_tot[i + 1]: # B should be decreasing
   #                      hey=1
 
+fig, ax = plt.subplots()
+
 print("plotting")
-#plt.plot(z,B_1tot*1e4, color="orange")
-#plt.plot(z,B_2tot*1e4, color="orange")
-#plt.plot(z,B_3tot*1e4, color="orange")
-#plt.plot(z,B_4tot*1e4, color="orange")
-#plt.plot(z,B_5tot*1e4, color="orange")
-#plt.plot(z,B_6tot*1e4, color="orange")
-#plt.plot(z,B_7tot*1e4, color="orange")
-#plt.plot(z,B_8tot*1e4, color="orange")
-#plt.plot(z,B_9tot*1e4, color="orange")
-#plt.plot(z,B_10tot*1e4, color="orange")
-#plt.plot(z,B_11tot*1e4, color="orange")
-#plt.plot(z,B_12tot*1e4, color="orange")
+ax.plot(z,B_1tot*1e4, color="orange")
+ax.plot(z,B_2tot*1e4, color="orange")
+ax.plot(z,B_3tot*1e4, color="orange")
+ax.plot(z,B_4tot*1e4, color="orange")
+ax.plot(z,B_5tot*1e4, color="orange")
+ax.plot(z,B_6tot*1e4, color="orange")
+ax.plot(z,B_7tot*1e4, color="orange")
+ax.plot(z,B_8tot*1e4, color="orange")
+ax.plot(z,B_9tot*1e4, color="orange")
+ax.plot(z,B_10tot*1e4, color="orange")
+ax.plot(z,B_11tot*1e4, color="orange")
+ax.plot(z,B_12tot*1e4, color="orange")
 #plt.plot(z-0.5,B_13tot*1e4, color="orange")
 
 #plt.plot(z-0.5,B_HHtot*1e4, color="orange")
@@ -234,8 +237,8 @@ with open("magnetic_field_real.txt", 'r') as f:
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    plt.plot(x,y,label="Spin-flip field with length L=0.5m")
-    plt.plot(x+0.5,y,label="Spin-flip field with length L=0.5m")
+    ax.plot(x,y,label="Spin-flip field with length L=0.5m")
+    ax.plot(x+0.5,y,label="Spin-flip field with length L=0.5m")
 with open("sim_setup/real_magn_field_0_5m.txt","r") as g: # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
@@ -251,6 +254,11 @@ with open("sim_setup/real_mag_field_0_7m.txt","r") as g: # plot measured magneti
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
     #plt.plot(xnew+0.5, ynew, label="Real slower field of length 0.7m")
+with open("sim_setup/example_magnetic_field_ANDI.txt","r") as g: # plot measured magnetic field
+    lines = g.readlines()
+    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
+    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
+    #ax.plot(xnew+0.5, ynew)
 #plt.xlim(0,0.8)
 L0=0.828#m
 v0_0=1500 #m/s
@@ -265,10 +273,15 @@ B = np.empty(len(pos))
 B=slower_field(pos,L0,v0_1,wavelength,omega,omega0)
 #plt.plot(pos-0.4,B*1e4,".",label="v0=1000m/s")
 
-plt.xlabel("Position in m", fontsize=15)
-plt.ylabel("Magnetic field in Gauss", fontsize=15)
+plt.xlabel("Position in m", fontsize=22)
+plt.ylabel("Magnetic field in Gauss", fontsize=22)
 plt.grid()
-plt.legend(prop={'size': 15})
+plt.rcParams.update({'font.size': 22})
+xticks = ax.xaxis.get_major_ticks()
+xticks[1].set_visible(False)
+plt.xticks(fontsize=22)
+plt.yticks(fontsize=22)
+#plt.legend(prop={'size': 15})
 #plt.ylim(0,1400)
 #plt.xlim(0,0.75)
 plt.show()

@@ -6,7 +6,8 @@ from light_atom_interaction import lorentzian_probability_2, doppler_shift
 import scipy.constants as scc
 
 vel_light=scc.c
-def Dopplershift_simple(nu, alpha, vx, vy, vz, lambda1) :
+def Dopplershift_simple(nu, alpha, vx, vy, vz) :
+    lambda1=scc.c/nu
     scalarproduct=math.cos(alpha)*vx + 0*vy - math.sin(alpha)*vz
     return nu-scalarproduct*2*math.pi/lambda1
 
@@ -20,7 +21,7 @@ def Dopplershift(nu , alpha , vx , vy , vz ) :
 def Probability(nu , nu_res , Gamma , I , I_sat):
     return 0.5 * (I / I_sat) * (Gamma**2) / (4 * (nu - nu_res)**2 + (Gamma ** 2) * (1 + I/I_sat))
 
-with open("velocity_atom_slowed_SF.txt", 'r') as f:
+with open("velocity_atom_start_SF.txt", 'r') as f:
     lines = f.readlines()
     vx = np.asarray([float(line.split()[0]) for line in lines])
     vy = np.asarray([float(line.split()[1]) for line in lines])
@@ -52,7 +53,7 @@ spectrum = np.zeros(nu.size)
 
 for i in range(len(vx)):
     #nu_shifted = Dopplershift(nu, alpha_0, vx[i], vy[i], vz[i])
-    nu_shifted=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i],wavelength)
+    nu_shifted=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i])
     prob = Probability(nu_shifted, init_freq[gs[i]], Gamma , sat, sat)
     spectrum += prob
 
@@ -63,7 +64,7 @@ ax.plot(nu*1e-12,spectrum,".")
 plt.xlabel("Laser Frequency in THz", fontsize=22)
 plt.ylabel("Sum of Lorentzian Probabilities", fontsize=22)
 plt.grid()
-plt.ylim(-1,16)
+#plt.ylim(-10,2100)
 ax = plt.gca()
 ax.ticklabel_format(useOffset=False)
 

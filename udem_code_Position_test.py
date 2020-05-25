@@ -387,11 +387,14 @@ if __name__ == '__main__':
     #    plt.plot(numberarray, findpt_all[i+1],color=colors[i],label=i+1)
 
     num = 10000
-    pol = 2
+    pol = 0
 
+    #B = np.linspace(-1e-4, 1e-4, num=num)  # in T
+    #B = np.linspace(-10e-4, 10e-4, num=num)  # in T
     B = np.linspace(-0.1, 0.1, num=num)  # in T
     deltaE = np.empty([6, 12, num])
     transstr = np.empty([6, 12, num])
+    fig, ax = plt.subplots()
 
     for i in range(len(B)):
         for ES in range(0, 12):
@@ -403,21 +406,21 @@ if __name__ == '__main__':
     for line_exc in range(0, 12):
         for line_gs in range(0, 6):
             # SIGMA MINUS
-            #if (line_gs == 0 and line_exc == 2) or (line_gs == 1 and line_exc == 2) or \
-            #        (line_gs == 0 and line_exc == 3) or (line_gs == 1 and line_exc == 3) or \
-            #        (line_gs == 0 and line_exc == 4) or (line_gs == 1 and line_exc == 4) or \
-            #        (line_gs == 2 and line_exc == 5) or (line_gs == 3 and line_exc == 5) or \
-            #        (line_gs == 2 and line_exc == 6) or (line_gs == 3 and line_exc == 6) or \
-            #        (line_gs == 5 and line_exc == 7) or (line_gs == 5 and line_exc == 8) or \
-            #        (line_gs == 5 and line_exc == 9) or (line_gs == 4 and line_exc == 10):
+            if (line_gs == 0 and line_exc == 2) or (line_gs == 1 and line_exc == 2) or \
+                    (line_gs == 0 and line_exc == 3) or (line_gs == 1 and line_exc == 3) or \
+                    (line_gs == 0 and line_exc == 4) or (line_gs == 1 and line_exc == 4) or \
+                    (line_gs == 2 and line_exc == 5) or (line_gs == 3 and line_exc == 5) or \
+                    (line_gs == 2 and line_exc == 6) or (line_gs == 3 and line_exc == 6) or \
+                    (line_gs == 5 and line_exc == 7) or (line_gs == 5 and line_exc == 8) or \
+                    (line_gs == 5 and line_exc == 9) or (line_gs == 4 and line_exc == 10):
             # SIGMA Plus
-            if line_gs == 0 and line_exc == 0 or line_gs == 1 and line_exc == 0 or \
-                    line_gs == 0 and line_exc == 1 or line_gs == 1 and line_exc == 1 or \
-                    line_gs == 4 and line_exc == 2 or line_gs == 4 and line_exc == 3 or \
-                    line_gs == 4 and line_exc == 4 or line_gs == 2 and line_exc == 7 or \
-                    line_gs == 3 and line_exc == 7 or line_gs == 3 and line_exc == 8 or \
-                    line_gs == 2 and line_exc == 9 or line_gs == 3 and line_exc == 9 or \
-                    line_gs == 5 and line_exc == 11 or line_gs == 2 and line_exc == 8:
+            #if line_gs == 0 and line_exc == 0 or line_gs == 1 and line_exc == 0 or \
+            #        line_gs == 0 and line_exc == 1 or line_gs == 1 and line_exc == 1 or \
+            #        line_gs == 4 and line_exc == 2 or line_gs == 4 and line_exc == 3 or \
+            #        line_gs == 4 and line_exc == 4 or line_gs == 2 and line_exc == 7 or \
+            #        line_gs == 3 and line_exc == 7 or line_gs == 3 and line_exc == 8 or \
+            #        line_gs == 2 and line_exc == 9 or line_gs == 3 and line_exc == 9 or \
+            #        line_gs == 5 and line_exc == 11 or line_gs == 2 and line_exc == 8:
 
             # PI
             #if line_gs == 1 and line_exc == 9 or line_gs == 0 and line_exc == 9 or \
@@ -428,20 +431,24 @@ if __name__ == '__main__':
             #    line_gs == 2 and line_exc == 3 or line_gs == 3 and line_exc == 3 or \
             #    line_gs == 2 and line_exc == 2 or line_gs == 3 and line_exc == 2 or \
             #    line_gs == 5 and line_exc == 0 or line_gs == 5 and line_exc == 1:
-                #plt.plot(1e4*B, 1e-9*deltaE[line_gs][line_exc], label="GS:{} to ES:{}".format(line_gs,line_exc), color=colors[k])
-                plt.plot(1e4*B, transstr[line_gs][line_exc],label="GS:{} to ES:{}".format(line_gs,line_exc), color=colors[k])
+                #ax.plot(1e4*B, 1e-9*deltaE[line_gs][line_exc], label="GS:{} to ES:{}".format(line_gs,line_exc), color=colors[k])
+                ax.plot(1e4*B, transstr[line_gs][line_exc],label="GS:{} to ES:{}".format(line_gs,line_exc), color=colors[k])
                 k+=1
 
 
 
 
-    plt.legend()
+    plt.legend(prop={'size': 12})
     plt.grid()
     #plt.xlim(0,0.00008)
-    #plt.ylim(1.49e8,1.54e8)
-    plt.xlabel("B in Gauss")
-    plt.ylabel("trans strength")
-    #plt.ylabel("delta E in GHz")
+    plt.xlabel("B in Gauss", fontsize=22)
+    plt.ylabel("Trans strength")
+    #plt.ylabel("delta E in GHz", fontsize=22)
+    plt.rcParams.update({'font.size': 22})
+    xticks = ax.xaxis.get_major_ticks()
+    xticks[1].set_visible(False)
+    plt.xticks(fontsize=22)
+    plt.yticks(fontsize=22)
     plt.show()
     #print("INDEX")
     #print(indexpt_all)
