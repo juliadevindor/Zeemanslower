@@ -471,7 +471,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 100 #sim_param_data['particle_number']
+    n = 10000 #sim_param_data['particle_number']
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
     # maximal considered velocity
@@ -500,7 +500,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -685e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -649e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -519,7 +519,7 @@ if __name__ == '__main__':
 
     slicing_positions[14]=0.69
     slicing_positions[15]=0.695
-    slicing_positions[17]=0.705
+    slicing_positions[16]=0.699
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']

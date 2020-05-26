@@ -80,7 +80,7 @@ dist_slower_MOT=0.1 # not approved
 dist_coils_small=0.002
 dist_coils_large=0.004
 
-coils = 12#13 #randrange(8, 13)  # random number of coils
+coils = 12# #randrange(8, 13)  # random number of coils
 print("Number of coils:", coils)
 
 # initialize arrays
@@ -109,9 +109,9 @@ array_coils = np.array([coils])  # write coil number to array for file name
 L_slower = (coils-2) * dist_coils_small + 2 * dist_coils_large + dist_oven_slower#+dist_slower_MOT#  total length
 print("L_slower w/o L_coils",L_slower)
 #N = np.array([1000,700,600,500,450,400,350,300,100,50,150,300]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
-N = np.array([1100,900,800,700,600,500,400,300,200,50,150,300]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
-I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8, -4.8,-4.8,-4.8]) # field like the one that has been measured
-L = np.array([0.05,0.05,0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05,0.05])  # real length values for Zeeman coils
+N = np.array([950,900,850,800,700,600,500,400,300,200,100,300]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
+I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,-4.8,-4.8]) # field like the one that has been measured
+L = np.array([0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05,0.05,0.05,0.05])  # real length values for Zeeman coils
 #N = np.array([1300,1000,900,700,600,500,400,300,250,150, 50,50,10]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
 #I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8, 4.8,4.8,4.8,4.8,4.8,4.8]) # field like the one that has been measured
 #L = np.array([0.04, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05, 0.05,0.05, 0.04])  # real length values for Zeeman coils
@@ -239,6 +239,17 @@ with open("magnetic_field_real.txt", 'r') as f:
     y = np.asarray([float(line.split(";")[1]) for line in lines])
     ax.plot(x,y,label="Spin-flip field with length L=0.5m")
     ax.plot(x+0.5,y,label="Spin-flip field with length L=0.5m")
+with open("sim_setup/real_magn_field_SF_0_5m.txt","r") as g: # plot measured magnetic field
+    lines = g.readlines()
+    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
+    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
+    ax.plot(xnew+0.5, ynew, label="Real slower SF field of length 0.5m")
+with open("sim_setup/real_magn_field_SF_0_6m.txt","r") as g: # plot measured magnetic field
+    lines = g.readlines()
+    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
+    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
+    ax.plot(xnew+0.5, ynew, label="Real slower SF field of length 0.6m")
+
 with open("sim_setup/real_magn_field_0_5m.txt","r") as g: # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
@@ -254,11 +265,7 @@ with open("sim_setup/real_mag_field_0_7m.txt","r") as g: # plot measured magneti
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
     #plt.plot(xnew+0.5, ynew, label="Real slower field of length 0.7m")
-with open("sim_setup/example_magnetic_field_ANDI.txt","r") as g: # plot measured magnetic field
-    lines = g.readlines()
-    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
-    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(xnew+0.5, ynew)
+
 #plt.xlim(0,0.8)
 L0=0.828#m
 v0_0=1500 #m/s
