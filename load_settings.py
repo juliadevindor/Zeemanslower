@@ -70,6 +70,7 @@ def load_files(sim_path, exp_path, atom_path, magn_path, max_step_path):
         # call fit function of class Magnetic_Field from magnetic_field.py. Increases degree of polynom until some error bound is exceeded
         spline_fit = magnetic_field_spline_fit(magnetic_field_distance, magnetic_strength)
         spline_fit_x=np.empty(len(spline_fit))
+
         for i in range(len(spline_fit)):
             if i==0:
                 spline_fit_x[i]=-0.6
@@ -95,10 +96,11 @@ def load_files(sim_path, exp_path, atom_path, magn_path, max_step_path):
                 line = line.split(";")
                 magnetic_field_distance.append(float(line[0]))
                 magnetic_strength.append(float(line[1]) * 1E-4)
-                #print(float(line[1])*1E-4,end=",")
+                #print(float(line[0]),float(line[1]))
 
             magnetic_file.close()
-
+            #plt.plot(magnetic_field_distance,magnetic_strength,".")
+            #plt.show()
             distance = float(magnetic_field_distance[-1] - magnetic_field_distance[0])
             distance_steps = np.linspace(0, distance, len(spline_fit))
             # print(spline_fit_field_function(spline_fit, distance_steps[0])+1E-35/spline_fit_field_function(spline_fit, distance_steps[2])+1E-35)

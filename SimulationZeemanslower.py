@@ -65,8 +65,8 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
     plane_slice_pos = slicing_position_array
     print("len",len(plane_slice_pos))
     plane_slice_flags = []
-    plane_slice_upper_groundstate = [[0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0]]
-    plane_slice_lower_groundstate = [[0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0]]
+    plane_slice_upper_groundstate = [[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0]]
+    plane_slice_lower_groundstate = [[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0]]
 
     for i in range(len(plane_slice_pos)):
         plane_slice_flags.append(0)
@@ -108,7 +108,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
     #zpos_array=[0.0]
     #zvel_array=[0.0]
     z_histogram=[[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]]
-    vel_z_histo=[[[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]]]
+    vel_z_histo=[[[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]]]
     # initializing lists with 1 for observing several variables. Needed for compiling through Numba
     observing_z_vel = [0.0]
     observing_z_pos = [0.0]
@@ -218,15 +218,12 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
         pos_index = 0
 
         z_pos_histo_binning=z_pos
-
         # if the atom is not dead do the steps
         while atom_dead != 0:
             for iii in range(0,19):
-                #print(iii)
                 if iii==pos_index:
                     pos_value=plane_slice_pos[iii]
                     break
-
             current_excitation_freq = [0.0, 0.0, 0.0, 0.0]
             loop_counter += 1
             if atom_count < cutoff_number:
@@ -234,10 +231,8 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                     observing_z_pos.append(z_pos)
                     observing_z_vel.append(z_velocity)
                     z_pos_before=z_pos
-
             # derive the squared x- and y-position for the following comparisons if the position in the xy-plane is beyond some (geometrical) limit
             x_y_pos_component_squared = x_pos ** 2 + y_pos ** 2
-
             # check if atoms move outside the laser beam or hit the wall of the MOT
             if x_y_pos_component_squared > light_beam_radius_squared or z_pos > target_center_z+0.12 or z_pos < 0.0 or z_velocity < 0.0:
                 dead_atoms_pos.append(z_pos)
@@ -249,7 +244,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                 # set the index to 0 (=dead)
                 atom_dead = 0
                 counter_dead+=1
-
                 if current_groundstate == 0:
                     dead_atoms_lower_groundstate.append(z_velocity)
                 if current_groundstate == 1:
@@ -262,14 +256,11 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                     observing_z_vel.append(-1)
 
                 continue
-
             # is the atom is not hitting the rear wall of the MOT
             if z_pos < target_center_z + target_radius:
-
                 # check if atom is inside the beam of the laser and if the frequency for exciting the atom is equal to the frequency of the laser
                 if x_y_pos_component_squared < light_beam_radius_squared:
                     excitation_index=0 #muss noch irgendwie gesetzt werden
-
                     reduced_freq_1,atom_freq_1,delta_1=lorentzian_probability_TEST(1.0,2,5,11,spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z),Position(5, 11, 2, spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z)), laser_frequency, laser_detuning,natural_line_width,laser_intensity_gauss(x_y_pos_component_squared,z_pos, intensity), x_velocity,y_velocity,z_velocity,wavevector_x,wavevector_y,wavevector_z, wavelength)
                     #reduced_freq_array.append(reduced_freq_1)
                     #atom_freq_array.append(atom_freq_1)
@@ -286,12 +277,10 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                     if z_pos==0.0 or z_pos>=z_pos_histo_binning+0.005:
                         z_histogram[GS_quantum_number].append(z_pos)
                         z_pos_histo_binning=z_pos
-
                     if z_pos>=pos_value and z_pos_histo[GS_quantum_number][pos_index]==0.0:
                         z_pos_histo[GS_quantum_number][pos_index]=pos_value
                         vel_z_histo[GS_quantum_number][pos_index].append(z_velocity_new)
                         pos_index+=1
-
                     atom_time_step=atom_path_length/(math.sqrt(z_velocity**2+y_velocity**2+x_velocity**2+1e-30))
                     # position updating for all atoms before calculating new velocity depending of effects occuring
                     x_pos += x_velocity * atom_time_step
@@ -311,7 +300,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                             observing_z_vel.append(z_velocity)
                             observing_magnetic_field.append(spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z))
                             z_pos_before=z_pos
-
                     for ii in range(len(plane_slice_pos)):
                         if plane_slice_pos[ii] < z_pos and plane_slice_flags[ii] != 1:
                             if current_groundstate == 0:
@@ -443,11 +431,11 @@ if __name__ == '__main__':
     '''
     xval=[-0.5]
     for itest in range(1,len(spline_fit)):
-        xval.append(xval[itest-1]+0.7/len(spline_fit))
+        xval.append(xval[itest-1]+1.0/len(spline_fit))
     #plt.plot(xval,spline_fit,".")
     #plt.xlabel("zpos in m")
     #plt.ylabel("grad B")
-
+    #plt.show()
     x=[-0.5]
     y=[0.0]
     #target_center_z=1.0
@@ -471,7 +459,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 10000 #sim_param_data['particle_number']
+    n = 100 #sim_param_data['particle_number']
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
     # maximal considered velocity
@@ -492,7 +480,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.708#0.828 #0.74 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 1.02#0.828 #0.74 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -500,7 +488,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -649e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -870e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -514,12 +502,12 @@ if __name__ == '__main__':
     #slicing_positions = [0.0, 0.1, 0.3, 0.35, target_center_z-0.1,target_center_z-0.05,target_center_z-0.01,target_center_z-0.005,target_center_z-0.002]#sim_param_data['positions_for_slicing']
     #slicing_positions = [0.0, 0.05, 0.1,0.15,0.2,0.25, 0.3, 0.35, 0.4,0.45,0.5,0.55,0.6,0.65,0.695,0.7,0.704]
     slicing_positions = [0.0]
-    for i in range(0,17):
+    for i in range(0,19):
         slicing_positions.append(slicing_positions[i]+0.05)
 
-    slicing_positions[14]=0.69
-    slicing_positions[15]=0.695
-    slicing_positions[16]=0.699
+    slicing_positions[17]=0.95
+    slicing_positions[18]=0.99
+    slicing_positions[19]=0.995
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']

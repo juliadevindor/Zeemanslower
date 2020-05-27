@@ -8,6 +8,7 @@ import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline
 # math functions
 import math
+import matplotlib.pyplot as plt
 
 from numba import jit, jitclass
 
@@ -80,12 +81,17 @@ def magnetic_field_spline_fit(position_array, magnetic_strength_array):
     spline_inter = InterpolatedUnivariateSpline(position_array, magnetic_strength_array, k=5)
     steps = (position_array[-1] - position_array[0])*math.pow(10, precision) + 1
     x_steps = np.linspace(position_array[0], position_array[-1], steps)
-
+    #print(spline_inter)
     discrete_interpolation = np.zeros(int(steps))
 
     for i in range(len(x_steps)):
         discrete_interpolation[i] = (spline_inter(x_steps[i]))
-        #print(x_steps[i],end=",")
+    #    print(x_steps[i],discrete_interpolation[i]*1e4)
+    #plt.plot(position_array,magnetic_strength_array,label="1")
+    #plt.plot(x_steps,discrete_interpolation,label="2")
+    #plt.ylim(-1,1.5)
+    #plt.legend()
+    #plt.show()
     return discrete_interpolation
 
 
