@@ -162,7 +162,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
             ###z_velocity<=1000m/s###
             while 0!=1: #try as long as "break" is reached
                 z_velocity_try=number_sampling(1, p_max, v_min, v_max, mass_lithium_6, temperature)
-                if z_velocity_try<=1450:
+                if z_velocity_try<=5000:#1450:
                     z_velocity=z_velocity_try
                     break
 
@@ -206,9 +206,9 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
             initial_state = 1
             GS_quantum_number = 5
 
-        #initial_state=1
-        #current_groundstate=1
-        #GS_quantum_number=5
+        initial_state=1
+        current_groundstate=1
+        GS_quantum_number=5
         groundstate_upper_lower_start.append(current_groundstate)
 
         if i == 3:
@@ -480,7 +480,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 1.02#0.828 #0.74 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.828 #0.74 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -488,7 +488,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -870e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -990e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
