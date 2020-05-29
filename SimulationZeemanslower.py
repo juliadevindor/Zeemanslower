@@ -137,9 +137,9 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
     counter_dead=0
 
     for i in range(0, atom_count):
-        z_pos_histo= [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,1.0],
-                       [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
-                       [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]]
+        z_pos_histo= [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0,0.0],
+                       [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0],
+                       [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0]]
 
         #print("counter", counter)
         #print("atom",i)
@@ -158,13 +158,13 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
         x_velocity = 0.0
         y_velocity = 0.0
         if atom_count>100:
-            #z_velocity = number_sampling(1, p_max, v_min, v_max, mass_lithium_6, temperature)
+            z_velocity = number_sampling(1, p_max, v_min, v_max, mass_lithium_6, temperature)
             ###z_velocity<=1000m/s###
-            while 0!=1: #try as long as "break" is reached
-                z_velocity_try=number_sampling(1, p_max, v_min, v_max, mass_lithium_6, temperature)
-                if z_velocity_try<=5000:#1450:
-                    z_velocity=z_velocity_try
-                    break
+            #while 0!=1: #try as long as "break" is reached
+            #    z_velocity_try=number_sampling(1, p_max, v_min, v_max, mass_lithium_6, temperature)
+            #    if z_velocity_try<=1450: #5000
+            #        z_velocity=z_velocity_try
+            #        break
 
 
         else:
@@ -220,9 +220,10 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
         z_pos_histo_binning=z_pos
         # if the atom is not dead do the steps
         while atom_dead != 0:
-            for iii in range(0,19):
+            for iii in range(0,20):
                 if iii==pos_index:
                     pos_value=plane_slice_pos[iii]
+                    #if iii==18: print(iii,pos_value)
                     break
             current_excitation_freq = [0.0, 0.0, 0.0, 0.0]
             loop_counter += 1
@@ -248,7 +249,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                     dead_atoms_lower_groundstate.append(z_velocity)
                 if current_groundstate == 1:
                     dead_atoms_upper_groundstate.append(z_velocity + 2000)
-
                 if atom_count < cutoff_number:
                     observing_z_pos.append(z_pos)
                     observing_z_vel.append(z_velocity)
@@ -280,7 +280,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                     if z_pos>=pos_value and z_pos_histo[GS_quantum_number][pos_index]==0.0:
                         z_pos_histo[GS_quantum_number][pos_index]=pos_value
                         vel_z_histo[GS_quantum_number][pos_index].append(z_velocity_new)
-                        pos_index+=1
+                        if pos_index+1<len(plane_slice_pos): pos_index+=1
                     atom_time_step=atom_path_length/(math.sqrt(z_velocity**2+y_velocity**2+x_velocity**2+1e-30))
                     # position updating for all atoms before calculating new velocity depending of effects occuring
                     x_pos += x_velocity * atom_time_step
@@ -480,7 +480,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.8 #0.74 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.74 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -488,7 +488,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -400e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -990e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -505,9 +505,9 @@ if __name__ == '__main__':
     for i in range(0,19):
         slicing_positions.append(slicing_positions[i]+0.05)
 
-    slicing_positions[17]=0.95
-    slicing_positions[18]=0.99
-    slicing_positions[19]=0.995
+    slicing_positions[15]=0.72
+    slicing_positions[16]=0.73
+    #slicing_positions[17]=0.995
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']
@@ -578,7 +578,7 @@ if __name__ == '__main__':
         file.write("\n")
     file.close()
 
-    file = open("velocity_atom_slowed.txt", "w+")  # open file
+    file = open("velocity_atom.txt", "w+")  # open file
     for vel in range(len(vel_x_atoms_in_mot)):
         file.write(str(vel_x_atoms_in_mot[vel]))
         file.write("\t")
@@ -622,6 +622,7 @@ if __name__ == '__main__':
         figure = plt.gcf()  # get current figure
         figure.set_size_inches(12, 10)
         #plt.show()
+        print(pos)
         plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(pos).replace('.', '_') + "_allGS" + ".png")
         plt.close()
         pos_i+=1
