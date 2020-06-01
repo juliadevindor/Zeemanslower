@@ -3,35 +3,14 @@
 # author: Julia Winter                                                                                                                   #
 ##########################################################################################################################################
 
-from random import *
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import quad
 import scipy.constants as scc
-import os
-import glob
+from scipy.optimize import curve_fit
 
 hPlanck=scc.h #6.62607004e-34 Js
 muB=scc.physical_constants['Bohr magneton'][0] # 9.274009994e-24 J/T
-
-def slower_field(pos, L0,v0,wavelength,omega, omega0):
-  # length of slower L0 in m
-    B0 = hPlanck*v0/(wavelength*muB) #0.08 #0.19185 # y-Achsenabschnitt
-    #print(B0)
-    Bbias = -3.5e-2 #0#(hPlanck/(2*np.pi))*(omega-omega0)/(muB)#-1.478*1e-9  # shiftet nur den Plot nach oben/ unten
-    B = np.empty(len(pos))
-
-    for i in range(0,len(pos)):
-        #print(pos[i])
-        #if pos[i]<0.0:
-        #    B[i]=0
-        if 1-pos[i]/L0 < 0: # to avoid "nan"
-            B[i]=0
-        elif pos[i]>L0:
-            B[i]=0
-        else:
-            B[i] = B0 * np.sqrt(1-pos[i]/L0) + Bbias
-    return B
 
 def B_coil(I_coil, N_coil, L_coil, R_coil, z0_coil, pos): # magnetic field of a single coil
     return mu_0*N_coil*I_coil/(2*L_coil)*((pos-z0_coil+L_coil/2)/np.sqrt(R_coil**2+(pos-z0_coil+L_coil/2)**2) - (pos-z0_coil-L_coil/2)/np.sqrt(R_coil**2+(pos-z0_coil-L_coil/2)**2)) # magnetic field of a single coil
@@ -108,13 +87,9 @@ array_coils = np.array([coils])  # write coil number to array for file name
 
 L_slower = (coils-2) * dist_coils_small + 2 * dist_coils_large + dist_oven_slower#+dist_slower_MOT#  total length
 print("L_slower w/o L_coils",L_slower)
-#N = np.array([1000,700,600,500,450,400,350,300,100,50,150,300]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
 N = np.array([1100,1000,900,800,700,600,500,400,300,200,100,50,20, 50,100,200,300,400]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
 I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,-4.8,-4.8,-4.8,-4.8,-4.8]) # field like the one that has been measured
 L = np.array([0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05,0.05,0.05,0.05, 0.05, 0.05, 0.05, 0.05,0.05,0.05,0.05,0.05])  # real length values for Zeeman coils
-#N = np.array([1300,1000,900,700,600,500,400,300,250,150, 50,50,10]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
-#I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8, 4.8,4.8,4.8,4.8,4.8,4.8]) # field like the one that has been measured
-#L = np.array([0.04, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05, 0.05,0.05, 0.04])  # real length values for Zeeman coils
 
 for p in range(0, coils): # loop over all Zeeman slower coils to obtain the length of all coils
     N_wires[p] = L[p]/d_wire # number of wires in each layer
@@ -139,7 +114,6 @@ for j in range(0, coils):  # calculate z0(center of coils) for all Zeeman coils
         z0[j] = z0[j-1] + L[j]/2 + L[j-1]/2 + dist_coils_small # z0 for all the other Zeeman coils
 
 file = open("magnetic_field_real.txt","w+")  # open file
-
 
 for o in range(0, num):  # loop over z (along the beam axis)
     B = 0  # startvalue for magnetic field
@@ -198,17 +172,6 @@ for o in range(0, num):  # loop over z (along the beam axis)
 
 file.close()
 
-
-   # Bmax = max(B_tot) # look for maximum value of the magnetic field
-   # index = np.where(B_tot == Bmax) # at which z is Bmax
-    #grad = np.gradient(B_tot) # gradient of the magnetic field
-   # if Bmax * 1e4 > 550:  # maximum B should be greater than 550 Gauss
-  #      if z[index] - L_ges > -(L_ges - 0.05) and z[index] - L_ges < -(L_ges - 0.25):  # maximum B should be in specific range (at the beginning of the slower)
-  #          for i in range(0, len(B_tot) - 1): # loop over all point of magnetic field
-  #              if z[i] - L_ges > z[index] - L_ges and z[i] - L_ges < 0.0:  # after maximum B and before 0
-  #                  if B_tot[i] > B_tot[i + 1]: # B should be decreasing
-  #                      hey=1
-
 fig, ax = plt.subplots()
 
 print("plotting")
@@ -227,83 +190,22 @@ print("plotting")
 #plt.plot(z-0.5,B_13tot*1e4, color="orange")
 
 #plt.plot(z-0.5,B_HHtot*1e4, color="orange")
-#plt.plot(z-L_ges,np.gradient(B_HHtot*1e4, z-L_ges), color="green", label="ha")
-#plt.plot(z-L_ges,B_HH1*1e4, color="black")
-#plt.plot(z-L_ges,B_HH2*1e4, color="grey")
-#print("MAX", max(np.gradient(B_HHtot*1e4, z-L_ges)), min(np.gradient(B_HHtot*1e4, z-L_ges)))
-#print("z", z[np.where(np.gradient(B_HHtot*1e4, z-L_ges)==max(np.gradient(B_HHtot*1e4, z-L_ges)))]-0.5, z[np.where(np.gradient(B_HHtot*1e4, z-L_ges)==min(np.gradient(B_HHtot*1e4, z-L_ges)))]-0.5)
 
 with open("magnetic_field_real.txt", 'r') as f:
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
     #ax.plot(x,y,label="Spin-flip field")
-    #ax.plot(x+0.5,y,label="Spin-flip field")
-with open("sim_setup/real_magn_field_SF_0_5m.txt","r") as g: # plot measured magnetic field
-    lines = g.readlines()
-    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
-    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(xnew+0.5, ynew, label="Real slower SF field of length 0.5m")
-with open("sim_setup/real_magn_field_SF_0_6m.txt","r") as g: # plot measured magnetic field
-    lines = g.readlines()
-    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
-    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(xnew+0.5, ynew, label="Real slower SF field of length 0.6m")
-with open("sim_setup/real_magn_field_SF_0_7m.txt","r") as g: # plot measured magnetic field
-    lines = g.readlines()
-    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
-    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(xnew+0.5, ynew, label="Real slower SF field of length 0.7m")
-with open("sim_setup/real_magn_field_SF_0_6m_2.txt","r") as g: # plot measured magnetic field
-    lines = g.readlines()
-    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
-    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(xnew+0.5, ynew, label="Alternative real slower SF field of length 0.6m")
-with open("sim_setup/real_magn_field_SF_0_7m_2.txt","r") as g: # plot measured magnetic field
-    lines = g.readlines()
-    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
-    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(xnew+0.5, ynew, label="Alternative real slower SF field of length 0.7m")
-with open("sim_setup/real_magn_field_SF_1m.txt","r") as g: # plot measured magnetic field
-    lines = g.readlines()
-    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
-    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(xnew+0.5, ynew, label="Real slower SF field of length 1.0m")
+    #ax.plot(x+0.5,y,".",label="Real slower field")
 
-with open("sim_setup/real_magn_field_0_5m.txt","r") as g: # plot measured magnetic field
+with open("B(z)_0_5m.txt","r") as g: # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(xnew+0.5, ynew, label="Real slower field of length 0.5m")
-with open("sim_setup/real_magn_field_0_6m.txt","r") as g: # plot measured magnetic field
-    lines = g.readlines()
-    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
-    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(xnew+0.5, ynew, label="Real slower field of length 0.6m")
-with open("sim_setup/real_mag_field_0_7m.txt","r") as g: # plot measured magnetic field
-    lines = g.readlines()
-    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
-    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(xnew+0.5, ynew, label="Real slower field of length 0.7m")
-with open("sim_setup/real_magn_field_1m.txt","r") as g: # plot measured magnetic field
-    lines = g.readlines()
-    xnew = np.asarray([float(line.split(";")[0]) for line in lines])
-    ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(xnew+0.5, ynew, label="Real slower field of length 1.0m")
+    ax.plot(xnew+0.5, ynew, label="Ideal slower field of length 0.5m")
 
-#plt.xlim(0,0.8)
-L0=0.828#m
-v0_0=1500 #m/s
-v0_1=800 #m/s
-v0_2=500 #m/s
-wavelength=670.992e-9 #m (Gehm)
-omega=446799923264221.4 #Hz (mein Wert) #446799900000000 #Hz (Andis Wert)
-omega0=446.7896e12 #Hz (Gehm)
-
-pos=np.linspace(0.0,L0,num=100)
-B = np.empty(len(pos))
-B=slower_field(pos,L0,v0_1,wavelength,omega,omega0)
-#plt.plot(pos-0.4,B*1e4,".",label="v0=1000m/s")
+popt, pcov = curve_fit(func, xdata, ydata)
+#plt.plot(xdata, func(xdata, *popt), 'r-', label='fit: a=%5.3f, b=%5.3f, c=%5.3f' % tuple(popt))
 
 plt.xlabel("Position in m", fontsize=22)
 plt.ylabel("Magnetic field in Gauss", fontsize=22)

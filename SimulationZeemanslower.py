@@ -488,7 +488,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -990e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -300e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -612,7 +612,7 @@ if __name__ == '__main__':
         colors=["red","cyan","darkred","blue","cornflowerblue","navy"]
         plt.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=100, stacked=True,color=colors, label=labels)
         plt.legend(loc="upper right",fontsize=22)
-        plt.ylim(0, 3500)
+        plt.ylim(0, 1000)
         plt.xlabel("v_z in m/s", fontsize=22)
         plt.ylabel("Atoms in GS", fontsize=22)
         plt.title("Atoms at z={}m".format(pos),fontsize=22)
