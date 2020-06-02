@@ -9,7 +9,7 @@ from scipy.integrate import quad
 import scipy.constants as scc
 from scipy.optimize import curve_fit
 
-num = 500
+num = 5000
 
 hPlanck=scc.h #6.62607004e-34 Js
 muB=scc.physical_constants['Bohr magneton'][0] # 9.274009994e-24 J/T
@@ -27,16 +27,24 @@ dist_oven_slower = 0.08
 dist_coils_small = 0.002
 dist_coils_large = 0.004
 
-def B_coil(pos,N_coil): # magnetic field of a single coil
+def B_coil(z, N1,N2,N3,N4,N5,N6,N7,N8): # magnetic field of a single coil
     coils = 8
     I_coil = 4.8
     L = 0.05
-    R_coil = R
+    #N1=int(N1)
+    #N2=int(N2)
+    #N3=int(N3)
+    #N4=int(N4)
+    #N5=int(N5)
+    #N6=int(N6)
+    #N7=int(N7)
+    #N8=int(N8)
+    N_coil=np.array([N1,N2,N3,N4,N5,N6,N7,N8])
 
     z0 = np.empty([coils])  # center of the coils
     N_wires = np.empty([coils])  # number of wires per layer for each coil
     M = np.empty([coils])  # number of wire layers for each coil
-    B=np.empty([num])
+    B=0
 
     for j in range(0, coils):  # calculate z0(center of coils) for all Zeeman coils
         if j == 0:
@@ -50,13 +58,13 @@ def B_coil(pos,N_coil): # magnetic field of a single coil
         M[p] = np.abs(round(N_coil[p] / N_wires[p], 0))  # number of layers
     M = M.astype(int)
 
-    for z in range(num):
-        for j in range(0, coils):  # loop over Zeeman coils
-            for mi in range(1, M[j] + 1):  # loop over all layers of each coil
-                R_coil=R + mi * d_wire
-                B[z] += mu_0*N_wires[p]*I_coil/(2*L)*((pos[z]-z0[j]+L/2)/np.sqrt(R_coil**2+(pos[z]-z0[j]+L/2)**2) - (pos[z]-z0[j]-L/2)/np.sqrt(R_coil**2+(pos[z]-z0[j]-L/2)**2))
+    for j in range(0, coils):  # loop over Zeeman coils
+        #for mi in range(1, M[j] + 1):  # loop over all layers of each coil
+        R_coil=R #+ mi * d_wire
+        N_wires[j]=N_coil[j]
+        B += mu_0*N_wires[j]*I_coil/(2*L) *((z-z0[j]+L/2)/np.sqrt(R_coil**2+(z-z0[j]+L/2)**2) - (z-z0[j]-L/2)/np.sqrt(R_coil**2+(z-z0[j]-L/2)**2))
 
-    return B
+    return 1e4*B
 
 fig, ax = plt.subplots()
 print("plotting")
@@ -68,18 +76,25 @@ with open("magnetic_field_real.txt", 'r') as f:
     #ax.plot(x,y,label="Spin-flip field")
     #ax.plot(x+0.5,y,".",label="Real slower field")
 
+#with open("sim_setup/real_magn_field_0_5m.txt", "r") as g:  # plot measured magnetic field
 with open("B(z)_0_5m.txt", "r") as g:  # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
     ax.plot(xnew+0.5, ynew, label="Ideal slower field of length 0.5m")
 
-N=[1100,900,800,700,600,500,300,100]
+N=np.array([1100,900,800,700,600,500,300,100])
 L_slower = 0.51  ##??
 pos=np.linspace(0,L_slower,num=num)
-#plt.plot(pos,1e4*B_coil(pos,N),".")
-popt, pcov = curve_fit(B_coil, xnew, ynew,p0=N)
-#plt.plot(xdata, func(xdata, *popt), 'r-', label='fit: a=%5.3f, b=%5.3f, c=%5.3f' % tuple(popt))
+plt.plot(pos,B_coil(pos,1100,900,800,700,600,500,300,100),".",label="old real field")
+popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,bounds=(0,650),p0=(650,600,600,550,500,400,300,100))
+#popt, pcov = curve_fit(B_coil, xnew, ynew)
+print(pcov)
+print(popt)
+plt.plot(pos,B_coil(pos,*popt),label="fit")
+
+#for i in pos:
+#    print(i,B_coil(i,1100,900,800,700,600,500,300,100),B_coil(i,*popt))
 
 plt.xlabel("Position in m", fontsize=22)
 plt.ylabel("Magnetic field in Gauss", fontsize=22)
