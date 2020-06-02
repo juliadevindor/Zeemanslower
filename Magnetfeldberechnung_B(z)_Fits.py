@@ -31,14 +31,7 @@ def B_coil(z, N1,N2,N3,N4,N5,N6,N7,N8): # magnetic field of a single coil
     coils = 8
     I_coil = 4.8
     L = 0.05
-    #N1=int(N1)
-    #N2=int(N2)
-    #N3=int(N3)
-    #N4=int(N4)
-    #N5=int(N5)
-    #N6=int(N6)
-    #N7=int(N7)
-    #N8=int(N8)
+
     N_coil=np.array([N1,N2,N3,N4,N5,N6,N7,N8])
 
     z0 = np.empty([coils])  # center of the coils
@@ -69,29 +62,48 @@ def B_coil(z, N1,N2,N3,N4,N5,N6,N7,N8): # magnetic field of a single coil
 fig, ax = plt.subplots()
 print("plotting")
 
-with open("magnetic_field_real.txt", 'r') as f:
-    lines = f.readlines()
-    x = np.asarray([float(line.split(";")[0]) for line in lines])
-    y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x,y,label="Spin-flip field")
-    #ax.plot(x+0.5,y,".",label="Real slower field")
-
 #with open("sim_setup/real_magn_field_0_5m.txt", "r") as g:  # plot measured magnetic field
 with open("B(z)_0_5m.txt", "r") as g:  # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(xnew+0.5, ynew, label="Ideal slower field of length 0.5m")
+    ax.plot(xnew+0.65, ynew, label="Ideal slower field of length 0.5m")
+
+i=len(xnew)-1
+
+xnewapp=[-0.0003]
+ynewapp=[0.0]
+ran=int(0.153/0.0001)
+for i in range(0,ran):
+    xnewapp.append(xnewapp[i]+0.0001)
+    ynewapp.append(0.0)
+
+xnewapp=np.asarray(xnewapp)
+ynewapp=np.asarray(ynewapp)
+xnew=np.concatenate((xnew,xnewapp),axis=0)
+ynew=np.concatenate((ynew,ynewapp),axis=0)
 
 N=np.array([1100,900,800,700,600,500,300,100])
-L_slower = 0.51  ##??
+L_slower = xnew[-1]+0.65  ##??
 pos=np.linspace(0,L_slower,num=num)
-plt.plot(pos,B_coil(pos,1100,900,800,700,600,500,300,100),".",label="old real field")
-popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,bounds=(0,650),p0=(650,600,600,550,500,400,300,100))
+#plt.plot(pos,B_coil(pos,1100,900,800,700,600,500,300,100),".",label="old real field")
+popt, pcov = curve_fit(B_coil, xnew+0.65, ynew,method="trf",bounds=(0,800))
 #popt, pcov = curve_fit(B_coil, xnew, ynew)
-print(pcov)
+#print(pcov)
 print(popt)
 plt.plot(pos,B_coil(pos,*popt),label="fit")
+
+ss_res=0
+ss_tot=0
+for i in range(len(ynew)):
+    # residual sum of squares
+    ss_res += np.sum((ynew[i] - B_coil(xnew[i],*popt)) ** 2)
+    # total sum of squares
+    ss_tot += np.sum((ynew[i] - np.mean(ynew)) ** 2)
+
+# r-squared
+r2 = 1 - (ss_res / ss_tot)
+print("goodness of fit", r2)
 
 #for i in pos:
 #    print(i,B_coil(i,1100,900,800,700,600,500,300,100),B_coil(i,*popt))
