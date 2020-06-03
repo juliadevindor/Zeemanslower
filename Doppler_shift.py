@@ -9,7 +9,7 @@ vel_light=scc.c
 def Dopplershift_simple(nu, alpha, vx, vy, vz) :
     lambda1=scc.c/nu
     scalarproduct=math.cos(alpha)*vx + 0*vy - math.sin(alpha)*vz
-    return nu-scalarproduct*2*math.pi/lambda1
+    return nu-scalarproduct*1/lambda1
 
 def Dopplershift(nu , alpha , vx , vy , vz ) :
    vel=math.sqrt(vx**2+vy**2+vz**2)
@@ -53,45 +53,31 @@ laser_sat_intensity=sat
 init_freq= np.array([446799978232118.25 , 446799978232118.25-228e6])#excitation_frequency -freq_shift_splitting[current_groundstate]-->0 oder -228E6
 nu0 = 446799978232118.25 #2*math.pi*446799900000000 #in Hz
 Gamma = natural_line_width #in Hz
-nu = np.linspace(nu0 - 350*Gamma , nu0 + 50*Gamma , 50000)
+nu = np.linspace(nu0 - 70*Gamma , nu0 + 30*Gamma , 50000)
 spectrum = np.zeros(nu.size)
-spectrum_simple_0 = np.zeros(nu.size)
-spectrum_simple_0s = np.zeros(nu.size)
-spectrum_simple_1 = np.zeros(nu.size)
-spectrum_simple_2 = np.zeros(nu.size)
-spectrum_simple_4 = np.zeros(nu.size)
 
-alpha_0=0*math.pi/180 #degree to rad
-alpha_1=1*math.pi/180 #degree to rad
-alpha_2=3*math.pi/180 #degree to rad
-alpha_4=4*math.pi/180 #degree to rad
-
-for i in range(len(vx)):
-    nu_shifted_simple_0=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i])
-    prob_simple_0 = Probability(nu_shifted_simple_0, init_freq[gs[i]], Gamma, sat, sat)
-    spectrum_simple_0 += prob_simple_0
-    nu_shifted_simple_0s = Dopplershift_simple(nu, alpha_0, vx2[i], vy2[i], vz2[i])
-    prob_simple_0s = Probability(nu_shifted_simple_0s, init_freq[gs2[i]], Gamma, sat, sat)
-    spectrum_simple_0s += prob_simple_0s
-
-    nu_shifted_simple_1=Dopplershift_simple(nu,alpha_1,vx[i],vy[i],vz[i])
-    prob_simple_1 = Probability(nu_shifted_simple_1, init_freq[gs[i]], Gamma , sat, sat)
-    spectrum_simple_1 += prob_simple_1
-    nu_shifted_simple_2=Dopplershift_simple(nu,alpha_2,vx[i],vy[i],vz[i])
-    prob_simple_2 = Probability(nu_shifted_simple_2, init_freq[gs[i]], Gamma , sat, sat)
-    spectrum_simple_2 += prob_simple_2
-    nu_shifted_simple_4=Dopplershift_simple(nu,alpha_4,vx[i],vy[i],vz[i])
-    prob_simple_4 = Probability(nu_shifted_simple_4, init_freq[gs[i]], Gamma , sat, sat)
-    spectrum_simple_4 += prob_simple_4
-#print(np.sum(spectrum_simple))
 fig=plt.figure()
 ax = fig.add_subplot(111)
-#ax.plot(nu*1e-12,spectrum,".")
-ax.plot(nu*1e-12,spectrum_simple_0,label="alpha=0 start")
-ax.plot(nu*1e-12,spectrum_simple_0s,label="alpha=0 slowed")
-#x.plot(nu*1e-12,spectrum_simple_1,label="alpha=1")
-#ax.plot(nu*1e-12,spectrum_simple_2,label="alpha=2")
-#ax.plot(nu*1e-12,spectrum_simple_4,label="alpha=4")
+
+for j in range(1):
+    spectrum_simple = np.zeros(nu.size)
+    spectrum_simple_s = np.zeros(nu.size)
+
+    alpha_0=j*math.pi/180 #degree to rad
+
+    for i in range(len(vx)):
+        nu_shifted_simple=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i])
+        prob_simple = Probability(nu_shifted_simple, init_freq[gs[i]], Gamma, sat, sat)
+        spectrum_simple += prob_simple
+        nu_shifted_simple_s = Dopplershift_simple(nu, alpha_0, vx2[i], vy2[i], vz2[i])
+        prob_simple_s = Probability(nu_shifted_simple_s, init_freq[gs2[i]], Gamma, sat, sat)
+        spectrum_simple_s += prob_simple_s
+
+    ax.plot(nu*1e-12,spectrum_simple,label="unslowed beam for alpha={}°".format(j))
+    ax.plot(nu*1e-12,spectrum_simple_s,label="slowed beam for alpha={}°".format(j))
+
+
+
 plt.xlabel("Laser Frequency in THz", fontsize=22)
 plt.ylabel("Sum of Lorentzian Probabilities", fontsize=22)
 plt.grid()

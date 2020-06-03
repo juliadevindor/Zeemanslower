@@ -27,12 +27,12 @@ dist_oven_slower = 0.08
 dist_coils_small = 0.002
 dist_coils_large = 0.004
 
-def B_coil(z, N1,N2,N3,N4,N5,N6,N7,N8): # magnetic field of a single coil
+def B_coil(z, I1,I2,I3,I4,I5,I6,I7,I8): # magnetic field of a single coil
     coils = 8
-    I_coil = 4.8
     L = 0.05
 
-    N_coil=np.array([N1,N2,N3,N4,N5,N6,N7,N8])
+    N_coil=np.array([500,500,500,500,500,500,500,500])
+    N_coil=np.array([I1,I2,I3,I4,I5,I6,I7,I8])
 
     z0 = np.empty([coils])  # center of the coils
     N_wires = np.empty([coils])  # number of wires per layer for each coil

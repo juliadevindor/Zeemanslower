@@ -459,7 +459,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 10000 #sim_param_data['particle_number']
+    n = 100 #sim_param_data['particle_number']
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
     # maximal considered velocity
@@ -609,7 +609,7 @@ if __name__ == '__main__':
     for pos in positions:
         #plt.figure()
         labels=["GS 0","GS 1","GS 2","GS 3","GS 4","GS 5"]
-        colors=["red","cyan","darkred","blue","cornflowerblue","navy"]
+        colors=["red","cyan","orange","blue","green","purple"]
         plt.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=100, stacked=True,color=colors, label=labels)
         plt.legend(loc="upper right",fontsize=22)
         plt.ylim(0, 1000)
