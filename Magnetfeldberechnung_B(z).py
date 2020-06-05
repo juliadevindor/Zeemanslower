@@ -54,7 +54,7 @@ M_HH=4 # 4 layers of wire for each HH coil
 L_MOT=0.6 # relevant length of MOT field
 
 # distances
-dist_oven_slower=0.08
+dist_oven_slower=0#0.08
 dist_slower_MOT=0.1 # not approved
 dist_coils_small=0.002
 dist_coils_large=0.004

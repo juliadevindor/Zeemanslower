@@ -24,6 +24,7 @@ def line_plotting(x_values, y_values, x_label, y_label, x_lim_min, x_lim_max, y_
     be the excitation probability or the magnetic field strength. If several dependent variables should be plotted
     depending on the position on the z-axis the eval_plotting function should be used.
     '''
+    fig, ax = plt.subplots()
 
     x_values_dict = defaultdict(list)
     y_values_dict = defaultdict(list)
@@ -42,16 +43,21 @@ def line_plotting(x_values, y_values, x_label, y_label, x_lim_min, x_lim_max, y_
 
     for key in x_values_dict:
         if preserve_color_flag is True:
-            plt.plot(x_values_dict[key], y_values_dict[key], linewidth=3, color=color_dict[key])
+            ax.plot(x_values_dict[key], y_values_dict[key], linewidth=3, color=color_dict[key])
         else:
-            plt.plot(x_values_dict[key], y_values_dict[key], linewidth=3)
-    plt.xlabel(x_label + ' (m)', fontweight='bold', fontsize=16)
-    plt.ylabel(y_label + ' (m/s)', fontweight='bold', fontsize=16)
-    # plt.plot((0.5, 0.5), (0, y_lim_max), linestyle='-', color='grey', alpha=0.5)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
+            ax.plot(x_values_dict[key], y_values_dict[key], linewidth=3)
+    plt.xlabel(x_label + ' (m)', fontweight='bold', fontsize=22)
+    plt.ylabel(y_label + ' (m/s)', fontweight='bold', fontsize=22)
+    # plt.ax((0.5, 0.5), (0, y_lim_max), linestyle='-', color='grey', alpha=0.5)
+    plt.xticks(fontsize=22)
+    plt.yticks(fontsize=22)
+
     plt.xlim(x_lim_min, x_lim_max)
     plt.ylim(y_lim_min, y_lim_max)
+    ax.spines['left'].set_position('zero')
+    # set the y-spine
+    ax.spines['bottom'].set_position('zero')
+    ax.yaxis.get_major_ticks()[0].label1.set_visible(False)
     plt.tight_layout()
     plt.show()
     #plt.close()

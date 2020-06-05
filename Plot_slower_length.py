@@ -1,23 +1,30 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-normal_slower_length=np.array([0.5,0.6,0.7,1.0])
-SF_slower_length=np.array([0.5,0.6,0.6,0.7,0.7,1.0])
+normal_slower_length=np.array([0.5,0.6,0.7,0.8,0.9])
+SF_slower_length=np.array([0.5,0.6,0.7,0.8,0.9])
 
-gs5_dead_atom=np.array([876,1960,1729,2630])
-allgs_dead_atom=np.array([272,624,556,869])
-gs5_slowed_atom_1=np.array([1780,2600+260,3050,2250]) #0.05m before end of slower
-allgs_slowed_atom_1=np.array([560,820+100,930,720]) #0.05m before end of slower
-gs5_slowed_atom_2=np.array([1250,900+800,1800,430+720]) #0.005m before end of slower
-allgs_slowed_atom_2=np.array([400,250+250,550,140+210]) #0.005m before end of slower
+#gs5_dead_atom=np.array([876,1960,1729,2630])
+#allgs_dead_atom=np.array([272,624,556,869])
+#gs5_slowed_atom_1=np.array([1780,2600+260,3050,2250]) #0.05m before end of slower
+#allgs_slowed_atom_1=np.array([560,820+100,930,720]) #0.05m before end of slower
+#gs5_slowed_atom_2=np.array([1250,900+800,1800,430+720]) #0.005m before end of slower
+#allgs_slowed_atom_2=np.array([400,250+250,550,140+210]) #0.005m before end of slower
 
-SF_gs5_dead_atom=np.array([1399,2483,1169,1673,1984,1773])
-SF_allgs_dead_atom=np.array([403,767,319,498,601,585])
-SF_gs5_slowed_atom_1=np.array([1540,2600,1000,2000,1570,715]) #0.05m before end of slower
-SF_allgs_slowed_atom_1=np.array([430,820,250,600,500,220]) #0.05m before end of slower
-SF_gs5_slowed_atom_2=np.array([360,680,250,570+90,375,180+140]) #0.005m before end of slower
-SF_allgs_slowed_atom_2=np.array([100,210,50,180+40,100,35+70]) #0.005m before end of slower
+#SF_gs5_dead_atom=np.array([1399,2483,1169,1673,1984,1773])
+#SF_allgs_dead_atom=np.array([403,767,319,498,601,585])
+#SF_gs5_slowed_atom_1=np.array([1540,2600,1000,2000,1570,715]) #0.05m before end of slower
+#SF_allgs_slowed_atom_1=np.array([430,820,250,600,500,220]) #0.05m before end of slower
+#SF_gs5_slowed_atom_2=np.array([360,680,250,570+90,375,180+140]) #0.005m before end of slower
+#SF_allgs_slowed_atom_2=np.array([100,210,50,180+40,100,35+70]) #0.005m before end of slower
 
+allgs_dead_atom_ideal=np.array([98,38,87,150,146])
+allgs_dead_atom_real=np.array([19,44,97,133,250])
+
+allgs_slowed_atom_1_ideal=np.array([95,170,260,420,450])
+allgs_slowed_atom_2_ideal=np.array([91,130+20,220,330+10,360])
+allgs_slowed_atom_1_real=np.array([60,120,210,270,350])
+allgs_slowed_atom_2_real=np.array([45,30+70,145,170,230])
 
 fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 15})
@@ -28,10 +35,11 @@ xticks = ax.xaxis.get_major_ticks()
 xticks[1].set_visible(False)
 plt.xticks(fontsize=22)
 plt.yticks(fontsize=22)
-plt.ylim(0,32)
+plt.ylim(-3,6)
+plt.xlim(0.45,0.95)
 plt.grid()
-ax.errorbar(normal_slower_length,gs5_dead_atom/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="GS 5 only")
-ax.errorbar(normal_slower_length,allgs_dead_atom/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
+ax.errorbar(normal_slower_length,allgs_dead_atom_ideal/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="Dead atoms ideal slower")
+ax.errorbar(normal_slower_length,allgs_dead_atom_real/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="Dead atoms real slower")
 plt.legend()
 plt.show()
 
@@ -44,12 +52,13 @@ xticks = ax.xaxis.get_major_ticks()
 xticks[1].set_visible(False)
 plt.xticks(fontsize=22)
 plt.yticks(fontsize=22)
-plt.ylim(0,32)
+plt.ylim(-3,6)
+plt.xlim(0.45,0.95)
 plt.grid()
-ax.errorbar(SF_slower_length,SF_gs5_dead_atom/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="GS 5 only")
-ax.errorbar(SF_slower_length,SF_allgs_dead_atom/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
+#ax.errorbar(SF_slower_length,SF_allgs_dead_atom_ideal/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
+#ax.errorbar(SF_slower_length,SF_allgs_dead_atom_real/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="All GS")
 plt.legend()
-plt.show()
+#plt.show()
 
 
 fig, ax = plt.subplots()
@@ -61,10 +70,11 @@ xticks = ax.xaxis.get_major_ticks()
 xticks[1].set_visible(False)
 plt.xticks(fontsize=22)
 plt.yticks(fontsize=22)
-plt.ylim(0,32)
+plt.ylim(-3,6)
+plt.xlim(0.45,0.95)
 plt.grid()
-ax.errorbar(normal_slower_length,gs5_slowed_atom_1/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="GS 5 only")
-ax.errorbar(normal_slower_length,allgs_slowed_atom_1/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
+ax.errorbar(normal_slower_length,allgs_slowed_atom_1_ideal/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="Slowed atoms ideal slower")
+ax.errorbar(normal_slower_length,allgs_slowed_atom_1_real/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="Slowed atoms real slower")
 plt.legend()
 plt.show()
 
@@ -77,10 +87,11 @@ xticks = ax.xaxis.get_major_ticks()
 xticks[1].set_visible(False)
 plt.xticks(fontsize=22)
 plt.yticks(fontsize=22)
-plt.ylim(0,32)
+plt.ylim(-3,6)
+plt.xlim(0.45,0.95)
 plt.grid()
-ax.errorbar(normal_slower_length,gs5_slowed_atom_2/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="GS 5 only")
-ax.errorbar(normal_slower_length,allgs_slowed_atom_2/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
+ax.errorbar(normal_slower_length,allgs_slowed_atom_2_ideal/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="Slowed atoms ideal slower")
+ax.errorbar(normal_slower_length,allgs_slowed_atom_2_real/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="Slowed atoms real slower")
 plt.legend()
 plt.show()
 
@@ -93,10 +104,11 @@ xticks = ax.xaxis.get_major_ticks()
 xticks[1].set_visible(False)
 plt.xticks(fontsize=22)
 plt.yticks(fontsize=22)
-plt.ylim(0,32)
+plt.ylim(-3,6)
+plt.xlim(0.45,0.95)
 plt.grid()
-ax.errorbar(normal_slower_length,(gs5_slowed_atom_1-gs5_slowed_atom_2)/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="GS 5 only")
-ax.errorbar(normal_slower_length,(allgs_slowed_atom_1-allgs_slowed_atom_2)/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
+ax.errorbar(normal_slower_length,(allgs_slowed_atom_1_ideal-allgs_slowed_atom_2_ideal)/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="Delta slowed atoms ideal slower")
+ax.errorbar(normal_slower_length,(allgs_slowed_atom_1_real-allgs_slowed_atom_2_real)/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="Delta slowed atoms real slower")
 plt.legend()
 plt.show()
 
@@ -110,12 +122,11 @@ xticks = ax.xaxis.get_major_ticks()
 xticks[1].set_visible(False)
 plt.xticks(fontsize=22)
 plt.yticks(fontsize=22)
-plt.ylim(0,32)
+#plt.ylim(0,32)
 plt.grid()
-ax.errorbar(SF_slower_length,SF_gs5_slowed_atom_1/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="GS 5 only")
-ax.errorbar(SF_slower_length,SF_allgs_slowed_atom_1/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
+#ax.errorbar(SF_slower_length,SF_allgs_slowed_atom_1/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
 plt.legend()
-plt.show()
+#plt.show()
 
 fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 15})
@@ -126,12 +137,11 @@ xticks = ax.xaxis.get_major_ticks()
 xticks[1].set_visible(False)
 plt.xticks(fontsize=22)
 plt.yticks(fontsize=22)
-plt.ylim(0,32)
+#plt.ylim(0,32)
 plt.grid()
-ax.errorbar(SF_slower_length,SF_gs5_slowed_atom_2/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="GS 5 only")
-ax.errorbar(SF_slower_length,SF_allgs_slowed_atom_2/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
+#ax.errorbar(SF_slower_length,SF_allgs_slowed_atom_2/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
 plt.legend()
-plt.show()
+#plt.show()
 
 fig, ax = plt.subplots()
 plt.rcParams.update({'font.size': 15})
@@ -142,9 +152,8 @@ xticks = ax.xaxis.get_major_ticks()
 xticks[1].set_visible(False)
 plt.xticks(fontsize=22)
 plt.yticks(fontsize=22)
-plt.ylim(0,32)
+#plt.ylim(0,32)
 plt.grid()
-ax.errorbar(SF_slower_length,(SF_gs5_slowed_atom_1-SF_gs5_slowed_atom_2)/100,yerr=1,fmt="o",elinewidth=2.0,capsize=2,label="GS 5 only")
-ax.errorbar(SF_slower_length,(SF_allgs_slowed_atom_1-SF_allgs_slowed_atom_2)/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
+#ax.errorbar(SF_slower_length,(SF_allgs_slowed_atom_1-SF_allgs_slowed_atom_2)/100,yerr=1,fmt="x",elinewidth=2.0,capsize=2,label="All GS")
 plt.legend()
-plt.show()
+#plt.show()

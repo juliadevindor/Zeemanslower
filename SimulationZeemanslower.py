@@ -168,7 +168,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
 
 
         else:
-            z_velocity=1450-i*14.5
+            z_velocity=2000-i*20
 
         start_x_velocity = x_velocity
         start_y_velocity = y_velocity
@@ -206,9 +206,9 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
             initial_state = 1
             GS_quantum_number = 5
 
-        #initial_state=1
-        #current_groundstate=1
-        #GS_quantum_number=5
+        initial_state=1
+        current_groundstate=1
+        GS_quantum_number=5
         groundstate_upper_lower_start.append(current_groundstate)
 
         if i == 3:
@@ -241,7 +241,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                 dead_atoms_vy.append(y_velocity)
                 dead_atoms_vz.append(z_velocity)
                 #print("atom dead: z_pos=", z_pos," x_vel=", x_velocity," y_vel=", y_velocity," z_vel=", z_velocity)
-                #print("here",x_y_pos_component_squared > light_beam_radius_squared, z_pos > target_center_z+0.12, z_pos < 0.0, z_velocity < 0.0)
+                print("here",x_y_pos_component_squared > light_beam_radius_squared, z_pos > target_center_z+0.12, z_pos < 0.0, z_velocity < 0.0)
                 # set the index to 0 (=dead)
                 atom_dead = 0
                 counter_dead+=1
@@ -459,7 +459,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 100 #sim_param_data['particle_number']
+    n = 10000 #sim_param_data['particle_number']
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
     # maximal considered velocity
@@ -480,7 +480,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.5 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 1.0 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -488,7 +488,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -250e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -290e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -505,9 +505,10 @@ if __name__ == '__main__':
     for i in range(0,19):
         slicing_positions.append(slicing_positions[i]+0.05)
 
-    slicing_positions[15]=0.72
-    slicing_positions[16]=0.73
-    #slicing_positions[17]=0.995
+    slicing_positions[16]=0.95
+    slicing_positions[17]=0.99
+    slicing_positions[18]=0.995
+    slicing_positions[19]=0.999
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']
@@ -545,9 +546,11 @@ if __name__ == '__main__':
                                     capture_vel, ground_state_quantum_numbers, exc_state_quantum_numbers)
 
     #plot dead atoms
-    plt.hist(dead_pos, bins=100)
+    fig, ax = plt.subplots()
+    ax.hist(dead_pos, bins=100)
     print("number of dead atoms", len(dead_pos))
     plt.ylim(0, 1000)
+    plt.xlim(target_center_z-0.1,target_center_z+0.001)
     plt.xlabel("Position in m", fontsize=22)
     plt.ylabel("Number of dead atoms", fontsize=22)
     plt.title("Total number of dead atoms: {} of {}".format(len(dead_pos),n),fontsize=22)
@@ -555,15 +558,21 @@ if __name__ == '__main__':
     plt.xticks(fontsize=22)
     plt.yticks(fontsize=22)
     plt.show()
+
+    fig, ax = plt.subplots()
     labels = ["v_x", "v_y", "v_z"]
-    plt.hist([dead_vx,dead_vy,dead_vz], bins=100, stacked=True, label=labels)
-    plt.ylim(0, 1000)
+    ax.hist([dead_vx,dead_vy,dead_vz], bins=100, stacked=True, label=labels)
+    plt.ylim(0, 500)
+    plt.xlim(0,100)
     plt.legend(loc="upper right", fontsize=22)
     plt.xlabel("Velocity in m/s", fontsize=22)
     plt.ylabel("Number of dead atoms", fontsize=22)
     plt.rcParams.update({'font.size': 22})
     plt.xticks(fontsize=22)
     plt.yticks(fontsize=22)
+    ax.spines['left'].set_position('zero')
+    ax.spines['bottom'].set_position('zero')
+    ax.yaxis.get_major_ticks()[0].label1.set_visible(False)
     plt.show()
 
     file = open("velocity_atom_start.txt", "w+")  # open file
@@ -608,22 +617,28 @@ if __name__ == '__main__':
     pos_i=0
     for pos in positions:
         #plt.figure()
+        fig, ax = plt.subplots()
         labels=["GS 0","GS 1","GS 2","GS 3","GS 4","GS 5"]
         colors=["red","cyan","orange","blue","green","purple"]
-        plt.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=100, stacked=True,color=colors, label=labels)
+        ax.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=100, stacked=True,color=colors, label=labels)
         plt.legend(loc="upper right",fontsize=22)
-        plt.ylim(0, 1000)
+        plt.ylim(0, 600)
+        #plt.xlim(0,)
         plt.xlabel("v_z in m/s", fontsize=22)
         plt.ylabel("Atoms in GS", fontsize=22)
-        plt.title("Atoms at z={}m".format(pos),fontsize=22)
+        plt.title("Atoms at z={}m".format(round(pos,3)),fontsize=22)
         plt.rcParams.update({'font.size': 22})
         plt.xticks(fontsize=22)
         plt.yticks(fontsize=22)
+        ax.spines['left'].set_position('zero')
+        ax.spines['bottom'].set_position('zero')
+        ax.yaxis.get_major_ticks()[0].label1.set_visible(False)
         figure = plt.gcf()  # get current figure
-        figure.set_size_inches(12, 10)
+        ##print(plt.rcParams.get('figure.figsize'))
+        figure.set_size_inches(13.66, 6.71)
         #plt.show()
         print(pos)
-        plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(pos).replace('.', '_') + "_allGS" + ".png")
+        plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,3)).replace('.', '_') + "_allGS" + ".png")
         plt.close()
         pos_i+=1
 
@@ -688,11 +703,11 @@ if __name__ == '__main__':
     print("target center", target_center_z)
     #if n<=100:
     line_plotting(observing_z_position, observing_z_velocity, 'z position', 'z velocity', 0.0,
-            target_center_z+0.05,0.0, 1450.0, startTime, False)
+            target_center_z+0.005,0.0, 2000.0, startTime, False)
 
     #elif n>100:
-    slice_plotting(slicing_positions, vel_z_plane_slices_upper_gs, vel_z_plane_slices_lower_gs, v_min, v_max,
-                n, bin_count, startTime)
+    #slice_plotting(slicing_positions, vel_z_plane_slices_upper_gs, vel_z_plane_slices_lower_gs, v_min, v_max,
+    #            n, bin_count, startTime)
 
 
     #hist_plotting('Upper groundstate vs lower groundstate', 'velocity', 'count', 0, 8000, 0, 0.1 * n, bin_count,

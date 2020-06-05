@@ -63,7 +63,7 @@ for j in range(1):
     spectrum_simple = np.zeros(nu.size)
     spectrum_simple_s = np.zeros(nu.size)
 
-    alpha_0=j*math.pi/180 #degree to rad
+    alpha_0=-j*math.pi/180 #degree to rad
 
     for i in range(len(vx)):
         nu_shifted_simple=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i])

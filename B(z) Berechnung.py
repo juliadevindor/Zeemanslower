@@ -13,7 +13,7 @@ def slower_field(pos, L0,v0,wavelength,omega, omega0):
   # length of slower L0 in m
     B0 = hPlanck*v0/(wavelength*muB) #0.08 #0.19185 # y-Achsenabschnitt
     #print(B0)
-    Bbias = -3e-2 #0#(hPlanck/(2*np.pi))*(omega-omega0)/(muB)#-1.478*1e-9  # shiftet nur den Plot nach oben/ unten
+    Bbias = 0#-3e-2 #0#(hPlanck/(2*np.pi))*(omega-omega0)/(muB)#-1.478*1e-9  # shiftet nur den Plot nach oben/ unten
     B = np.empty(len(pos))
 
     for i in range(0,len(pos)):
@@ -28,7 +28,7 @@ def slower_field(pos, L0,v0,wavelength,omega, omega0):
             B[i] = B0 * np.sqrt(1-pos[i]/L0) + Bbias
     return B
 
-L0=0.7#m
+L0=1.0#m
 v0_0=1200 #m/s
 v0_1=800 #m/s
 v0_2=500 #m/s
@@ -38,7 +38,7 @@ omega0=446.7896e12 #Hz (Gehm)
 
 pos=np.linspace(-0.0,L0+0.2,num=1000)
 B = np.empty(len(pos))
-B=slower_field(pos,L0,1050,wavelength,omega,omega0)
+B=slower_field(pos,L0,1850,wavelength,omega,omega0)
 file=open("B(z).txt","w+")
 
 for i in range(len(pos)):
@@ -48,42 +48,48 @@ file.close()
 
 fig, ax = plt.subplots()
 
-with open("B(z)_0_5m_SF.txt","r") as g:
+with open("B(z)_0_5m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Real slower SF field of length 0.5m")
-with open("B(z)_0_6m_SF.txt","r") as g:
+    ax.plot(x+0.5,y,label="Decreasing field slower of length 0.5m")
+with open("B(z)_0_6m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Real slower SF field of length 0.6m")
-with open("B(z)_0_7m_SF.txt","r") as g:
+    ax.plot(x+0.5,y,label="Decreasing field slower of length 0.6m")
+with open("B(z)_0_7m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Real slower SF field of length 0.7m")
+    ax.plot(x+0.5,y,label="Decreasing field slower of length 0.7m")
 with open("B(z)_0_6m_SF_2.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Alternativ real slower SF field of length 0.6m")
+   # ax.plot(x+0.5,y,label="Alternativ real slower SF field of length 0.6m")
 with open("B(z)_0_7m_SF_2.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Alternative real slower SF field of length 0.7m")
-with open("B(z)_1_0m_SF.txt","r") as g:
+   # ax.plot(x+0.5,y,label="Alternative real slower SF field of length 0.7m")
+with open("B(z)_0_8m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Real slower SF field of length 1.0m")
+    ax.plot(x+0.5,y,label="Decreasing field slower of length 0.8m")
+
+with open("B(z)_0_9m.txt","r") as g:
+    lines = g.readlines()
+    x = np.asarray([float(line.split(";")[0]) for line in lines])
+    y = np.asarray([float(line.split(";")[1]) for line in lines])
+    ax.plot(x+0.5,y,label="Decreasing field slower of length 0.9m")
 
 with open("B(z).txt","r") as f: # plot measured magnetic field
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x+0.5,y, label="Decreasing-field slower", color="black")
+    ax.plot(x+0.5,y, label="Decreasing-field slower of length 1m", color="black")
 #ax.plot(pos+0.1,B*1e4,label="v0=1000m/s")
 plt.annotate("z in m", xy=(1.01, 0), ha='left', va='top', xycoords='axes fraction', fontsize=22)
 plt.annotate("B in Gauss", xy=(-0.05, 1.05), ha='left', va='top', xycoords='axes fraction', fontsize=22)
