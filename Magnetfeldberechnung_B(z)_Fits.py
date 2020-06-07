@@ -21,7 +21,7 @@ Gamma=2*np.pi*5.87*1e6 #Hz
 m_Li=6.015*1.66*1e-27 #kg
 mu_0=4*np.pi*1e-7 # magnetic field constant
 R= 0.043 # inner radius of Zeeman-coils in m (not approved)
-d_wire=0.001# length of the wire in m
+d_wire=0.005# length of the wire in m
 b_wire=0.001# thickness of the wire in m
 # distances
 dist_coils_small = 0.002
@@ -44,7 +44,7 @@ def B_coil_single(z,I,coil):
             z0[j] = z0[j - 1] + L / 2 + L / 2 + dist_coils_small  # z0 for all the other Zeeman coils
     for p in range(0, coils):  # loop over all Zeeman slower coils to obtain the length of all coils
         N_wires[p] = L / d_wire  # number of wires in each layer
-        M[p] = np.abs(round(N_coil / N_wires[p], 0))  # number of layers
+        M[p] = np.abs(round(N_coil[p] / N_wires[p], 0))  # number of layers
     M = M.astype(int)
 
     for j in range(0, coils):  # loop over Zeeman coils
@@ -58,9 +58,9 @@ def B_coil_single(z,I,coil):
     return 1e4 * B_0tot
 
 
-def B_coil(z, I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11):#,I12,I13,I14,I15,I16,I17): # magnetic field of a single coil
+def B_coil(z, I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17): # magnetic field of a single coil
 
-    I_coil=np.array([I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11])#,I12,I13,I14,I15,I16,I17])
+    I_coil=np.array([I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17])
 
     z0 = np.empty([coils])  # center of the coils
     N_wires = np.empty([coils])  # number of wires per layer for each coil
@@ -78,13 +78,14 @@ def B_coil(z, I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11):#,I12,I13,I14,I15,I16,I17): # 
 
     for p in range(0, coils):  # loop over all Zeeman slower coils to obtain the length of all coils
         N_wires[p] = L/ d_wire  # number of wires in each layer
-        M[p] = np.abs(round(N_coil / N_wires[p], 0))  # number of layers
+        M[p] = np.abs(round(N_coil[p] / N_wires[p], 0))  # number of layers
     M = M.astype(int)
 
     for j in range(0, coils):  # loop over Zeeman coils
         for mi in range(1, M[j] + 1):  # loop over all layers of each coil
-            R_coil=R + mi * d_wire
-            B += mu_0*N_wires[j]*I_coil[j]/(2*L) *((z-z0[j]+L/2)/np.sqrt(R_coil**2+(z-z0[j]+L/2)**2) - (z-z0[j]-L/2)/np.sqrt(R_coil**2+(z-z0[j]-L/2)**2))
+            R_coil=R + mi * b_wire
+            B += mu_0*N_wires[j]*I_coil[j]/(2*L) \
+                 *((z-z0[j]+L/2)/np.sqrt(R_coil**2+(z-z0[j]+L/2)**2) - (z-z0[j]-L/2)/np.sqrt(R_coil**2+(z-z0[j]-L/2)**2))
 
     return 1e4*B
 
@@ -92,12 +93,12 @@ fig, ax = plt.subplots()
 print("plotting")
 
 #I=np.array([5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0])
-coils = 11
+coils = 17
 L = 0.05
-N_coil=50
-L_field=0.6
+N_coil=np.array([320,300,300,260,250,250,250,200,200,170,170,170,160,140,130,130,100])
+L_field=0.9
 #with open("sim_setup/real_magn_field_0_5m.txt", "r") as g:  # plot measured magnetic field
-with open("B(z)_0_6m.txt", "r") as g:  # plot measured magnetic field
+with open("B(z)_0_9m.txt", "r") as g:  # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
@@ -105,10 +106,12 @@ with open("B(z)_0_6m.txt", "r") as g:  # plot measured magnetic field
 L_slower = xnew[-1]+L_field  ##??
 pos=np.linspace(0,L_field,num=num)
 #plt.plot(pos,B_coil(pos,1100,900,800,700,600,500,300,100),".",label="old real field")
-popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,method="trf",bounds=(0,100))
+popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,method="trf",bounds=(0,27))
 #popt, pcov = curve_fit(B_coil, xnew, ynew)
 #print(pcov)
-print(popt)
+for i in range(coils):
+    print(round(popt[i],3),end=",")
+print(" ")
 plt.plot(pos,B_coil(pos,*popt),label="Fit: real field of length {}m".format(L_field))
 
 for i in range(coils):

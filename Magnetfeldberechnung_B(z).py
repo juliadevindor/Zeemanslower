@@ -36,11 +36,11 @@ Gamma=2*np.pi*5.87*1e6 #Hz
 m_Li=6.015*1.66*1e-27 #kg
 mu_0=4*np.pi*1e-7 # magnetic field constant
 
-num=10
+num=1000
 sample_count=0
 R= 0.043 # inner radius of Zeeman-coils in m (not approved)
 d_wire=0.001# thickness of the wire in m
-#b_wire=0.005
+b_wire=0.005
 s0 = 5  # saturation parameter
 
 # HH coils
@@ -59,7 +59,7 @@ dist_slower_MOT=0.1 # not approved
 dist_coils_small=0.002
 dist_coils_large=0.004
 
-coils = 18# #randrange(8, 13)  # random number of coils
+coils = 17# #randrange(8, 13)  # random number of coils
 print("Number of coils:", coils)
 
 # initialize arrays
@@ -87,9 +87,14 @@ array_coils = np.array([coils])  # write coil number to array for file name
 
 L_slower = (coils-2) * dist_coils_small + 2 * dist_coils_large + dist_oven_slower#+dist_slower_MOT#  total length
 print("L_slower w/o L_coils",L_slower)
-N = np.array([1100,1000,900,800,700,600,500,400,300,200,100,50,20, 50,100,200,300,400]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
-I = np.array([4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,-4.8,-4.8,-4.8,-4.8,-4.8]) # field like the one that has been measured
-L = np.array([0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05,0.05,0.05,0.05, 0.05, 0.05, 0.05, 0.05,0.05,0.05,0.05,0.05])  # real length values for Zeeman coils
+#N = np.array([320,320,270,270,250,220,200,170,160]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
+#I = np.array([15.625,11.9,11.668,11.541,10.997,11.352,10.995,10.396,10.122]) # field like the one that has been measured
+#N = np.array([50,50,50,50,50,50,50,50,50]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
+#I = np.array([100.0,76.16286526,63.00735423,62.31878558,54.98645356,49.94757199,43.9799914,35.34623289,32.3912794]) # field like the one that has been measured
+N = np.array([320,320,300,300,280,280,260,260,240,240,200,200,180,180,160,160,140]) #np.array([800,700,650,600,550,450,350,300,250,200, 50,100,650]) # field like the one that has been measured
+I = np.array([25.0,25.0,22.567,22.013,22.554,21.628,22.247,21.185,21.738,20.478,22.937,21.253,21.413,19.358,18.239,16.134,11.441])
+# field like the one that has been measured
+L = np.array([0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05,0.05,0.05,0.05, 0.05, 0.05, 0.05, 0.05,0.05,0.05,0.05])  # real length values for Zeeman coils
 
 for p in range(0, coils): # loop over all Zeeman slower coils to obtain the length of all coils
     N_wires[p] = L[p]/d_wire # number of wires in each layer
@@ -112,7 +117,7 @@ for j in range(0, coils):  # calculate z0(center of coils) for all Zeeman coils
         z0[j] = z0[j-1] + L[j]/2 + L[j-1]/2 + dist_coils_large # z0 for second and last Zeeman coil
     if j!=0 and j!=1 and j!=coils-1:
         z0[j] = z0[j-1] + L[j]/2 + L[j-1]/2 + dist_coils_small # z0 for all the other Zeeman coils
-
+    print(z0[j])
 file = open("magnetic_field_real.txt","w+")  # open file
 
 for o in range(0, num):  # loop over z (along the beam axis)
@@ -196,16 +201,13 @@ with open("magnetic_field_real.txt", 'r') as f:
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
     #ax.plot(x,y,label="Spin-flip field")
-    #ax.plot(x+0.5,y,".",label="Real slower field")
+    ax.plot(x+0.5,y,".",label="Real slower field")
 
-with open("B(z)_0_5m.txt","r") as g: # plot measured magnetic field
+with open("B(z)_0_9m.txt","r") as g: # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
     ax.plot(xnew+0.5, ynew, label="Ideal slower field of length 0.5m")
-
-popt, pcov = curve_fit(func, xdata, ydata)
-#plt.plot(xdata, func(xdata, *popt), 'r-', label='fit: a=%5.3f, b=%5.3f, c=%5.3f' % tuple(popt))
 
 plt.xlabel("Position in m", fontsize=22)
 plt.ylabel("Magnetic field in Gauss", fontsize=22)

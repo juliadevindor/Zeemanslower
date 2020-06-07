@@ -54,10 +54,10 @@ def line_plotting(x_values, y_values, x_label, y_label, x_lim_min, x_lim_max, y_
 
     plt.xlim(x_lim_min, x_lim_max)
     plt.ylim(y_lim_min, y_lim_max)
-    ax.spines['left'].set_position('zero')
+    #ax.spines['left'].set_position('zero')
     # set the y-spine
-    ax.spines['bottom'].set_position('zero')
-    ax.yaxis.get_major_ticks()[0].label1.set_visible(False)
+    #ax.spines['bottom'].set_position('zero')
+    #ax.yaxis.get_major_ticks()[0].label1.set_visible(False)
     plt.tight_layout()
     plt.show()
     #plt.close()

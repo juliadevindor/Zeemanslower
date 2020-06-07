@@ -19,7 +19,7 @@ def Excitation(Debug_flag, current_groundstate,counter,mass_lithium_6,GS_quantum
     excitation_rate_sum = 0.0
     GS = GS_quantum_number  
     if Debug_flag==1: print("=====================================")
-    if Debug_flag==1: print("zpos:", z_pos, "GS:", GS)
+    if Debug_flag==1: print("zpos:", z_pos, "GS:", GS,"vz",vz)
 
     if z_pos > zeeman_distance:
         for a in range(0,12): #loop over all excited states

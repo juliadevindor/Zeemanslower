@@ -85,6 +85,12 @@ with open("B(z)_0_9m.txt","r") as g:
     y = np.asarray([float(line.split(";")[1]) for line in lines])
     ax.plot(x+0.5,y,label="Decreasing field slower of length 0.9m")
 
+with open("B(z)_1_0m.txt","r") as g:
+    lines = g.readlines()
+    x = np.asarray([float(line.split(";")[0]) for line in lines])
+    y = np.asarray([float(line.split(";")[1]) for line in lines])
+    ax.plot(x+0.5,y,label="Decreasing field slower of length 1.0m")
+
 with open("B(z).txt","r") as f: # plot measured magnetic field
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
