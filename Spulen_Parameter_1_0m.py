@@ -32,19 +32,18 @@ def U_reihe(U_coils,num):
     return U_tot
 
 
-L=0.9 #m
-coils=17
+L=1.0 #m
+coils=19
 N_fit=50
 L_coil=0.05
 R_coil=0.043
 d_wire=0.005
 b_wire=0.001
 N_layer=L_coil/d_wire #=10 windings per layer
-I_fit=np.array([25.0,25.0,25.0,25.0,25.0,24.677,23.133,23.258,22.778,24.74,25.0,25.0,24.157,24.794,21.987,20.582,14.915]) #A
+I_fit=np.array([26.0,26.0,26.0,24.477,25.777,26.0,25.48,24.518,23.901,24.845,26.0,26.0,26.0,26.0,26.0,24.988,21.596,20.816,14.52]) #A
 M_fit=N_fit/N_layer #=5 Layers
-Temp=100
 
-N_real=np.array([320,300,300,260,250,250,250,240,230,200,180,170,160,140,130,130,100]) #Vorschlag
+N_real=np.array([320,320,300,300,260,250,250,250,240,230,200,180,170,160,150,140,130,130,90]) #Vorschlag
 
 I_real=np.empty([coils]) #A
 M_real=np.empty([coils]) # number of layers
@@ -58,7 +57,7 @@ for i in range(coils):
     Resistance_real[i]=0
     for j in range(M_real[i]):
         Resistance_real[i]+=(0.017e-6*2*np.pi*N_layer*(R_coil+j*b_wire))/(d_wire*b_wire)
-    Resistance_real[i]=Resistance_real[i]*(1+4.3e-3*(Temp-20))
+    #Resistance_real=Resistance_real*1.344
 
     #X=0
     #z=z0[i] # pos in m
@@ -110,13 +109,13 @@ print(" ")
 
 #erste Spule einzeln
 print("first coil with individual power supply")
-print("I_tot/A", round(I_real[0],3), "R_tot/Ohm", round(Resistance_real[0],3),"U_tot/V",round(I_real[0]*Resistance_real[0] ,3),"P_tot/W", round(I_real[0]**2*Resistance_real[0],3))
+print("I_tot/A", round(I_real[0],3), "R_tot/Ohm", round(Resistance_real[0],3),"U_tot/V",round(I_real[0]*Resistance_real[0] ,3),"P_tot/W", round(Power_real[0],3))
 print(" ")
 
 #Rest des Schaltkreises gepaart parallel und dann in Reihe
 
 num_coils=2
-coils_use=np.array([[2,17],[3,16]])
+coils_use=np.array([[2,19],[3,18]])
 print("{} following coils in parallel in pairs of two on one power supply".format(num_coils*2))
 R=np.empty([num_coils])
 I=np.empty([num_coils])
@@ -131,7 +130,7 @@ print("R_ges/Ohm:",round(R_ges,3),"I_ges/A:",round(I_ges,3),"U_ges/V:",round(R_g
 print(" ")
 
 num_coils=2
-coils_use=np.array([[4,15],[5,14]])
+coils_use=np.array([[4,17],[5,16]])
 print("{} following coils in parallel in pairs of two on one power supply".format(num_coils*2))
 R=np.empty([num_coils])
 I=np.empty([num_coils])
@@ -146,7 +145,7 @@ print("R_ges/Ohm:",round(R_ges,3),"I_ges/A:",round(I_ges,3),"U_ges/V:",round(R_g
 print(" ")
 
 num_coils=2
-coils_use=np.array([[6,13],[7,12]])
+coils_use=np.array([[6,15],[7,14]])
 print("{} following coils in parallel in pairs of two on one power supply".format(num_coils*2))
 R=np.empty([num_coils])
 I=np.empty([num_coils])
@@ -160,8 +159,8 @@ I_ges=I_reihe(I,num_coils)
 print("R_ges/Ohm:",round(R_ges,3),"I_ges/A:",round(I_ges,3),"U_ges/V:",round(R_ges*I_ges,3),"P_ges/Watt:",round(R_ges*I_ges**2,3))
 print(" ")
 
-num_coils=2
-coils_use=np.array([[8,11],[9,10]])
+num_coils=3
+coils_use=np.array([[8,13],[9,12],[10,11]])
 print("{} following coils in parallel in pairs of two on one power supply".format(num_coils*2))
 R=np.empty([num_coils])
 I=np.empty([num_coils])

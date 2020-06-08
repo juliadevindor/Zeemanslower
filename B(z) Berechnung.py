@@ -48,12 +48,14 @@ file.close()
 
 fig, ax = plt.subplots()
 
-with open("B(z)_0_5m.txt","r") as g:
+with open("B(z)_fit_0_5m.txt","r") as g:
+#with open("B(z)_0_5m.txt", "r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
     ax.plot(x+0.5,y,label="Decreasing field slower of length 0.5m")
-with open("B(z)_0_6m.txt","r") as g:
+with open("B(z)_fit_0_6m.txt","r") as g:
+#with open("B(z)_0_6m.txt", "r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
@@ -62,7 +64,7 @@ with open("B(z)_0_7m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Decreasing field slower of length 0.7m")
+    #ax.plot(x+0.5,y,label="Decreasing field slower of length 0.7m")
 with open("B(z)_0_6m_SF_2.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
@@ -77,15 +79,17 @@ with open("B(z)_0_8m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Decreasing field slower of length 0.8m")
+    #ax.plot(x+0.5,y,label="Decreasing field slower of length 0.8m")
 
-with open("B(z)_0_9m.txt","r") as g:
+with open("B(z)_fit_0_9m.txt","r") as g:
+#with open("B(z)_0_9m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
     ax.plot(x+0.5,y,label="Decreasing field slower of length 0.9m")
 
-with open("B(z)_1_0m.txt","r") as g:
+with open("B(z)_fit_1_0m.txt","r") as g:
+#with open("B(z)_1_0m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
@@ -95,7 +99,7 @@ with open("B(z).txt","r") as f: # plot measured magnetic field
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y, label="Decreasing-field slower of length 1m", color="black")
+    #ax.plot(x+0.5,y, label="Decreasing-field slower of length 1m", color="black")
 #ax.plot(pos+0.1,B*1e4,label="v0=1000m/s")
 plt.annotate("z in m", xy=(1.01, 0), ha='left', va='top', xycoords='axes fraction', fontsize=22)
 plt.annotate("B in Gauss", xy=(-0.05, 1.05), ha='left', va='top', xycoords='axes fraction', fontsize=22)

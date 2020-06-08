@@ -58,9 +58,9 @@ def B_coil_single(z,I,coil):
     return 1e4 * B_0tot
 
 
-def B_coil(z, I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17): # magnetic field of a single coil
+def B_coil(z, I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17,I18,I19): # magnetic field of a single coil
 
-    I_coil=np.array([I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17])
+    I_coil=np.array([I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17,I18,I19])
 
     z0 = np.empty([coils])  # center of the coils
     N_wires = np.empty([coils])  # number of wires per layer for each coil
@@ -93,12 +93,12 @@ fig, ax = plt.subplots()
 print("plotting")
 
 #I=np.array([5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0])
-coils = 17
+coils = 19
 L = 0.05
-N_coil=np.array([320,300,300,260,250,250,250,200,200,170,170,170,160,140,130,130,100])
-L_field=0.9
+N_coil=np.array([320,320,300,300,260,250,250,250,240,230,200,180,170,160,150,140,130,130,90])
+L_field=1.0
 #with open("sim_setup/real_magn_field_0_5m.txt", "r") as g:  # plot measured magnetic field
-with open("B(z)_0_9m.txt", "r") as g:  # plot measured magnetic field
+with open("B(z)_1_0m.txt", "r") as g:  # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
@@ -106,7 +106,7 @@ with open("B(z)_0_9m.txt", "r") as g:  # plot measured magnetic field
 L_slower = xnew[-1]+L_field  ##??
 pos=np.linspace(0,L_field,num=num)
 #plt.plot(pos,B_coil(pos,1100,900,800,700,600,500,300,100),".",label="old real field")
-popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,method="trf",bounds=(0,27))
+popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,method="trf",bounds=(0,26))
 #popt, pcov = curve_fit(B_coil, xnew, ynew)
 #print(pcov)
 for i in range(coils):
@@ -114,8 +114,8 @@ for i in range(coils):
 print(" ")
 plt.plot(pos,B_coil(pos,*popt),label="Fit: real field of length {}m".format(L_field))
 
-for i in range(coils):
-    plt.plot(pos,B_coil_single(pos,popt[i],i),color="black")
+#for i in range(coils):
+#    plt.plot(pos,B_coil_single(pos,popt[i],i),color="black")
 
 file=open("B(z)_fit.txt","w+")
 for zpos in pos:

@@ -110,13 +110,13 @@ print(" ")
 
 #erste Spule einzeln
 print("first coil with individual power supply")
-print("I_tot/A", round(I_real[0],3), "R_tot/Ohm", round(Resistance_real[0],3),"U_tot/V",round(I_real[0]*Resistance_real[0] ,3),"P_tot/W", round(I_real[0]**2*Resistance_real[0],3))
+print("I_tot/A", round(I_real[0],3), "R_tot/Ohm", round(Resistance_real[0],3),"U_tot/V",round(I_real[0]*Resistance_real[0] ,3),"P_tot/W", round(Power_real[0],3))
 print(" ")
 
 #Rest des Schaltkreises gepaart parallel und dann in Reihe
 
-num_coils=2
-coils_use=np.array([[2,17],[3,16]])
+num_coils=3
+coils_use=np.array([[2,17],[3,16],[4,15]])
 print("{} following coils in parallel in pairs of two on one power supply".format(num_coils*2))
 R=np.empty([num_coils])
 I=np.empty([num_coils])
@@ -130,23 +130,8 @@ I_ges=I_reihe(I,num_coils)
 print("R_ges/Ohm:",round(R_ges,3),"I_ges/A:",round(I_ges,3),"U_ges/V:",round(R_ges*I_ges,3),"P_ges/Watt:",round(R_ges*I_ges**2,3))
 print(" ")
 
-num_coils=2
-coils_use=np.array([[4,15],[5,14]])
-print("{} following coils in parallel in pairs of two on one power supply".format(num_coils*2))
-R=np.empty([num_coils])
-I=np.empty([num_coils])
-for i in range(num_coils):
-    R[i]=R_parallel([Resistance_real[coils_use[i,0]-1],Resistance_real[coils_use[i,1]-1]],2)
-    print("R_{}_{}=".format(coils_use[i,0],coils_use[i,1]),round(R[i],3))
-    I[i]=I_parallel([I_real[coils_use[i,0]-1],I_real[coils_use[i,1]-1]],2)
-    print("I_{}_{}=".format(coils_use[i,0],coils_use[i,1]),round(I[i],3))
-R_ges=R_reihe(R,num_coils)
-I_ges=I_reihe(I,num_coils)
-print("R_ges/Ohm:",round(R_ges,3),"I_ges/A:",round(I_ges,3),"U_ges/V:",round(R_ges*I_ges,3),"P_ges/Watt:",round(R_ges*I_ges**2,3))
-print(" ")
-
-num_coils=2
-coils_use=np.array([[6,13],[7,12]])
+num_coils=3
+coils_use=np.array([[5,14],[6,13],[7,12]])
 print("{} following coils in parallel in pairs of two on one power supply".format(num_coils*2))
 R=np.empty([num_coils])
 I=np.empty([num_coils])
