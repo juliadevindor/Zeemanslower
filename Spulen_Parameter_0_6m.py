@@ -36,22 +36,17 @@ L=0.6 #m
 coils=11
 N_fit=np.array([320,250,230,200,200,200,200,170,170,150,150])
 L_coil=0.05
-R_coil=0.043
+R_coil=0.045/2
 d_wire=0.005
 b_wire=0.001
 N_layer=L_coil/d_wire #=10 windings per layer
-I_fit=np.array([20.0,20.0,17.851,19.417,18.36,16.995,15.766,16.14,14.34,13.44,10.998]) #A
-
-#I_real=np.empty([coils]) #A
-#M_real=np.empty([coils]) # number of layers
+I_fit=np.array([19.0,17.366,18.179,19.0,18.323,16.832,15.69,15.947,14.454,12.598,11.34]) #A
 M_fit=np.empty([coils]) # number of layers
 Resistance_real=np.empty([coils]) #Ohm
 Power_real=np.empty([coils]) #Watt
 
 for i in range(coils):
     M_fit[i]=N_fit[i]/N_layer #=5 Layers
-    #M_real[i]=np.abs(round(N_real[i]/N_layer,0))
-    #M_real=(M_real).astype(int)
     Resistance_real[i]=0
     for j in range(int(M_fit[i])):
         Resistance_real[i]+=(0.017e-6*2*np.pi*N_layer*(R_coil+j*b_wire))/(d_wire*b_wire)
@@ -61,7 +56,6 @@ for i in range(coils):
 print("#",end=" ")
 print("N_fit",end=" ")
 print("I_fit/A",end=" ")
-print("(N*I)_fit",end=" ")
 print("Durchmesser_Spule/cm",end=" ")
 print("layers_M",end=" ")
 print("R_coil/Ohm",end=" ")
@@ -71,7 +65,6 @@ for i in range(coils):
     print(i,end=" ")
     print(N_fit[i],end=" ")
     print(round(I_fit[i],3),end=" ")
-    print(round(N_fit[i] * I_fit[i],3),end=" ")
     print(round(100*2*(R_coil+M_fit[i]*b_wire),3),end=" ")
     print(M_fit[i],end=" ")
     print(round(Resistance_real[i],3),end=" ")

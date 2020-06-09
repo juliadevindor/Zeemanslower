@@ -36,32 +36,26 @@ L=0.5 #m
 coils=9
 N_fit=np.array([320,250,230,200,200,200,200,170,170])
 L_coil=0.05
-R_coil=0.043
+R_coil=0.045/2
 d_wire=0.005
 b_wire=0.001
 N_layer=L_coil/d_wire #=10 windings per layer
-I_fit=np.array([16.0,16.0,14.221,14.946,14.031,12.441,11.22,10.361,9.474]) #A
-
-#I_real=np.empty([coils]) #A
-#M_real=np.empty([coils]) # number of layers
+I_fit=np.array([15.0,14.172,14.14,14.921,13.815,12.354,11.154,9.879,9.491]) #A
 M_fit=np.empty([coils]) # number of layers
 Resistance_real=np.empty([coils]) #Ohm
 Power_real=np.empty([coils]) #Watt
 
 for i in range(coils):
     M_fit[i]=N_fit[i]/N_layer #=5 Layers
-    #M_real[i]=np.abs(round(N_real[i]/N_layer,0))
-    #M_real=(M_real).astype(int)
     Resistance_real[i]=0
     for j in range(int(M_fit[i])):
         Resistance_real[i]+=(0.017e-6*2*np.pi*N_layer*(R_coil+j*b_wire))/(d_wire*b_wire)
-    #Resistance_real=Resistance_real*1.344
+    #Resistance_real=Resistance_real*(1+4.3e-3*(Temp-20))
     Power_real[i]=I_fit[i]**2*Resistance_real[i]
 
 print("#",end=" ")
 print("N_fit",end=" ")
 print("I_fit/A",end=" ")
-print("(N*I)_fit",end=" ")
 print("Durchmesser_Spule/cm",end=" ")
 print("layers_M",end=" ")
 print("R_coil/Ohm",end=" ")
@@ -71,7 +65,6 @@ for i in range(coils):
     print(i,end=" ")
     print(N_fit[i],end=" ")
     print(round(I_fit[i],3),end=" ")
-    print(round(N_fit[i] * I_fit[i],3),end=" ")
     print(round(100*2*(R_coil+M_fit[i]*b_wire),3),end=" ")
     print(M_fit[i],end=" ")
     print(round(Resistance_real[i],3),end=" ")
@@ -86,7 +79,6 @@ print("I_tot/A", round(I_fit[0],3), "R_tot/Ohm", round(Resistance_real[0],3),"U_
 print(" ")
 
 #Rest des Schaltkreises gepaart parallel und dann in Reihe
-
 num_coils=2
 coils_use=np.array([[2,9],[3,8]])
 print("{} following coils in parallel in pairs of two on one power supply".format(num_coils*2))

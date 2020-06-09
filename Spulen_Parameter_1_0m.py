@@ -34,22 +34,16 @@ def U_reihe(U_coils,num):
 
 L=1.0 #m
 coils=19
-N_fit=50
 L_coil=0.05
-R_coil=0.043
+R_coil=0.045/2
 d_wire=0.005
 b_wire=0.001
 N_layer=L_coil/d_wire #=10 windings per layer
-I_fit=np.array([26.0,26.0,26.0,24.477,25.777,26.0,25.48,24.518,23.901,24.845,26.0,26.0,26.0,26.0,26.0,24.988,21.596,20.816,14.52]) #A
-M_fit=N_fit/N_layer #=5 Layers
-
-N_real=np.array([320,320,300,300,260,250,250,250,240,230,200,180,170,160,150,140,130,130,90]) #Vorschlag
-
-I_real=np.empty([coils]) #A
+I_fit=np.array([26.0,26.0,23.872,24.111,25.748,26.0,25.235,24.352,24.102,24.3,26.0,26.0,26.0,26.0,24.588,24.199,22.535,18.518,15.702]) #A
+N_real=np.array([320,320,300,300,260,250,250,250,240,230,200,180,170,160,160,140,130,130,100]) #Vorschlag
 M_real=np.empty([coils]) # number of layers
 Resistance_real=np.empty([coils]) #Ohm
 Power_real=np.empty([coils]) #Watt
-#z0=np.array([0.025,0.07900000000000001,0.131,0.183,0.235,0.28700000000000003,0.3390000000000001,0.3910000000000001,0.4450000000000002]) #m
 
 for i in range(coils):
     M_real[i]=np.abs(round(N_real[i]/N_layer,0))
@@ -71,30 +65,25 @@ for i in range(coils):
     #    Y+=((z-z0[i]+L/    2) / np.sqrt(rad ** 2 + (z - z0[i] + L / 2) ** 2) - (z - z0[i] - L / 2) / np.sqrt(
     #    rad ** 2 + (z - z0[i] - L / 2) ** 2))
 
-    #I_real[i]=I_fit[i]*X/Y
-    I_real[i]=N_fit*I_fit[i]/N_real[i]
+    #I_fit[i]=I_fit[i]*X/Y
 
-    Power_real[i]=I_real[i]**2*Resistance_real[i]
+    Power_real[i]=I_fit[i]**2*Resistance_real[i]
 
 print("#",end=" ")
-print("N_fit",end=" ")
 print("I_fit/A",end=" ")
-print("(N*I)_fit",end=" ")
 print("N_real",end=" ")
 print("Durchmesser_Spule/cm",end=" ")
-print("I_real/A",end=" ")
+print("I_fit/A",end=" ")
 print("layers_M",end=" ")
 print("R_coil/Ohm",end=" ")
 print("P_coil/Watt")
 
 for i in range(coils):
     print(i,end=" ")
-    print(N_fit,end=" ")
     print(round(I_fit[i],3),end=" ")
-    print(round(N_fit * I_fit[i],3),end=" ")
     print(N_real[i],end=" ")
     print(round(100*2*(R_coil+M_real[i]*b_wire),3),end=" ")
-    print(round(I_real[i],3),end=" ")
+    print(round(I_fit[i],3),end=" ")
     print(M_real[i],end=" ")
     print(round(Resistance_real[i],3),end=" ")
     print(round(Power_real[i],3))
@@ -102,14 +91,14 @@ for i in range(coils):
 print(" ")
 
 for i in range(coils):
-    print(round(I_real[i],3),end=",")
+    print(round(I_fit[i],3),end=",")
 
 #Schaltkreis durchrechnen
 print(" ")
 
 #erste Spule einzeln
 print("first coil with individual power supply")
-print("I_tot/A", round(I_real[0],3), "R_tot/Ohm", round(Resistance_real[0],3),"U_tot/V",round(I_real[0]*Resistance_real[0] ,3),"P_tot/W", round(Power_real[0],3))
+print("I_tot/A", round(I_fit[0],3), "R_tot/Ohm", round(Resistance_real[0],3),"U_tot/V",round(I_fit[0]*Resistance_real[0] ,3),"P_tot/W", round(Power_real[0],3))
 print(" ")
 
 #Rest des Schaltkreises gepaart parallel und dann in Reihe
@@ -122,7 +111,7 @@ I=np.empty([num_coils])
 for i in range(num_coils):
     R[i]=R_parallel([Resistance_real[coils_use[i,0]-1],Resistance_real[coils_use[i,1]-1]],2)
     print("R_{}_{}=".format(coils_use[i,0],coils_use[i,1]),round(R[i],3))
-    I[i]=I_parallel([I_real[coils_use[i,0]-1],I_real[coils_use[i,1]-1]],2)
+    I[i]=I_parallel([I_fit[coils_use[i,0]-1],I_fit[coils_use[i,1]-1]],2)
     print("I_{}_{}=".format(coils_use[i,0],coils_use[i,1]),round(I[i],3))
 R_ges=R_reihe(R,num_coils)
 I_ges=I_reihe(I,num_coils)
@@ -137,7 +126,7 @@ I=np.empty([num_coils])
 for i in range(num_coils):
     R[i]=R_parallel([Resistance_real[coils_use[i,0]-1],Resistance_real[coils_use[i,1]-1]],2)
     print("R_{}_{}=".format(coils_use[i,0],coils_use[i,1]),round(R[i],3))
-    I[i]=I_parallel([I_real[coils_use[i,0]-1],I_real[coils_use[i,1]-1]],2)
+    I[i]=I_parallel([I_fit[coils_use[i,0]-1],I_fit[coils_use[i,1]-1]],2)
     print("I_{}_{}=".format(coils_use[i,0],coils_use[i,1]),round(I[i],3))
 R_ges=R_reihe(R,num_coils)
 I_ges=I_reihe(I,num_coils)
@@ -152,7 +141,7 @@ I=np.empty([num_coils])
 for i in range(num_coils):
     R[i]=R_parallel([Resistance_real[coils_use[i,0]-1],Resistance_real[coils_use[i,1]-1]],2)
     print("R_{}_{}=".format(coils_use[i,0],coils_use[i,1]),round(R[i],3))
-    I[i]=I_parallel([I_real[coils_use[i,0]-1],I_real[coils_use[i,1]-1]],2)
+    I[i]=I_parallel([I_fit[coils_use[i,0]-1],I_fit[coils_use[i,1]-1]],2)
     print("I_{}_{}=".format(coils_use[i,0],coils_use[i,1]),round(I[i],3))
 R_ges=R_reihe(R,num_coils)
 I_ges=I_reihe(I,num_coils)
@@ -167,7 +156,7 @@ I=np.empty([num_coils])
 for i in range(num_coils):
     R[i]=R_parallel([Resistance_real[coils_use[i,0]-1],Resistance_real[coils_use[i,1]-1]],2)
     print("R_{}_{}=".format(coils_use[i,0],coils_use[i,1]),round(R[i],3))
-    I[i]=I_parallel([I_real[coils_use[i,0]-1],I_real[coils_use[i,1]-1]],2)
+    I[i]=I_parallel([I_fit[coils_use[i,0]-1],I_fit[coils_use[i,1]-1]],2)
     print("I_{}_{}=".format(coils_use[i,0],coils_use[i,1]),round(I[i],3))
 R_ges=R_reihe(R,num_coils)
 I_ges=I_reihe(I,num_coils)
