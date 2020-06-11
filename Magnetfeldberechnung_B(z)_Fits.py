@@ -65,7 +65,7 @@ print("plotting")
 
 coils = 19
 L = 0.05
-N_coil=np.array([320,320,300,300,260,250,250,250,240,230,200,180,170,160,160,140,130,130,100])
+N_coil=np.array([320,320,300,300,270,260,250,250,240,230,220,190,190,160,160,140,130,130,100])
 L_field=1.0
 num = 5000
 mu_0=4*np.pi*1e-7 # magnetic field constant
@@ -75,7 +75,7 @@ b_wire=0.001# thickness of the wire in m
 dist_coils_small = 0.002
 dist_coils_large = 0.002 #0.004
 
-with open("B(z)_1_0m.txt", "r") as g:  # plot measured magnetic field
+with open("B(z)_1_0m_NEW.txt", "r") as g:  # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
@@ -83,7 +83,7 @@ with open("B(z)_1_0m.txt", "r") as g:  # plot measured magnetic field
 L_slower = xnew[-1]+L_field  ##??
 pos=np.linspace(0,L_field,num=num)
 #plt.plot(pos,B_coil(pos,1100,900,800,700,600,500,300,100),".",label="old real field")
-popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,method="trf",bounds=(0,26))
+popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,method="trf",bounds=(0,23))
 #popt, pcov = curve_fit(B_coil, xnew, ynew)
 #print(pcov)
 for i in range(coils):

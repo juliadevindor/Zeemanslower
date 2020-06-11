@@ -17,7 +17,7 @@ def slower_field(pos, L0,v0,wavelength,omega, omega0):
     B = np.empty(len(pos))
 
     for i in range(0,len(pos)):
-        print(pos[i])
+        #print(pos[i])
         #if pos[i]<0.0:
         #    B[i]=0
         if 1-pos[i]/L0 < 0: # to avoid "nan"
@@ -38,7 +38,7 @@ omega0=446.7896e12 #Hz (Gehm)
 
 pos=np.linspace(-0.0,L0+0.2,num=1000)
 B = np.empty(len(pos))
-B=slower_field(pos,L0,1850,wavelength,omega,omega0)
+B=slower_field(pos,L0,1580,wavelength,omega,omega0)
 file=open("B(z).txt","w+")
 
 for i in range(len(pos)):
@@ -53,13 +53,13 @@ with open("B(z)_fit_0_5m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Decreasing field slower of length 0.5m")
+    #ax.plot(x+0.5,y,label="Decreasing field slower of length 0.5m")
 with open("B(z)_fit_0_6m.txt","r") as g:
 #with open("B(z)_0_6m.txt", "r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Decreasing field slower of length 0.6m")
+    #ax.plot(x+0.5,y,label="Decreasing field slower of length 0.6m")
 with open("B(z)_0_7m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
@@ -75,31 +75,44 @@ with open("B(z)_0_7m_SF_2.txt","r") as g:
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
    # ax.plot(x+0.5,y,label="Alternative real slower SF field of length 0.7m")
-with open("B(z)_0_8m.txt","r") as g:
+with open("B(z)_1_0m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x+0.5,y,label="Decreasing field slower of length 0.8m")
+    ax.plot(x+0.5,y,label="Decreasing field slower of length 1m")
 
 with open("B(z)_fit_0_9m.txt","r") as g:
 #with open("B(z)_0_9m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Decreasing field slower of length 0.9m")
+    #ax.plot(x+0.5,y,label="Decreasing field slower of length 0.9m")
 
 with open("B(z)_fit_1_0m.txt","r") as g:
 #with open("B(z)_1_0m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x+0.5,y,label="Decreasing field slower of length 1.0m")
+    #ax.plot(x+0.5,y,label="Decreasing field slower of length 1.0m")
 
 with open("B(z).txt","r") as f: # plot measured magnetic field
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x+0.5,y, label="Decreasing-field slower of length 1m", color="black")
+    ax.plot(x+0.5,y, label="new", color="black")
+mass_li=9.988142325599999e-27
+gamma=36882297.753144175
+lambda_=6.70977e-07
+k_=2*np.pi/lambda_
+wavelength_laser=6.709770033520598e-07
+amax=hPlanck/(2*np.pi)*gamma*k_/(2*mass_li)*0.5
+#print("vmax",np.sqrt(2*amax*0.5))
+#print("vmax",np.sqrt(2*amax*0.6))
+#print("vmax",np.sqrt(2*amax*0.7))
+#print("vmax",np.sqrt(2*amax*0.8))
+#print("vmax",np.sqrt(2*amax*0.9))
+#print("vmax",np.sqrt(2*amax*1.0))
+
 #ax.plot(pos+0.1,B*1e4,label="v0=1000m/s")
 plt.annotate("z in m", xy=(1.01, 0), ha='left', va='top', xycoords='axes fraction', fontsize=22)
 plt.annotate("B in Gauss", xy=(-0.05, 1.05), ha='left', va='top', xycoords='axes fraction', fontsize=22)

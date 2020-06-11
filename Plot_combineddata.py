@@ -19,9 +19,9 @@ with open("Measurements/MOT_new.txt", "r") as g:
     x = np.asarray([float(line.split()[0]) for line in lines])
     y = np.asarray([float(line.split()[1]) for line in lines])
     #plt.plot((x-33.5)/100, y*10, label="MOT w/o screws")
-    plt.vlines(0.05,-350,750)
-plt.vlines(0.05-0.117,-350,750)
-plt.vlines(-0.1,-350,750)
+    #plt.vlines(0.05,-350,750)
+#plt.vlines(0.05-0.117,-350,750)
+#plt.vlines(-0.1,-350,750)
 
 
 with open("Measurements/Zeemanslower_old_standalone_Bz.txt", "r") as g:
@@ -43,16 +43,21 @@ with open("./TEST.txt", "r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    plt.plot(x,y,".",label="Messung gesamt von uns")
-plt.plot(x,B_coil(I_1,N_1,L_1,R_1,z0_1,xourslower-0.5))
+    #plt.plot(x,y,".",label="Messung gesamt von uns")
+#plt.plot(x,B_coil(I_1,N_1,L_1,R_1,z0_1,xourslower-0.5))
 
 
 with open("Measurements/example_magnetic_field.txt", "r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    plt.plot(x, y, label="good field")
+    #plt.plot(x, y, label="good field")
 
+with open("Measurements/MOT_new.txt", "r") as g:
+    lines = g.readlines()
+    x = np.asarray([float(line.split()[0]) for line in lines])
+    y = np.asarray([float(line.split()[1]) for line in lines])
+    plt.plot(x, y, label="MOT field")
 
 plt.grid()
 plt.xlabel("distance from right edge of slower/ m", fontsize=15)

@@ -429,10 +429,10 @@ if __name__ == '__main__':
         "C:/Users/ACW/Documents/JGU/NawiInf/Kurse/MA/Code/particle_simulation_ma/magnetic_field_measurement/MinusFitListtxt.txt",
         "C:/Users/ACW/Documents/JGU/NawiInf/Kurse/MA/Code/particle_simulation_ma/magnetic_field_measurement/maximum_step_length_MinusFitListtxt.txt")
     '''
-    xval=[-0.5]
+    xval=[0.0]
     for itest in range(1,len(spline_fit)):
-        xval.append(xval[itest-1]+1.0/len(spline_fit))
-    #plt.plot(xval,spline_fit,".")
+        xval.append(xval[itest-1]+0.8/len(spline_fit))
+   # plt.plot(xval,spline_fit,".")
     #plt.xlabel("zpos in m")
     #plt.ylabel("grad B")
     #plt.show()
@@ -488,7 +488,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -190e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -320e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
