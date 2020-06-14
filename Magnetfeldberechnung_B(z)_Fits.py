@@ -17,21 +17,21 @@ def B_coil_single(z,I,coil):
     B_0tot=0
     for j in range(0, coils):  # calculate z0(center of coils) for all Zeeman coils
         if j == 0:
-            z0[j] = L / 2   # z0 for the first Zeeman coil
+            z0[j] = L[j] / 2 -dist  # z0 for the first Zeeman coil
         if j == 1 or j == coils - 1:
-            z0[j] = z0[j - 1] + L / 2 + L / 2 + dist_coils_large  # z0 for second and last Zeeman coil
+            z0[j] = z0[j - 1] + L[j] / 2 + L[j] / 2 + dist_coils_large  # z0 for second and last Zeeman coil
         if j != 0 and j != 1 and j != coils - 1:
-            z0[j] = z0[j - 1] + L / 2 + L / 2 + dist_coils_small  # z0 for all the other Zeeman coils
+            z0[j] = z0[j - 1] + L[j] / 2 + L[j] / 2 + dist_coils_small  # z0 for all the other Zeeman coils
     for p in range(0, coils):  # loop over all Zeeman slower coils to obtain the length of all coils
-        N_wires[p] = L / d_wire  # number of wires in each layer
+        N_wires[p] = L[p] / d_wire  # number of wires in each layer
         M[p] = np.abs(round(N_coil[p] / N_wires[p], 0))  # number of layers
     M = M.astype(int)
     for j in range(0, coils):  # loop over Zeeman coils
         for mi in range(1, M[j] + 1):  # loop over all layers of each coil
             R_coil = R + mi * b_wire
-            B += mu_0 * N_wires[j] * I / (2 * L) * ((z - z0[j] + L / 2) / np.sqrt(R_coil ** 2 + (z - z0[j] + L / 2) ** 2) - (z - z0[j] - L / 2) / np.sqrt(R_coil ** 2 + (z - z0[j] - L / 2) ** 2))
+            B += mu_0 * N_wires[j] * I / (2 * L[j]) * ((z - z0[j] + L[j] / 2) / np.sqrt(R_coil ** 2 + (z - z0[j] + L[j] / 2) ** 2) - (z - z0[j] - L[j] / 2) / np.sqrt(R_coil ** 2 + (z - z0[j] - L[j] / 2) ** 2))
             if j==coil:
-                B_0tot += mu_0 * N_wires[j] * I / (2 * L) * ((z - z0[j] + L / 2) / np.sqrt(R_coil ** 2 + (z - z0[j] + L / 2) ** 2) - (z - z0[j] - L / 2) / np.sqrt(R_coil ** 2 + (z - z0[j] - L / 2) ** 2))
+                B_0tot += mu_0 * N_wires[j] * I / (2 * L[j]) * ((z - z0[j] + L[j] / 2) / np.sqrt(R_coil ** 2 + (z - z0[j] + L[j] / 2) ** 2) - (z - z0[j] - L[j] / 2) / np.sqrt(R_coil ** 2 + (z - z0[j] - L[j]/ 2) ** 2))
     return 1e4 * B_0tot
 
 
@@ -44,29 +44,30 @@ def B_coil(z, I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17,I18,I19
     B=0
     for j in range(0, coils):  # calculate z0(center of coils) for all Zeeman coils
         if j == 0:
-            z0[j] = L / 2   # z0 for the first Zeeman coil
+            z0[j] = L[j] / 2 -dist  # z0 for the first Zeeman coil
         if j == 1 or j == coils - 1:
-            z0[j] = z0[j - 1] + L/ 2 + L / 2 + dist_coils_large  # z0 for second and last Zeeman coil
+            z0[j] = z0[j - 1] + L[j]/ 2 + L[j] / 2 + dist_coils_large  # z0 for second and last Zeeman coil
         if j != 0 and j != 1 and j != coils - 1:
-            z0[j] = z0[j - 1] + L / 2 + L/ 2 + dist_coils_small  # z0 for all the other Zeeman coils
+            z0[j] = z0[j - 1] + L[j] / 2 + L[j]/ 2 + dist_coils_small  # z0 for all the other Zeeman coils
     for p in range(0, coils):  # loop over all Zeeman slower coils to obtain the length of all coils
-        N_wires[p] = L/ d_wire  # number of wires in each layer
+        N_wires[p] = L[p]/ d_wire  # number of wires in each layer
         M[p] = np.abs(round(N_coil[p] / N_wires[p], 0))  # number of layers
     M = M.astype(int)
     for j in range(0, coils):  # loop over Zeeman coils
         for mi in range(1, M[j] + 1):  # loop over all layers of each coil
             R_coil=R + mi * b_wire
-            B += mu_0*N_wires[j]*I_coil[j]/(2*L) \
-                 *((z-z0[j]+L/2)/np.sqrt(R_coil**2+(z-z0[j]+L/2)**2) - (z-z0[j]-L/2)/np.sqrt(R_coil**2+(z-z0[j]-L/2)**2))
+            B += mu_0*N_wires[j]*I_coil[j]/(2*L[j]) \
+                 *((z-z0[j]+L[j]/2)/np.sqrt(R_coil**2+(z-z0[j]+L[j]/2)**2) - (z-z0[j]-L[j]/2)/np.sqrt(R_coil**2+(z-z0[j]-L[j]/2)**2))
     return 1e4*B
 
 fig, ax = plt.subplots()
 print("plotting")
 
 coils = 19
-L = 0.05
-N_coil=np.array([320,320,300,300,270,260,250,250,240,230,220,190,190,160,160,140,130,130,100])
-L_field=1.0
+dist=0.04
+L = np.array([0.05,0.05,0.05,0.045,0.045,0.045,0.045,0.045,0.045,0.045,0.045,0.045,0.045,0.045,0.045,0.045,0.045,0.05,0.05])
+N_coil=np.array([370,350,320,280,260,250,250,240,230,220,210,200,190,170,150,150,250,250,250])
+L_field=0.9 + dist#+time for increase of  magnetic field
 num = 5000
 mu_0=4*np.pi*1e-7 # magnetic field constant
 R= 0.045/2 # inner radius of Zeeman-coils in m (not approved)
@@ -75,31 +76,35 @@ b_wire=0.001# thickness of the wire in m
 dist_coils_small = 0.002
 dist_coils_large = 0.002 #0.004
 
-with open("B(z)_1_0m_NEW.txt", "r") as g:  # plot measured magnetic field
+with open("B(z)_0_9m_NEW.txt", "r") as g:  # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(xnew+0.5, ynew, label="Ideal slower field of length {}m".format(L_field))
+    ax.plot(xnew+0.5, ynew, label="Ideal slower field of length {}m".format(round(L_field,2)))
 L_slower = xnew[-1]+L_field  ##??
-pos=np.linspace(0,L_field,num=num)
+pos=np.linspace(-dist,L_field-dist,num=num)
 #plt.plot(pos,B_coil(pos,1100,900,800,700,600,500,300,100),".",label="old real field")
-popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,method="trf",bounds=(0,23))
+popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,method="trf",bounds=(0,22.5))
 #popt, pcov = curve_fit(B_coil, xnew, ynew)
 #print(pcov)
 for i in range(coils):
     print(round(popt[i],3),end=",")
 print(" ")
-plt.plot(pos,B_coil(pos,*popt),label="Fit: real field of length {}m".format(L_field))
+plt.plot(pos,B_coil(pos,*popt),label="Fit: real field of length {}m".format(round(L_field,2)))
 
-#for i in range(coils):
-#    plt.plot(pos,B_coil_single(pos,popt[i],i),color="black")
+for i in range(coils):
+    plt.plot(pos,B_coil_single(pos,popt[i],i),color="black")
 
 file=open("B(z)_fit.txt","w+")
 for zpos in pos:
-    file.write("{};{}\n".format(zpos-0.5, B_coil(zpos,*popt)))
+    file.write("{};{}\n".format(zpos-0.5+dist, B_coil(zpos,*popt)))
 file.close()
 
-print(0.05*coils+2*dist_coils_large+(coils-3)*dist_coils_small)
+Lges=0
+for i in range(coils):
+    Lges+=L[i]
+Lges+=2*dist_coils_large+(coils-3)*dist_coils_small
+print(Lges)
 
 ss_res=0
 ss_tot=0
