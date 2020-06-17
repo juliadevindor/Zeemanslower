@@ -659,4 +659,7 @@ def trans_strength(GS,ES,pol,B):
             elif B<-0.1:
                 trans_strength=0.0
 
-    return trans_strength
+    if trans_strength>=0:
+        return trans_strength
+    elif trans_strength<0:
+        return 0
