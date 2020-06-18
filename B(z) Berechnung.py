@@ -72,27 +72,36 @@ with open("B(z)_0_7m_changed.txt","r") as g:
     print("L=",0.7,"m: ",round(max(y),3),round(x[np.argmax(y)]+0.5,3))
     print("L=", 0.7, "m: ", round(min(y), 3), round(x[np.argmin(y)] + 0.5, 3))
     print("L=",0.7,"m: ",round(x[np.argmin(y)] + 0.5, 3)-round(x[np.argmax(y)]+0.5,3))
-with open("B(z)_0_8m_NEW.txt","r") as g:
+with open("B(z)_0_8m_changed.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x+0.5,y,color="red",label="Decreasing field slower of length 0.8m")
+    ax.plot(x+0.5,y,color="red",label="Decreasing field slower of length 0.8m")
     print("L=",0.8,"m: ",round(max(y),3),round(x[np.argmax(y)]+0.5,3))
     print("L=", 0.8, "m: ", round(min(y), 3), round(x[np.argmin(y)] + 0.5, 3))
     print("L=",0.8,"m: ",round(x[np.argmin(y)] + 0.5, 3)-round(x[np.argmax(y)]+0.5,3))
-with open("B(z)_0_9m_NEW.txt","r") as g:
+with open("B(z)_0_9m_changed.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x+0.5,y,color="purple",label="Decreasing field slower of length 0.9m")
+    ax.plot(x+0.5,y,color="purple",label="Decreasing field slower of length 0.9m")
     print("L=",0.9,"m: ",round(max(y),3),round(x[np.argmax(y)]+0.5,3))
     print("L=", 0.9, "m: ", round(min(y), 3), round(x[np.argmin(y)] + 0.5, 3))
     print("L=",0.9,"m: ",round(x[np.argmin(y)] + 0.5, 3)-round(x[np.argmax(y)]+0.5,3))
-with open("B(z)_1_0m_NEW.txt","r") as g:
+with open("B(z)_1_0m_changed.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-   # ax.plot(x+0.5,y,color="brown",label="Decreasing field slower of length 1m")
+    ax.plot(x+0.5,y,color="brown",label="Decreasing field slower of length 1m")
+    print("L=",1,"m: ",round(max(y),3),round(x[np.argmax(y)]+0.5,3))
+    print("L=", 1, "m: ", round(min(y), 3), round(x[np.argmin(y)] + 0.5, 3))
+    print("L=",1,"m: ",round(x[np.argmin(y)] + 0.5, 3)-round(x[np.argmax(y)]+0.5,3))
+
+with open("B(z)_1_0m_changed_ADD.txt","r") as g:
+    lines = g.readlines()
+    x = np.asarray([float(line.split(";")[0]) for line in lines])
+    y = np.asarray([float(line.split(";")[1]) for line in lines])
+    ax.plot(x+0.5,y,color="black",label="Decreasing field slower of length 1m + extra coil")
     print("L=",1,"m: ",round(max(y),3),round(x[np.argmax(y)]+0.5,3))
     print("L=", 1, "m: ", round(min(y), 3), round(x[np.argmin(y)] + 0.5, 3))
     print("L=",1,"m: ",round(x[np.argmin(y)] + 0.5, 3)-round(x[np.argmax(y)]+0.5,3))
@@ -121,31 +130,38 @@ with open("B(z)_fit_0_7m.txt","r") as g:
     print("L=",0.7,"m: ",round(max(y),3),round(x[np.argmax(y)]+0.5,3))
     print("L=", 0.7, "m: ", round(min(y), 3), round(x[np.argmin(y)] + 0.5, 3))
     print("L=",0.7,"m: ",round(x[np.argmin(y)] + 0.5, 3)-round(x[np.argmax(y)]+0.5,3))
-with open("B(z)_fit_0_8m_NEW.txt","r") as g:
+with open("B(z)_fit_0_8m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x+0.5,y,color="red")
+    ax.plot(x+0.5,y,color="red")
     print("L=",0.8,"m: ",round(max(y),3),round(x[np.argmax(y)]+0.5,3))
     print("L=", 0.8, "m: ", round(min(y), 3), round(x[np.argmin(y)] + 0.5, 3))
     print("L=",0.8,"m: ",round(x[np.argmin(y)] + 0.5, 3)-round(x[np.argmax(y)]+0.5,3))
-with open("B(z)_fit_0_9m_NEW.txt","r") as g:
+with open("B(z)_fit_0_9m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x+0.5,y,color="purple")
+    ax.plot(x+0.5,y,color="purple")
     print("L=",0.9,"m: ",round(max(y),3),round(x[np.argmax(y)]+0.5,3))
     print("L=", 0.9, "m: ", round(min(y), 3), round(x[np.argmin(y)] + 0.5, 3))
     print("L=",0.9,"m: ",round(x[np.argmin(y)] + 0.5, 3)-round(x[np.argmax(y)]+0.5,3))
-with open("B(z)_fit_1_0m_NEW.txt","r") as g:
+with open("B(z)_fit_1_0m.txt","r") as g:
     lines = g.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x+0.5,y,color="brown")
+    ax.plot(x+0.5,y,color="brown")
     print("L=",1,"m: ",round(max(y),3),round(x[np.argmax(y)]+0.5,3))
     print("L=", 1, "m: ", round(min(y), 3), round(x[np.argmin(y)] + 0.5, 3))
     print("L=",1,"m: ",round(x[np.argmin(y)] + 0.5, 3)-round(x[np.argmax(y)]+0.5,3))
-
+with open("B(z)_fit_1_0m_ADD.txt","r") as g:
+    lines = g.readlines()
+    x = np.asarray([float(line.split(";")[0]) for line in lines])
+    y = np.asarray([float(line.split(";")[1]) for line in lines])
+    ax.plot(x+0.5,y,color="black")
+    print("L=",1,"m: ",round(max(y),3),round(x[np.argmax(y)]+0.5,3))
+    print("L=", 1, "m: ", round(min(y), 3), round(x[np.argmin(y)] + 0.5, 3))
+    print("L=",1,"m: ",round(x[np.argmin(y)] + 0.5, 3)-round(x[np.argmax(y)]+0.5,3))
 with open("B(z).txt","r") as f: # plot measured magnetic field
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
