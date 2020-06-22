@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 normal_slower_length=np.array([0.43,0.529,0.621,0.73,0.823,0.925])
-normal_slower_length_ideal=np.array([0.43,0.529,0.621,0.73,0.823,0.925]) #([0.5,0.6,0.7,0.8,0.9,1.0])
+normal_slower_length_ideal=np.array([0.5,0.6,0.7,0.8,0.9,1.0])
 
 #allgs_dead_atom_ideal=np.array([98,38,87,100,247,260])
 #allgs_dead_atom_real=np.array([15,68,64,134,165,150])
