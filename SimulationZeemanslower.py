@@ -2,6 +2,7 @@
 from datetime import datetime
 # module for creating pathes, directories and folders
 import pathlib
+import numpy as np
 import scipy.constants as scc
 # math module provides mathematical operations like power, squareroot and so on
 import math
@@ -244,7 +245,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                 dead_atoms_vy.append(y_velocity)
                 dead_atoms_vz.append(z_velocity)
                 #print("atom dead: z_pos=", z_pos," x_vel=", x_velocity," y_vel=", y_velocity," z_vel=", z_velocity)
-                #print("here",x_y_pos_component_squared > light_beam_radius_squared, z_pos > target_center_z+0.12, z_pos < 0.0, z_velocity < 0.0)
+                #print("here",z_pos,x_y_pos_component_squared > light_beam_radius_squared, z_pos > target_center_z+0.12, z_pos < 0.0, z_velocity < 0.0)
                 # set the index to 0 (=dead)
                 atom_dead = 0
                 counter_dead+=1
@@ -362,6 +363,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                     count_vel_z_251_300 += 1
 
                 atom_dead = 0
+                atom_dead = 0
                 continue
 
         if GS_quantum_number==0:
@@ -462,7 +464,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 100 #sim_param_data['particle_number']
+    n = 10000 #sim_param_data['particle_number']
     allgs=1 #0=gs5 only, 1=all gs
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
@@ -484,7 +486,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 1.0 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.8 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -492,7 +494,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -1220e6#-650e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -980e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -509,10 +511,10 @@ if __name__ == '__main__':
     for i in range(0,19):
         slicing_positions.append(slicing_positions[i]+0.05)
 
-    slicing_positions[16]=0.95
-    slicing_positions[17]=0.99
-    slicing_positions[18]=0.995
-    slicing_positions[19]=0.999
+    slicing_positions[15]=target_center_z-0.05
+    slicing_positions[16]=target_center_z-0.01
+    slicing_positions[17]=target_center_z -0.005
+    slicing_positions[18]=target_center_z-0.001
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']
@@ -619,15 +621,31 @@ if __name__ == '__main__':
     positions=slicing_positions
 
     pos_i=0
+    count1=0
+    count2=0
     for pos in positions:
         #plt.figure()
         fig, ax = plt.subplots()
         labels=["GS 0","GS 1","GS 2","GS 3","GS 4","GS 5"]
         colors=["red","cyan","orange","blue","green","purple"]
-        ax.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=100, stacked=True,color=colors, label=labels)
+        bin_size = 30
+        min_edge = 0
+        max_edge = 5700
+        N = int((max_edge-min_edge)/bin_size)
+        bin_list = np.linspace(min_edge, max_edge, N+1)
+        ax.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=bin_list, stacked=True,color=colors, label=labels)
         plt.legend(loc="upper right",fontsize=22)
         plt.ylim(0, 600)
-        #plt.xlim(0,)
+        if pos_i==15:
+            for i in range(len(v_z_histo[5][pos_i])):
+                if v_z_histo[5][pos_i][i]<=10*30:
+                    count1+=1
+            print("slowed atoms at {}m:{}".format(pos,count1))
+        if pos_i==18:
+            for i in range(len(v_z_histo[5][pos_i])):
+                if v_z_histo[5][pos_i][i]<=30:
+                    count2+=1
+            print("slowed atoms at {}m:{}".format(pos,count2))
         plt.xlabel("v_z in m/s", fontsize=22)
         plt.ylabel("Atoms in GS", fontsize=22)
         plt.title("Atoms at z={}m".format(round(pos,3)),fontsize=22)
