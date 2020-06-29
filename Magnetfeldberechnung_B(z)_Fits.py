@@ -35,9 +35,9 @@ def B_coil_single(z,I,coil):
     return 1e4 * B_0tot
 
 
-def B_coil(z, I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11):#,I12,I13,I14,I15,I16,I17,I18,I19,I20): # magnetic field of a single coil
+def B_coil(z, I1,I2,I3,I4,I5,I6,I7,I8,I9):#,I10):#I11):#,I12,I13,I14,I15,I16,I17,I18,I19,I20): # magnetic field of a single coil
 
-    I_coil=np.array([I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11])#,I12,I13,I14,I15,I16,I17,I18,I19,I20])
+    I_coil=np.array([I1,I2,I3,I4,I5,I6,I7,I8,I9])#,I10])#,I11])#,I12,I13,I14,I15,I16,I17,I18,I19,I20])
     z0 = np.empty([coils])  # center of the coils
     N_wires = np.empty([coils])  # number of wires per layer for each coil
     M = np.empty([coils])  # number of wire layers for each coil
@@ -63,11 +63,11 @@ def B_coil(z, I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11):#,I12,I13,I14,I15,I16,I17,I18,
 fig, ax = plt.subplots()
 print("plotting")
 
-coils = 11
+coils = 9
 dist=0#0.04
-L = np.array([0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05])
-N_coil=np.array([320,280,260,250,230,200,200,170,170,100,200])
-L_field=0.7 + dist#+time for increase of  magnetic field
+L = np.array([0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05])
+N_coil=np.array([320,280,260,250,230,200,200,170,170])
+L_field=0.6 + dist#+time for increase of  magnetic field
 num = 5000
 mu_0=4*np.pi*1e-7 # magnetic field constant
 R= 0.045/2 # inner radius of Zeeman-coils in m (not approved)
@@ -84,7 +84,7 @@ with open("B(z)_0_5m.txt", "r") as g:  # plot measured magnetic field
 L_slower = xnew[-1]+L_field  ##??
 pos=np.linspace(-dist,L_field-dist,num=num)
 #plt.plot(pos,B_coil(pos,1100,900,800,700,600,500,300,100),".",label="old real field")
-popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,method="trf",bounds=(-20,13.2))
+popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,method="trf",bounds=(0,13.2))
 #popt, pcov = curve_fit(B_coil, xnew, ynew)
 #print(pcov)
 for i in range(coils):
@@ -146,7 +146,7 @@ with open("B(z)_0_5m.txt","r") as g:
             y[i]=max(B_coil(pos,*popt))
     #ax.plot(x+0.5,y,color="black",label="CHANGED Decreasing field slower of length 0.5m")
 
-file=open("B(z)_0_5m_changed_add.txt","w+")
+file=open("B(z)_0_5m_full_B.txt","w+")
 for i in range(len(y)):
     file.write("{};{}\n".format(x[i], y[i]))
 file.close()
@@ -156,7 +156,7 @@ with open("B(z)_fit_0_5m.txt", "r") as g:  # plot measured magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(xnew+0.5, ynew, label="Old fitted slower field of length {}m".format(round(L_field,2)))
+    #ax.plot(xnew+0.5, ynew, label="Old fitted slower field of length {}m".format(round(L_field,2)))
 
 plt.legend(prop={'size': 15})
 plt.show()

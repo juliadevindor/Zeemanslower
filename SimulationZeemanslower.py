@@ -437,7 +437,7 @@ if __name__ == '__main__':
     xval=[0.0]
     for itest in range(1,len(spline_fit)):
         xval.append(xval[itest-1]+0.8/len(spline_fit))
-   # plt.plot(xval,spline_fit,".")
+    #plt.plot(xval,spline_fit,".")
     #plt.xlabel("zpos in m")
     #plt.ylabel("grad B")
     #plt.show()
@@ -486,7 +486,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.8 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 1.0 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -494,7 +494,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -980e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -1015e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -511,10 +511,10 @@ if __name__ == '__main__':
     for i in range(0,19):
         slicing_positions.append(slicing_positions[i]+0.05)
 
-    slicing_positions[15]=target_center_z-0.05
-    slicing_positions[16]=target_center_z-0.01
-    slicing_positions[17]=target_center_z -0.005
-    slicing_positions[18]=target_center_z-0.001
+    slicing_positions[16]=target_center_z-0.05
+    slicing_positions[17]=target_center_z-0.01
+    slicing_positions[18]=target_center_z -0.005
+    slicing_positions[19]=target_center_z-0.001
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']
@@ -628,20 +628,19 @@ if __name__ == '__main__':
         fig, ax = plt.subplots()
         labels=["GS 0","GS 1","GS 2","GS 3","GS 4","GS 5"]
         colors=["red","cyan","orange","blue","green","purple"]
-        bin_size = 30
+        bin_size = 10
         min_edge = 0
         max_edge = 5700
         N = int((max_edge-min_edge)/bin_size)
         bin_list = np.linspace(min_edge, max_edge, N+1)
         ax.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=bin_list, stacked=True,color=colors, label=labels)
         plt.legend(loc="upper right",fontsize=22)
-        plt.ylim(0, 600)
-        if pos_i==15:
+        if pos_i==16:
             for i in range(len(v_z_histo[5][pos_i])):
                 if v_z_histo[5][pos_i][i]<=10*30:
                     count1+=1
             print("slowed atoms at {}m:{}".format(pos,count1))
-        if pos_i==18:
+        if pos_i==19:
             for i in range(len(v_z_histo[5][pos_i])):
                 if v_z_histo[5][pos_i][i]<=30:
                     count2+=1
@@ -654,10 +653,11 @@ if __name__ == '__main__':
         plt.yticks(fontsize=22)
         ax.spines['left'].set_position('zero')
         ax.spines['bottom'].set_position('zero')
-        ax.yaxis.get_major_ticks()[0].label1.set_visible(False)
+        #ax.yaxis.get_major_ticks()[0].label1.set_visible(False)
         figure = plt.gcf()  # get current figure
         ##print(plt.rcParams.get('figure.figsize'))
         figure.set_size_inches(13.66, 6.71)
+        plt.ylim(0, 200)
         #plt.show()
         print(pos)
         plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,3)).replace('.', '_') + "_allGS" + ".png")
