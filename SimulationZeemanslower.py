@@ -66,8 +66,8 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
     plane_slice_pos = slicing_position_array
     print("len",len(plane_slice_pos))
     plane_slice_flags = []
-    plane_slice_upper_groundstate = [[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0]]
-    plane_slice_lower_groundstate = [[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0]]
+    plane_slice_upper_groundstate = [[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0]]
+    plane_slice_lower_groundstate = [[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0]]
 
     for i in range(len(plane_slice_pos)):
         plane_slice_flags.append(0)
@@ -109,7 +109,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
     #zpos_array=[0.0]
     #zvel_array=[0.0]
     z_histogram=[[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]]
-    vel_z_histo=[[[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]]]
+    vel_z_histo=[[[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]]]
     # initializing lists with 1 for observing several variables. Needed for compiling through Numba
     observing_z_vel = [0.0]
     observing_z_pos = [0.0]
@@ -138,9 +138,9 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
     counter_dead=0
 
     for i in range(0, atom_count):
-        z_pos_histo= [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0,0.0],
-                       [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0],
-                       [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0]]
+        z_pos_histo= [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0,0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0,0.0, 0.0, 0.0,0.0],
+                       [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0,0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0,0.0],
+                       [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0,0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0,0.0]]
 
         #print("counter", counter)
         #print("atom",i)
@@ -494,7 +494,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -1015e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -1070e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -508,13 +508,16 @@ if __name__ == '__main__':
     #slicing_positions = [0.0, 0.1, 0.3, 0.35, target_center_z-0.1,target_center_z-0.05,target_center_z-0.01,target_center_z-0.005,target_center_z-0.002]#sim_param_data['positions_for_slicing']
     #slicing_positions = [0.0, 0.05, 0.1,0.15,0.2,0.25, 0.3, 0.35, 0.4,0.45,0.5,0.55,0.6,0.65,0.695,0.7,0.704]
     slicing_positions = [0.0]
-    for i in range(0,19):
+    for i in range(0,22):
         slicing_positions.append(slicing_positions[i]+0.05)
 
-    slicing_positions[16]=target_center_z-0.05
-    slicing_positions[17]=target_center_z-0.01
-    slicing_positions[18]=target_center_z -0.005
-    slicing_positions[19]=target_center_z-0.001
+    slicing_positions[16]=0.8
+    slicing_positions[17]=0.83
+    slicing_positions[18]=0.85
+    slicing_positions[19]=0.9
+    slicing_positions[20]=target_center_z-0.05
+    slicing_positions[21]=target_center_z -0.005
+    slicing_positions[22]=target_center_z-0.001
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']
@@ -635,12 +638,12 @@ if __name__ == '__main__':
         bin_list = np.linspace(min_edge, max_edge, N+1)
         ax.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=bin_list, stacked=True,color=colors, label=labels)
         plt.legend(loc="upper right",fontsize=22)
-        if pos_i==16:
+        if pos_i==20:
             for i in range(len(v_z_histo[5][pos_i])):
                 if v_z_histo[5][pos_i][i]<=10*30:
                     count1+=1
             print("slowed atoms at {}m:{}".format(pos,count1))
-        if pos_i==19:
+        if pos_i==22:
             for i in range(len(v_z_histo[5][pos_i])):
                 if v_z_histo[5][pos_i][i]<=30:
                     count2+=1
