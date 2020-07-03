@@ -350,7 +350,3 @@ if __name__ == '__main__':
     plt.xlabel("Magnetic field in Gauss", fontsize=22)
     plt.ylabel("delta E in Hz", fontsize=22)
     plt.show()
-    #print("INDEX")
-    #print(indexpt_all)
-    #print("FINPT")
-    #print(findpt_all)

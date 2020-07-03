@@ -227,7 +227,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
             for iii in range(0,20):
                 if iii==pos_index:
                     pos_value=plane_slice_pos[iii]
-                    #if iii==18: print(iii,pos_value)
                     break
             current_excitation_freq = [0.0, 0.0, 0.0, 0.0]
             loop_counter += 1
@@ -363,7 +362,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                     count_vel_z_251_300 += 1
 
                 atom_dead = 0
-                atom_dead = 0
                 continue
 
         if GS_quantum_number==0:
@@ -486,7 +484,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 1.0 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.93 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -494,7 +492,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -1070e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -1010e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -514,7 +512,7 @@ if __name__ == '__main__':
     slicing_positions[16]=0.8
     slicing_positions[17]=0.83
     slicing_positions[18]=0.85
-    slicing_positions[19]=0.9
+    slicing_positions[19]=0.86
     slicing_positions[20]=target_center_z-0.05
     slicing_positions[21]=target_center_z -0.005
     slicing_positions[22]=target_center_z-0.001
@@ -554,12 +552,15 @@ if __name__ == '__main__':
                                     spline_fit, target_radius, intensity,max_step_length_file, slicing_positions,
                                     capture_vel, ground_state_quantum_numbers, exc_state_quantum_numbers)
 
+    #line_plotting(observing_z_position, observing_z_velocity, 'z position', 'z velocity', 0.0,
+    #        target_center_z+0.005,0.0, 2000.0, startTime, False)
+
     #plot dead atoms
     fig, ax = plt.subplots()
     ax.hist(dead_pos, bins=100)
     print("number of dead atoms", len(dead_pos))
-    plt.ylim(0, 100)
-    plt.xlim(target_center_z-0.1,target_center_z+0.001)
+    #plt.ylim(0, 100)
+    plt.xlim(target_center_z-0.5,target_center_z+0.001)
     plt.xlabel("Position in m", fontsize=22)
     plt.ylabel("Number of dead atoms", fontsize=22)
     plt.title("Total number of dead atoms: {} of {}".format(len(dead_pos),n),fontsize=22)
@@ -571,8 +572,8 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
     labels = ["v_x", "v_y", "v_z"]
     ax.hist([dead_vx,dead_vy,dead_vz], bins=100, stacked=True, label=labels)
-    plt.ylim(0, 500)
-    plt.xlim(0,100)
+    #plt.ylim(0, 500)
+    #plt.xlim(0,100)
     plt.legend(loc="upper right", fontsize=22)
     plt.xlabel("Velocity in m/s", fontsize=22)
     plt.ylabel("Number of dead atoms", fontsize=22)
@@ -660,7 +661,7 @@ if __name__ == '__main__':
         figure = plt.gcf()  # get current figure
         ##print(plt.rcParams.get('figure.figsize'))
         figure.set_size_inches(13.66, 6.71)
-        plt.ylim(0, 200)
+        plt.ylim(0, 200)#200)
         #plt.show()
         print(pos)
         plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,3)).replace('.', '_') + "_allGS" + ".png")

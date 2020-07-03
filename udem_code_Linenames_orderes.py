@@ -176,7 +176,7 @@ if __name__ == '__main__':
     Bfieldarray3 = np.linspace(10e-4, 0.1, num=2000)  # np.linspace(10e-4,0.5,num=100) #
     #Bfieldarray = Bfieldarray1#np.linspace(0, 1e-4, num=2000)  # np.concatenate((Bfieldarray1,Bfieldarray2),axis=0)##np.linspace(0,2e-4,num=500)
     Bfieldarray = np.concatenate((Bfieldarray1, Bfieldarray2), axis=0) #np.linspace(-1e-2,1e-2,num=500)#
-    #Bfieldarray = np.concatenate((Bfieldarray, Bfieldarray3), axis=0) #np.linspace(-1e-2,1e-2,num=500)#
+    Bfieldarray = np.concatenate((Bfieldarray, Bfieldarray3), axis=0) #np.linspace(-1e-2,1e-2,num=500)#
     num_lines_exc=12
     num_lines_gs=6
 
@@ -210,36 +210,36 @@ if __name__ == '__main__':
     k=0
 
 
-    for line_exc in range(0,12):
+    for line_exc in range(0,6):
         findpt = np.empty(len(numberarray))
-        diff = np.empty(12)
+        diff = np.empty(6)
 
         for j in range(0,len(numberarray)): #loop over Bfield
-            if j<3 and line_exc!=5:
-                findpt[0] = Ees[line_exc][1]
-                findpt[1] = Ees[line_exc][1]
-                findpt[2] = Ees[line_exc][2]
+            if j<3:# and line_exc!=5:
+                findpt[0] = Egs[line_exc][0]
+                findpt[1] = Egs[line_exc][1]
+                findpt[2] = Egs[line_exc][2]
                 steigung = (findpt[2] - findpt[1]) / (numberarray[2] - numberarray[1])
                 achsenab = findpt[1]
-            if j>=3 and line_exc!=5:
+            if j>=3:# and line_exc!=5:
                 steigung = (findpt[j-1]-findpt[1])/(numberarray[j-1]-numberarray[1])
                 findpt[j] = steigung * numberarray[j] + achsenab
-                for i in range(0,12):
-                    diff[i] = np.abs(findpt[j] - Ees[i][j])
-                findpt[j] = Ees[np.argmin(diff)][j]
-            if j<4 and line_exc==5:
-                findpt[0] = Ees[line_exc][1]
-                findpt[1] = Ees[line_exc][1]
-                findpt[2] = Ees[line_exc][2]
-                findpt[3] = Ees[line_exc][3]
-                steigung = (findpt[2] - findpt[1]) / (numberarray[2] - numberarray[1])
-                achsenab = findpt[1]
-            if j>=4 and line_exc==5:
-                steigung = (findpt[j-1]-findpt[1])/(numberarray[j-1]-numberarray[1])
-                findpt[j] = steigung * numberarray[j] + achsenab
-                for i in range(0,12):
-                    diff[i] = np.abs(findpt[j] - Ees[i][j])
-                findpt[j] = Ees[np.argmin(diff)][j]
+                for i in range(0,6):
+                    diff[i] = np.abs(findpt[j] - Egs[i][j])
+                findpt[j] = Egs[np.argmin(diff)][j]
+            #if j<4 and line_exc==5:
+            #    findpt[0] = Ees[line_exc][1]
+            #    findpt[1] = Ees[line_exc][1]
+            #    findpt[2] = Ees[line_exc][2]
+            #    findpt[3] = Ees[line_exc][3]
+            #    steigung = (findpt[2] - findpt[1]) / (numberarray[2] - numberarray[1])
+            #    achsenab = findpt[1]
+            #if j>=4 and line_exc==5:
+            #    steigung = (findpt[j-1]-findpt[1])/(numberarray[j-1]-numberarray[1])
+            #    findpt[j] = steigung * numberarray[j] + achsenab
+            #    for i in range(0,12):
+            #        diff[i] = np.abs(findpt[j] - Ees[i][j])
+            #    findpt[j] = Ees[np.argmin(diff)][j]
 
         findpt_all.append(findpt)
 
@@ -248,12 +248,12 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
 
 
-    for line_exc in range(1, 13):
-        ax.plot(1e4 * numberarray, 1e-9 * findpt_all[line_exc],color=colors[line_exc], label="Excited state {}".format(line_exc-1))
+    #for line_exc in range(1, 13):
+        #ax.plot(1e4 * numberarray, 1e-9 * findpt_all[line_exc],color=colors[line_exc], label="Excited state {}".format(line_exc-1))
         #ax.plot(1e4 * numberarray, 1e-9 * Ees[line_exc-1],".",color=colors[line_exc])
 
-    #for line_gs in range(1,7):
-    #    ax.plot(1e4 * numberarray, 1e-9 * findpt_all[line_gs],color=colors[line_gs], label="Ground state {}".format(line_gs-1))
+    for line_gs in range(1,7):
+        ax.plot(1e4 * numberarray, 1e-9 * findpt_all[line_gs],color=colors[line_gs], label="Ground state {}".format(line_gs-1))
         #ax.plot(1e4 * numberarray, 1e-9 * Egs[line_gs-1],".",color=colors[line_gs])
 
     #plt.ylim(-5,5)

@@ -1,4 +1,3 @@
-from trans_strength import trans_strength
 from Position import Position
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,11 +23,11 @@ for line_gs in range(0,6):
             line_gs == 3 and line_exc == 7 or line_gs == 3 and line_exc == 8 or \
             line_gs == 2 and line_exc == 9 or line_gs == 3 and line_exc == 9 or \
             line_gs == 5 and line_exc == 11 or line_gs == 2 and line_exc == 8:
-            det = -400e6
+            det = -1000e6
             for i in range(num):
                 exc_prob[i]=(lorentzian_probability(2,line_gs,line_exc,Bfield,Position(line_gs,line_exc,2,Bfield),446799900000000, det, 2 * math.pi * 5.87E6,10,0,0,0,0,0,-1,scc.c /446799900000000))
                 det_array[i]=det
-                det+=400e6/num
+                det+=2000e6/num
 
             plt.plot(det_array*1e-6,exc_prob,label="GS:{} ES:{}".format(line_gs, line_exc), color=colors[color])
             color+=1
@@ -39,17 +38,20 @@ det_array_2=np.empty(num)
 shift=[-228e6,0.0]
 label=["lower GS", "upper GS"]
 
-for a in range(0,2):
-    det_2 = -200e6
-    for i in range(num):
-        exc_prob_2[i]=(lorentzian_probability_2(446799978232118.25-shift[a], 446799900000000, det_2, 2 * math.pi * 5.87E6, 0.11, 0.11/5))
-        det_array_2[i]=det_2
-        det_2+=350e6/num
-    #plt.plot(det_array_2*1e-6,exc_prob_2,label=label[a])
+#for a in range(0,2):
+#    det_2 = -200e6
+#    for i in range(num):
+#        exc_prob_2[i]=(lorentzian_probability_2(446799978232118.25-shift[a], 446799900000000, det_2, 2 * math.pi * 5.87E6, 0.11, 0.11/5))
+#        det_array_2[i]=det_2
+#        det_2+=350e6/num
+#    plt.plot(det_array_2*1e-6,exc_prob_2,label=label[a])
 
-plt.xlabel("Detuning in MHz", fontsize=15)
-plt.ylabel("excitation rate in a.u.", fontsize=15)
+plt.xlabel("Detuning in MHz", fontsize=22)
+plt.ylabel("Excitation rate in a.u.", fontsize=22)
 plt.yscale('log')
-plt.legend(fontsize=11)
+plt.legend(fontsize=17)
+plt.rcParams.update({'font.size': 22})
+plt.xticks(fontsize=22)
+plt.yticks(fontsize=22)
 #plt.grid()
 plt.show()

@@ -53,7 +53,6 @@ def lorentzian_probability(pol, GS, a, Bfield, atom_freq, laser_frequency, laser
     omega = 2 * math.pi * 1e6 * 11.925*trans_strength(GS, a, pol, Bfield) * 4.37 * math.sqrt(0.1*laser_intensity) # Rabi frequency mit 11.925Debye
     s_val = 0.5 * omega ** 2 / (delta ** 2 + (natural_line_width ** 2) / 4)
     excitation_rate = s_val / (2 * (1 + s_val))
-
     return excitation_rate
 
 # lorentzian probability distribution for calculating the probability of excitment
