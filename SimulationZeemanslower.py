@@ -444,10 +444,12 @@ if __name__ == '__main__':
     #target_center_z=1.0
     #print("spline 6000", spline_fit[6000])
     #print("spline 15000", spline_fit[15000])
-    for jj in range(1,1000):
-        x.append(x[jj-1]+0.5/1000)
-        y.append(10e4 * spline_fit_field_function(spline_fit, x[jj], maximum_distance,0.5))
-    #plt.plot(x,y)
+    #for jj in range(1,1000):
+        #spline_fit=-spline_fit
+        #x.append(x[jj-1]+0.5/1000)
+        #y.append(10e4 * spline_fit_field_function(spline_fit, x[jj], maximum_distance,0.5))
+    #spline_fit=-spline_fit #for sigma -
+    #plt.plot(spline_fit)
     #plt.show()
 
     # mass of observed atom
@@ -462,8 +464,8 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 10000 #sim_param_data['particle_number']
-    allgs=1 #0=gs5 only, 1=all gs
+    n = 100 #sim_param_data['particle_number']
+    allgs=0 #0=gs5 only, 1=all gs
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
     # maximal considered velocity
@@ -613,11 +615,16 @@ if __name__ == '__main__':
     for GS in range(0,6):
         z_histo[GS]=z_histo[GS][1:]
         plt.hist(z_histo[GS], bins=100, facecolor='green', edgecolor='black', linewidth=1.2)
-        plt.ylim(0, 7500)
+        #plt.ylim(0, 7500)
         plt.xlim(0, target_center_z)
-        plt.xlabel("z in m", fontsize=15)
+        plt.xlabel("z in m", fontsize=22)
+        plt.ylabel("Atoms in GS", fontsize=22)
         #plt.ylabel("Atoms in GS", fontsize=12)
-        plt.title("Atoms in GS{}".format(GS))
+        plt.title("Atoms in GS{}".format(GS),fontsize=22)
+        plt.xticks(fontsize=22)
+        plt.yticks(fontsize=22)
+        figure = plt.gcf()  # get current figure
+        figure.set_size_inches(13.66, 6.71)
         plt.savefig('simulation_results/' + "GS_distr" + "/" + "z" + "_Histo_pos" + "_GS" + str(GS) + ".png")
         plt.close()
 
@@ -661,7 +668,7 @@ if __name__ == '__main__':
         figure = plt.gcf()  # get current figure
         ##print(plt.rcParams.get('figure.figsize'))
         figure.set_size_inches(13.66, 6.71)
-        plt.ylim(0, 200)#200)
+        plt.ylim(0, 350)
         #plt.show()
         print(pos)
         plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,3)).replace('.', '_') + "_allGS" + ".png")
