@@ -464,7 +464,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 100 #sim_param_data['particle_number']
+    n = 10000 #sim_param_data['particle_number']
     allgs=0 #0=gs5 only, 1=all gs
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
@@ -668,7 +668,7 @@ if __name__ == '__main__':
         figure = plt.gcf()  # get current figure
         ##print(plt.rcParams.get('figure.figsize'))
         figure.set_size_inches(13.66, 6.71)
-        plt.ylim(0, 350)
+        plt.ylim(0,1850)# 350)
         #plt.show()
         print(pos)
         plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,3)).replace('.', '_') + "_allGS" + ".png")
