@@ -449,7 +449,7 @@ if __name__ == '__main__':
         #x.append(x[jj-1]+0.5/1000)
         #y.append(10e4 * spline_fit_field_function(spline_fit, x[jj], maximum_distance,0.5))
     #spline_fit=-spline_fit #for sigma -
-    #plt.plot(spline_fit)
+    #plt.plot(max_step_length_file)
     #plt.show()
 
     # mass of observed atom
@@ -465,7 +465,7 @@ if __name__ == '__main__':
     temperature = sim_param_data['temperature']
     # number of observed atoms
     n = 10000 #sim_param_data['particle_number']
-    allgs=0 #0=gs5 only, 1=all gs
+    allgs=1 #0=gs5 only, 1=all gs
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
     # maximal considered velocity
@@ -494,6 +494,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
+    #repumper=on/off
     laser_det = -1010e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
@@ -644,18 +645,16 @@ if __name__ == '__main__':
         max_edge = 5700
         N = int((max_edge-min_edge)/bin_size)
         bin_list = np.linspace(min_edge, max_edge, N+1)
-        ax.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=bin_list, stacked=True,color=colors, label=labels)
+        res, bins, patches=ax.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=bin_list, stacked=True,color=colors, label=labels)
+
+        if (pos>=0.54 and pos<0.56) or (pos>=0.75 and pos<0.76) or (pos>=0.8 and pos<0.81):
+            flat = res[5].flatten()
+            flat.sort()
+            print(pos, np.amax(res[5])+flat[-2])
+        else:
+            print(np.amax(res[5]))
+
         plt.legend(loc="upper right",fontsize=22)
-        if pos_i==20:
-            for i in range(len(v_z_histo[5][pos_i])):
-                if v_z_histo[5][pos_i][i]<=10*30:
-                    count1+=1
-            print("slowed atoms at {}m:{}".format(pos,count1))
-        if pos_i==22:
-            for i in range(len(v_z_histo[5][pos_i])):
-                if v_z_histo[5][pos_i][i]<=30:
-                    count2+=1
-            print("slowed atoms at {}m:{}".format(pos,count2))
         plt.xlabel("v_z in m/s", fontsize=22)
         plt.ylabel("Atoms in GS", fontsize=22)
         plt.title("Atoms at z={}m".format(round(pos,3)),fontsize=22)
@@ -668,10 +667,11 @@ if __name__ == '__main__':
         figure = plt.gcf()  # get current figure
         ##print(plt.rcParams.get('figure.figsize'))
         figure.set_size_inches(13.66, 6.71)
-        plt.ylim(0,1850)# 350)
+        plt.ylim(0,350)
         #plt.show()
-        print(pos)
+        #print(pos)
         plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,3)).replace('.', '_') + "_allGS" + ".png")
+        #print((ax.hist(v_z_histo[5][pos_i])[0]))
         plt.close()
         pos_i+=1
 
