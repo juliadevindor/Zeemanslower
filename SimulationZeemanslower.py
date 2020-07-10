@@ -224,7 +224,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
         z_pos_histo_binning=z_pos
         # if the atom is not dead do the steps
         while atom_dead != 0:
-            for iii in range(0,20):
+            for iii in range(0,23):
                 if iii==pos_index:
                     pos_value=plane_slice_pos[iii]
                     break
@@ -281,6 +281,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                         z_histogram[GS_quantum_number].append(z_pos)
                         z_pos_histo_binning=z_pos
                     if z_pos>=pos_value and z_pos_histo[GS_quantum_number][pos_index]==0.0:
+                        #print(GS_quantum_number,pos_index,pos_value,z_velocity_new)
                         z_pos_histo[GS_quantum_number][pos_index]=pos_value
                         vel_z_histo[GS_quantum_number][pos_index].append(z_velocity_new)
                         if pos_index+1<len(plane_slice_pos): pos_index+=1
@@ -434,13 +435,13 @@ if __name__ == '__main__':
     '''
     xval=[0.0]
     for itest in range(1,len(spline_fit)):
-        xval.append(xval[itest-1]+0.8/len(spline_fit))
+        xval.append(xval[itest-1]+1.0/len(spline_fit))
     #plt.plot(xval,spline_fit,".")
     #plt.xlabel("zpos in m")
     #plt.ylabel("grad B")
     #plt.show()
-    x=[-0.5]
-    y=[0.0]
+    #x=[-0.5]
+    #y=[0.0]
     #target_center_z=1.0
     #print("spline 6000", spline_fit[6000])
     #print("spline 15000", spline_fit[15000])
@@ -449,7 +450,7 @@ if __name__ == '__main__':
         #x.append(x[jj-1]+0.5/1000)
         #y.append(10e4 * spline_fit_field_function(spline_fit, x[jj], maximum_distance,0.5))
     #spline_fit=-spline_fit #for sigma -
-    #plt.plot(max_step_length_file)
+    #plt.plot(spline_fit)
     #plt.show()
 
     # mass of observed atom
@@ -486,7 +487,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.93 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.95 #0.93 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -495,7 +496,7 @@ if __name__ == '__main__':
 
     # laser properties
     #repumper=on/off
-    laser_det = -1010e6 #-2300e6#-990e6#-300e6 #-1020e6 #(sim_param_data["slower_laser_detuning"])  # -550e6
+    laser_det = -460e6#-1010e6 #(sim_param_data["slower_laser_detuning"])
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -512,13 +513,13 @@ if __name__ == '__main__':
     for i in range(0,22):
         slicing_positions.append(slicing_positions[i]+0.05)
 
-    slicing_positions[16]=0.8
-    slicing_positions[17]=0.83
-    slicing_positions[18]=0.85
-    slicing_positions[19]=0.86
-    slicing_positions[20]=target_center_z-0.05
-    slicing_positions[21]=target_center_z -0.005
-    slicing_positions[22]=target_center_z-0.001
+    #slicing_positions[16]=0.8
+    #slicing_positions[17]=0.83
+    #slicing_positions[18]=0.85
+    #slicing_positions[19]=0.86
+    slicing_positions[18]=target_center_z-0.05
+    slicing_positions[19]=target_center_z-0.005
+    slicing_positions[20]=target_center_z-0.001
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']
@@ -653,6 +654,8 @@ if __name__ == '__main__':
             print(pos, np.amax(res[5])+flat[-2])
         else:
             print(np.amax(res[5]))
+        if pos==target_center_z-0.001:
+            print(res[5][0]+res[5][1]+res[5][2])
 
         plt.legend(loc="upper right",fontsize=22)
         plt.xlabel("v_z in m/s", fontsize=22)
@@ -669,9 +672,10 @@ if __name__ == '__main__':
         figure.set_size_inches(13.66, 6.71)
         plt.ylim(0,350)
         #plt.show()
-        #print(pos)
+        v_z_histo[5][pos_i].sort()
+        print(pos)
+        #print(v_z_histo[5][pos_i])
         plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,3)).replace('.', '_') + "_allGS" + ".png")
-        #print((ax.hist(v_z_histo[5][pos_i])[0]))
         plt.close()
         pos_i+=1
 
