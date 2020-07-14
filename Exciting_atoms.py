@@ -26,7 +26,7 @@ def Excitation(Debug_flag, current_groundstate,counter,mass_lithium_6,GS_quantum
             for pol in range(0, 3):  # loop over all polarizations: 0: sigmin; 1:pi; 2:sigplus
                 rho_ex[a]=polarization[pol]*lorentzian_probability(pol,GS,a,Bfield,Position(GS, a, pol, Bfield), laser_frequency, laser_detuning,natural_line_width,laser_intensity_gauss(x_y_pos_component_squared,z_pos, laser_intensity), vx, vy, vz, kx, ky, kz, wavelength)
                 ### repumper laser ###
-                #rho_ex[a]+=polarization[pol]*lorentzian_probability(pol,GS,a,Bfield,Position(GS, a, pol, Bfield), laser_frequency, laser_detuning+1000e6,natural_line_width,laser_intensity_gauss(x_y_pos_component_squared,z_pos, laser_intensity), vx, vy, vz, kx, ky, kz, wavelength)
+                #rho_ex[a]+=polarization[pol]*lorentzian_probability(pol,GS,a,Bfield,Position(GS, a, pol, Bfield), laser_frequency, laser_detuning+300e6,natural_line_width,laser_intensity_gauss(x_y_pos_component_squared,z_pos, laser_intensity), vx, vy, vz, kx, ky, kz, wavelength)
                 ### repumper laser ###
                 if rho_ex[a]>1e-20 and Debug_flag==1: print("ES", a, "sigma", pol, "rho ex", rho_ex[a])
                 excitation_rate[a]+=rho_ex[a]*natural_line_width #Gamma_i
