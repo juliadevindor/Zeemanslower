@@ -465,7 +465,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 100000 #sim_param_data['particle_number']
+    n = 100 #sim_param_data['particle_number']
     allgs=1 #0=gs5 only, 1=all gs
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
@@ -487,7 +487,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.7 #0.93 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 1.0 #0.93 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -496,7 +496,7 @@ if __name__ == '__main__':
 
     # laser properties
     #repumper=on/off
-    laser_det = -830e6#-1010e6 #(sim_param_data["slower_laser_detuning"])
+    laser_det = -1012e6 #-1012e6#-1010e6 #(sim_param_data["slower_laser_detuning"])
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -513,13 +513,13 @@ if __name__ == '__main__':
     for i in range(0,22):
         slicing_positions.append(slicing_positions[i]+0.05)
 
-    #slicing_positions[16]=0.8
-    #slicing_positions[17]=0.83
-    #slicing_positions[18]=0.85
-    #slicing_positions[19]=0.86
-    slicing_positions[13]=target_center_z-0.05
-    slicing_positions[14]=target_center_z-0.005
-    slicing_positions[15]=target_center_z-0.001
+    slicing_positions[16]=0.8
+    slicing_positions[17]=0.85
+    slicing_positions[18]=0.9
+    slicing_positions[19]=0.929
+    slicing_positions[20]=target_center_z-0.05
+    slicing_positions[21]=target_center_z-0.005
+    slicing_positions[22]=target_center_z-0.001
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']
@@ -654,8 +654,9 @@ if __name__ == '__main__':
             print(pos, np.amax(res[5])+flat[-2])
         else:
             print(np.amax(res[5]))
-        if pos==target_center_z-0.001:
+        if pos==target_center_z-0.001 or pos==0.929:
             print(res[5][0]+res[5][1]+res[5][2])
+            #print(res[5][0]+res[5][1]+res[5][2]+res[5][3]+res[5][4]+res[5][5])
 
         plt.legend(loc="upper right",fontsize=22)
         plt.xlabel("v_z in m/s", fontsize=22)
@@ -670,7 +671,7 @@ if __name__ == '__main__':
         figure = plt.gcf()  # get current figure
         ##print(plt.rcParams.get('figure.figsize'))
         figure.set_size_inches(13.66, 6.71)
-        plt.ylim(0,3500)#350)
+        plt.ylim(0,4000)#350)
         #plt.show()
         v_z_histo[5][pos_i].sort()
         print(pos)

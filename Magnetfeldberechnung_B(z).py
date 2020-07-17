@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import quad
 import scipy.constants as scc
-from scipy.optimize import curve_fit
 
 hPlanck=scc.h #6.62607004e-34 Js
 muB=scc.physical_constants['Bohr magneton'][0] # 9.274009994e-24 J/T
