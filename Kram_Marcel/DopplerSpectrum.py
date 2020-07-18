@@ -102,8 +102,9 @@ ax3.spines["top"].set_color("blue")
 ax3.spines["top"].set_bounds(newpos[0], ax1.get_xlim()[-1])
 ax3.set_xlabel("Velocity of F=3/2 [m/s]", fontsize=15)
 ax3.set_xlim(ax1.get_xlim())
-
+plt.show()
 plt.savefig("UnslowedBeam.pdf",bbox_inches='tight', pad_inches=0.02, dpi=150)
+plt.close()
 
 #########################################################
 ## Create Li6 Spectrum Plot of hot beam vs slowed beam ##
@@ -169,5 +170,5 @@ ax3.spines["top"].set_color("blue")
 ax3.spines["top"].set_bounds(newpos[0], ax1.get_xlim()[-1])
 ax3.set_xlabel("Velocity of F=3/2 [m/s]", fontsize=15)
 ax3.set_xlim(ax1.get_xlim())
-
+plt.show()
 plt.savefig("SlowedBeam.pdf",bbox_inches='tight', pad_inches=0.02, dpi=150)

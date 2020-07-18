@@ -53,12 +53,12 @@ laser_sat_intensity=sat
 init_freq= np.array([446799978232118.25 , 446799978232118.25-228e6])#excitation_frequency -freq_shift_splitting[current_groundstate]-->0 oder -228E6
 nu0 = 446799978232118.25 #2*math.pi*446799900000000 #in Hz
 Gamma = natural_line_width #in Hz
-nu = np.linspace(nu0 - 70*Gamma , nu0 + 70*Gamma , 50000)
+nu = np.linspace(nu0 - 50*Gamma , nu0 + 10*Gamma , 50000)
 spectrum = np.zeros(nu.size)
 
 fig=plt.figure()
 ax = fig.add_subplot(111)
-
+x_values=np.arange(0,700)
 for j in range(1):
     spectrum_simple = np.zeros(nu.size)
     spectrum_simple_s = np.zeros(nu.size)
@@ -70,8 +70,8 @@ for j in range(1):
         nu_shifted_simple_s = Dopplershift_simple(nu, alpha_0, vx2[i], vy2[i], vz2[i])
         prob_simple_s = Probability(nu_shifted_simple_s, init_freq[gs2[i]], Gamma, sat, sat)
         spectrum_simple_s += prob_simple_s
-    ax.plot(-nu*1e-12,spectrum_simple,label="unslowed beam for alpha={}°".format(j))
-    ax.plot(-nu*1e-12,spectrum_simple_s,label="slowed beam for alpha={}°".format(j))
+    ax.plot(-nu*1e-12,spectrum_simple/spectrum_simple.max(),label="unslowed beam for alpha={}°".format(j))
+    ax.plot(-nu*1e-12,spectrum_simple_s/spectrum_simple.max(),label="slowed beam for alpha={}°".format(j))
 plt.xlabel("Laser Frequency in THz", fontsize=22)
 plt.ylabel("Sum of Lorentzian Probabilities", fontsize=22)
 plt.grid()
@@ -81,81 +81,3 @@ plt.legend()
 ax.ticklabel_format(useOffset=False)
 plt.show()
 plt.close()
-
-fig=plt.figure()
-ax = fig.add_subplot(111)
-for j in range(5):
-    spectrum_simple = np.zeros(nu.size)
-    spectrum_simple_s = np.zeros(nu.size)
-    alpha_0=-j*math.pi/180 #degree to rad
-    for i in range(len(vx)):
-        nu_shifted_simple=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i])
-        prob_simple = Probability(nu_shifted_simple, init_freq[gs[i]], Gamma, sat, sat)
-        spectrum_simple += prob_simple
-        nu_shifted_simple_s = Dopplershift_simple(nu, alpha_0, vx2[i], vy2[i], vz2[i])
-        prob_simple_s = Probability(nu_shifted_simple_s, init_freq[gs2[i]], Gamma, sat, sat)
-        spectrum_simple_s += prob_simple_s
-    ax.plot(nu*1e-12,spectrum_simple,label="unslowed beam for alpha={}°".format(j))
-    #ax.plot(nu*1e-12,spectrum_simple_s,label="slowed beam for alpha={}°".format(j))
-plt.xlabel("Laser Frequency in THz", fontsize=22)
-plt.ylabel("Sum of Lorentzian Probabilities", fontsize=22)
-plt.grid()
-#plt.ylim(-10,2100)
-ax = plt.gca()
-plt.legend()
-ax.ticklabel_format(useOffset=False)
-plt.show()
-plt.close()
-
-fig=plt.figure()
-ax = fig.add_subplot(111)
-for j in range(5):
-    spectrum_simple = np.zeros(nu.size)
-    spectrum_simple_s = np.zeros(nu.size)
-    alpha_0=-j*math.pi/180 #degree to rad
-    for i in range(len(vx)):
-        nu_shifted_simple=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i])
-        prob_simple = Probability(nu_shifted_simple, init_freq[gs[i]], Gamma, sat, sat)
-        spectrum_simple += prob_simple
-        nu_shifted_simple_s = Dopplershift_simple(nu, alpha_0, vx2[i], vy2[i], vz2[i])
-        prob_simple_s = Probability(nu_shifted_simple_s, init_freq[gs2[i]], Gamma, sat, sat)
-        spectrum_simple_s += prob_simple_s
-    #ax.plot(nu*1e-12,spectrum_simple,label="unslowed beam for alpha={}°".format(j))
-    ax.plot(nu*1e-12,spectrum_simple_s,label="slowed beam for alpha={}°".format(j))
-plt.xlabel("Laser Frequency in THz", fontsize=22)
-plt.ylabel("Sum of Lorentzian Probabilities", fontsize=22)
-plt.grid()
-#plt.ylim(-10,2100)
-ax = plt.gca()
-plt.legend()
-ax.ticklabel_format(useOffset=False)
-plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#print(nu[np.argmax(spectrum_simple_0, axis=0)])
-#print(nu[np.argmax(spectrum_simple_1, axis=0)])
-#print(nu[np.argmax(spectrum_simple_2, axis=0)])
-#print(nu[np.argmax(spectrum_simple_4, axis=0)])
-
-#print("delta",nu[np.argmax(spectrum_simple_0, axis=0)]-nu[np.argmax(spectrum_simple_1, axis=0)])
-#print("delta",nu[np.argmax(spectrum_simple_0, axis=0)]-nu[np.argmax(spectrum_simple_2, axis=0)])
-#print("delta",nu[np.argmax(spectrum_simple_0, axis=0)]-nu[np.argmax(spectrum_simple_4, axis=0)])
-
