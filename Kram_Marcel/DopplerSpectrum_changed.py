@@ -90,61 +90,11 @@ print("x0\t=\t{0}".format(popt[3]))
 print("fPerT\t=\t{0}".format(popt[4]))
 print("")
 #with x0 and fperT the x-axis can be transformed into delta nu
-
 xx = (xx-popt[3]) * popt[4]
-
-# Drawing begins here
-plt.figure(figsize=(5,4))
-
-ax1 = plt.subplot(1,1,1)
-ax1.plot( xx, V/V.max(), "k", label="Data")
-ax1.plot( xx, totalSpectrum(xx, popt[0], popt[1], popt[2], 0, 1), color="orange", label="Fit")
-ax1.plot( xx, dopplerSpectrum(xx, popt[0], popt[2], 0, 1), "r--",label="F=1/2")
-ax1.plot( xx, dopplerSpectrum(xx, popt[1], popt[2], 228, 1), "b--",label="F=3/2")
-ax1.spines["top"].set_visible(False)
-ax1.set_xlabel(r"$\Delta\nu$ [-MHz]", fontsize=15)
-ax1.set_ylabel("Intensity [A.U.]", fontsize=15)
-ax1.set_ylim(-0.1,1.1)
-ax1.legend(fontsize=10)
-
-# Add two x-axes above
-ax2 = ax1.twiny()
-newlabels = np.array([0,1000,2000,3000,4000,5000,6000])
-newpos = 446799677 * (1-1/(1+newlabels/2.998e8*np.sin(popt[2]*np.pi/180)))
-ax2.plot( [newpos[0], newpos[0]], ax1.get_ylim(), "r--", alpha=0.3 )
-ax2.set_xticks(newpos)
-ax2.set_xticklabels(newlabels)
-ax2.xaxis.set_ticks_position("top")
-ax2.tick_params(axis="x", colors="red")
-ax2.xaxis.set_label_position("top")
-ax2.xaxis.label.set_color("red")
-ax2.spines["top"].set_color("red")
-ax2.set_xlabel("Velocity of F=1/2 [m/s]", fontsize=15)
-ax2.set_xlim(ax1.get_xlim())
-
-ax3 = ax1.twiny()
-newlabels = np.array([0,1000,2000,3000,4000])
-newpos = 446799677-(446799677-228)/(1+newlabels/2.998e8*np.sin(popt[2]*np.pi/180))
-ax3.plot( [newpos[0], newpos[0]], ax1.get_ylim(), "b--", alpha=0.3 )
-ax3.set_xticks(newpos)
-ax3.set_xticklabels(newlabels)
-ax3.xaxis.set_ticks_position("top")
-ax3.tick_params(axis="x", colors="blue")
-ax3.xaxis.set_label_position("top")
-ax3.xaxis.label.set_color("blue")
-ax3.spines["top"].set_position(("outward",40))
-ax3.spines["top"].set_color("blue")
-ax3.spines["top"].set_bounds(newpos[0], ax1.get_xlim()[-1])
-ax3.set_xlabel("Velocity of F=3/2 [m/s]", fontsize=15)
-ax3.set_xlim(ax1.get_xlim())
-#plt.show()
-plt.savefig("UnslowedBeam.pdf",bbox_inches='tight', pad_inches=0.02, dpi=150)
-plt.close()
 
 #########################################################
 ## Create Li6 Spectrum Plot of hot beam vs slowed beam ##
 #########################################################
-plt.close()
 
 V_slowed = load("SlowedBeam.txt")
 plt.figure(figsize=(5,4))
@@ -231,21 +181,28 @@ spectrum = np.zeros(nu.size)
 
 ax4 = ax1.twiny()
 
-#fig=plt.figure()
-#ax = fig.add_subplot(111)
-for j in range(1):
-    spectrum_simple = np.zeros(nu.size)
-    spectrum_simple_s = np.zeros(nu.size)
-    alpha_0=-j*math.pi/180 #degree to rad
-    for i in range(len(vx)):
-        nu_shifted_simple=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i])
-        prob_simple = Probability(nu_shifted_simple, init_freq[gs[i]], Gamma, sat, sat)
-        spectrum_simple += prob_simple
-        nu_shifted_simple_s = Dopplershift_simple(nu, alpha_0, vx2[i], vy2[i], vz2[i])
-        prob_simple_s = Probability(nu_shifted_simple_s, init_freq[gs2[i]], Gamma, sat, sat)
-        spectrum_simple_s += prob_simple_s
-    ax4.plot(-nu*1e-12,spectrum_simple/spectrum_simple.max(),label="unslowed beam for alpha={}°".format(j))
-    ax4.plot(-nu*1e-12,spectrum_simple_s/spectrum_simple.max(),label="slowed beam for alpha={}°".format(j))
+j=0 #alpha in degrees
+
+spectrum_simple = np.zeros(nu.size)
+spectrum_simple_s = np.zeros(nu.size)
+alpha_0=-j*math.pi/180 #degree to rad
+for i in range(len(vx)):
+    nu_shifted_simple=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i])
+    prob_simple = Probability(nu_shifted_simple, init_freq[gs[i]], Gamma, sat, sat)
+    spectrum_simple += prob_simple
+    nu_shifted_simple_s = Dopplershift_simple(nu, alpha_0, vx2[i], vy2[i], vz2[i])
+    prob_simple_s = Probability(nu_shifted_simple_s, init_freq[gs2[i]], Gamma, sat, sat)
+    spectrum_simple_s += prob_simple_s
+
+popt2, pcov2 = curve_fit(totalSpectrum, -nu*1e-12, spectrum_simple/spectrum_simple.max(),p0=(popt[0],popt[1],popt[2],popt[3],popt[4]))
+#max1 = np.where(spectrum_simple == np.amax(spectrum_simple))
+#max2 = np.where(spectrum_simple_s == np.amax(spectrum_simple_s))
+
+ax4.plot(-xx,spectrum_simple/spectrum_simple.max(),label="unslowed beam for alpha={}°".format(j))
+ax4.plot(-xx,spectrum_simple_s/spectrum_simple.max(),label="slowed beam for alpha={}°".format(j))
+
+ax4.plot(xx,totalSpectrum(xx, popt[0], popt[1], popt[2], 0, 1),label="FIT")
+
 #plt.xlabel("Laser Frequency in THz", fontsize=22)
 #plt.ylabel("Sum of Lorentzian Probabilities", fontsize=22)
 #plt.grid()
@@ -256,7 +213,7 @@ for j in range(1):
 #plt.show()
 
 
-plt.legend(framealpha=1,fontsize=10)
+ax1.legend(framealpha=1,fontsize=10)
 
 plt.show()
 plt.savefig("SlowedBeam.pdf",bbox_inches='tight', pad_inches=0.02, dpi=150)

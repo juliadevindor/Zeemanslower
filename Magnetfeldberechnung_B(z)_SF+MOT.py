@@ -34,7 +34,7 @@ dist=0#0.04
 L = np.array([0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05])
 N = np.array([320,270,250,240,250,250,230,200,200,170,170,150,150,150,100,150])
 I = np.array([14.0,14.0,13.605,13.16,11.847,10.889,10.623,10.61,9.448,8.974,7.221,5.509,2.895,-0.862,-5.944,-17.341])
-L_field=1.4 #0.93 + dist#+time for increase of  magnetic field
+L_field=1.5 #0.93 + dist#+time for increase of  magnetic field
 num = 5000
 mu_0=4*np.pi*1e-7 # magnetic field constant
 R= 0.045/2 # inner radius of Zeeman-coils in m (not approved)
@@ -83,18 +83,18 @@ for o in range(0, num):  # loop over z (along the beam axis)
             R_layer=R+mi*b_wire
             B += B_coil(I[j], N_wires[j], L[j], R_layer, z0[j], z[o]) # calculate magnetic field and add to total magnetic field
     for mi_HH in range(0,M_HH): # loop over all layers of HH coils
-        B_HHtot[o] += (B_HHcoils(z[o], z0_HH, R_HH+24*d_wire_HH, I_HH, N_HH/M_HH, d_HH) + B_HHcoils(z[o], z0_HH, R_HH+24*d_wire_HH, -I_HH, N_HH/M_HH, -d_HH))  # calculating HH field
+        B_HHtot[o] += (B_HHcoils(z[o], z0_HH, R_HH+24*d_wire_HH, -I_HH, N_HH/M_HH, d_HH) + B_HHcoils(z[o], z0_HH, R_HH+24*d_wire_HH, I_HH, N_HH/M_HH, -d_HH))  # calculating HH field
 
     B+= B_HHtot[o] # add HH coils to total magnetic field
     B_tot[o] = B
 
 plt.plot(z,B_tot*1e4,label="Real spin-flip slower L=0.8m + MOT",color="blue")
 
-with open("fields/B(z)_fit_0_8m_SF.txt", "r") as f:
+with open("fields/B(z)_0_8m_SF_long.txt", "r") as f:
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x + 0.5, y, label="Real spin-flip slower L=0.8m", color="red")
+    ax.plot(x + 0.5, y, label="Ideal spin-flip slower L=0.8m", color="red")
 with open("Measurements/Feld_MOT_01_12_2017_40A.txt", "r") as f:
     lines = f.readlines()
     x = np.asarray([float(line.split()[0]) for line in lines])

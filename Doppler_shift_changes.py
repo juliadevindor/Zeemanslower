@@ -70,6 +70,8 @@ for j in range(1):
         nu_shifted_simple_s = Dopplershift_simple(nu, alpha_0, vx2[i], vy2[i], vz2[i])
         prob_simple_s = Probability(nu_shifted_simple_s, init_freq[gs2[i]], Gamma, sat, sat)
         spectrum_simple_s += prob_simple_s
+
+
     ax.plot(-nu*1e-12,spectrum_simple/spectrum_simple.max(),label="unslowed beam for alpha={}°".format(j))
     ax.plot(-nu*1e-12,spectrum_simple_s/spectrum_simple.max(),label="slowed beam for alpha={}°".format(j))
 plt.xlabel("Laser Frequency in THz", fontsize=22)
