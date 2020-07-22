@@ -3,17 +3,17 @@ import matplotlib.pyplot as plt
 fig, ax = plt.subplots()
 
 
-with open("fields/B(z)_fit_0_8m_SF.txt", "r") as f:
+with open("sim_setup/example_magnetic_field.txt", "r") as f:
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    ax.plot(x + 0.5, y, label="Real spin-flip slower L=0.8m", color="red")
+    ax.plot(x + 0.5, y, label="Zeeman Slower + MOT field", color="red")
 
-with open("Measurements/Feld_MOT_01_12_2017_40A.txt", "r") as f:
+with open("fields/B(z)_0_5m_full_B.txt", "r") as f:
     lines = f.readlines()
-    x = np.asarray([float(line.split()[0]) for line in lines])
-    y = np.asarray([float(line.split()[1]) for line in lines])
-    ax.plot(x/100 +1, y*10, label="MOT measurement", color="blue")
+    x = np.asarray([float(line.split(";")[0]) for line in lines])
+    y = np.asarray([float(line.split(";")[1]) for line in lines])
+    ax.plot(x + 0.5, y, label="Zeeman Slower + MOT field", color="red")
 
 plt.grid()
 #plt.ylim(-600,1000)

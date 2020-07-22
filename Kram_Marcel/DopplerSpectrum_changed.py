@@ -28,14 +28,14 @@ def Dopplershift(nu , alpha , vx , vy , vz ) :
 def Probability(nu , nu_res , Gamma , I , I_sat):
     return 0.5 * (I / I_sat) * (Gamma**2) / (4 * (nu - nu_res)**2 + (Gamma ** 2) * (1 + I/I_sat))
 
-with open("velocity_atom_start_500.txt", 'r') as f:
+with open("velocity_atom_start_all.txt", 'r') as f:
     lines = f.readlines()
     vx = np.asarray([float(line.split()[0]) for line in lines])
     vy = np.asarray([float(line.split()[1]) for line in lines])
     vz = np.asarray([float(line.split()[2]) for line in lines])
     gs = np.asarray([int(line.split()[3]) for line in lines])
 
-with open("velocity_atom_500.txt", 'r') as f:
+with open("velocity_atom_all.txt", 'r') as f:
     lines = f.readlines()
     vx2 = np.asarray([float(line.split()[0]) for line in lines])
     vy2 = np.asarray([float(line.split()[1]) for line in lines])
@@ -75,6 +75,7 @@ def totalSpectrum(x, norm1, norm2, angle, x0, freqPerTime):
 
 # Fit function to measured spectrum here
 V = load("UnslowedBeam.txt")
+
 xx = np.linspace(0,V.size,V.size)
 yy = totalSpectrum(xx, 1/2, 1, 5, 5835, 228/(55000-27000))
 popt, pcov = curve_fit( totalSpectrum, xx, V/V.max(),
@@ -176,12 +177,12 @@ laser_sat_intensity=sat
 init_freq= np.array([446799978232118.25 , 446799978232118.25-228e6])#excitation_frequency -freq_shift_splitting[current_groundstate]-->0 oder -228E6
 nu0 = 446799978232118.25 #2*math.pi*446799900000000 #in Hz
 Gamma = natural_line_width #in Hz
-nu = np.linspace(nu0 - 50*Gamma , nu0 + 10*Gamma , len(xx))
+nu = np.linspace(nu0 - 60*Gamma , nu0 + 100*Gamma , len(xx))
 spectrum = np.zeros(nu.size)
 
-ax4 = ax1.twiny()
+#ax4 = ax1.twiny()
 
-j=0 #alpha in degrees
+j=4.468405424956707 #alpha in degrees
 
 spectrum_simple = np.zeros(nu.size)
 spectrum_simple_s = np.zeros(nu.size)
@@ -194,14 +195,34 @@ for i in range(len(vx)):
     prob_simple_s = Probability(nu_shifted_simple_s, init_freq[gs2[i]], Gamma, sat, sat)
     spectrum_simple_s += prob_simple_s
 
-popt2, pcov2 = curve_fit(totalSpectrum, -nu*1e-12, spectrum_simple/spectrum_simple.max(),p0=(popt[0],popt[1],popt[2],popt[3],popt[4]))
-#max1 = np.where(spectrum_simple == np.amax(spectrum_simple))
-#max2 = np.where(spectrum_simple_s == np.amax(spectrum_simple_s))
+max1=np.where(spectrum_simple==np.amax(spectrum_simple[:int(len(spectrum_simple)/2)]))
+max2=np.where(spectrum_simple==np.amax(spectrum_simple[int(len(spectrum_simple)/2)+1:]))
+max1_old=np.where(V==np.amax(V[:int(len(V)/2)-10000]))
+max2_old=np.where(V==np.amax(V))
+max1_old_ind=max1_old[0][1]
+max2_old_ind=max2_old[0][1]
 
-ax4.plot(-xx,spectrum_simple/spectrum_simple.max(),label="unslowed beam for alpha={}°".format(j))
-ax4.plot(-xx,spectrum_simple_s/spectrum_simple.max(),label="slowed beam for alpha={}°".format(j))
+print("max simu_old",xx[max1],xx[max2],xx[max1]-xx[max2])
+print("max data_old",xx[max1_old_ind],xx[max2_old_ind],xx[max1_old_ind]-xx[max2_old_ind])
+print("max simu_nu",nu[max1]*1e-12,nu[max2]*1e-12,(nu[max1]-nu[max2])*1e-6)
 
-ax4.plot(xx,totalSpectrum(xx, popt[0], popt[1], popt[2], 0, 1),label="FIT")
+xxnew=[0.0]#xx*(228.00051256/504.18579242)
+
+for i in range(len(xx)-1):
+    if i<len(xx[int(max1[0]):]):
+        xxnew.append(xx[int(max1[0])+i])
+    else:
+        xxnew.append(xxnew[i-1]+0.01)
+
+xxnew = xxnew[::-1]
+print("NEW")
+#print("max simu_new",xxnew[max1],xxnew[max2],xxnew[max1]-xxnew[max2])
+print("max simu_new_NU",nu[max1]*1e-12,nu[max2]*1e-12,(nu[max1]-nu[max2])*1e-6)
+
+ax1.plot(xxnew,spectrum_simple/spectrum_simple.max(),".",label="unslowed beam for alpha={}°".format(j))
+#ax1.plot(xxnew,spectrum_simple_s/spectrum_simple.max(),label="slowed beam for alpha={}°".format(j))
+
+#ax4.plot(xx,totalSpectrum(xx, popt[0], popt[1], popt[2], 0, 1),label="FIT")
 
 #plt.xlabel("Laser Frequency in THz", fontsize=22)
 #plt.ylabel("Sum of Lorentzian Probabilities", fontsize=22)
@@ -214,6 +235,6 @@ ax4.plot(xx,totalSpectrum(xx, popt[0], popt[1], popt[2], 0, 1),label="FIT")
 
 
 ax1.legend(framealpha=1,fontsize=10)
-
+ax1.grid()
 plt.show()
 plt.savefig("SlowedBeam.pdf",bbox_inches='tight', pad_inches=0.02, dpi=150)
