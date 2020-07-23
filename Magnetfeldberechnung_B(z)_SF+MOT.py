@@ -32,9 +32,9 @@ coils = 16
 shift=550
 dist=0#0.04
 L = np.array([0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05])
-N = np.array([320,270,250,240,250,250,230,200,200,170,170,150,150,150,100,150])
+N = np.array([320,270,250,240,250,250,230,200,200,170,170,150,150,100,20,30])
 I = np.array([14.0,14.0,13.605,13.16,11.847,10.889,10.623,10.61,9.448,8.974,7.221,5.509,2.895,-0.862,-5.944,-17.341])
-L_field=1.5 #0.93 + dist#+time for increase of  magnetic field
+L_field=1.2 #0.93 + dist#+time for increase of  magnetic field
 num = 5000
 mu_0=4*np.pi*1e-7 # magnetic field constant
 R= 0.045/2 # inner radius of Zeeman-coils in m (not approved)
@@ -51,7 +51,7 @@ d_HH=0.0493 # distance from one coil to the MOT center
 d_wire_HH=0.001 # thickness of the wire in m
 M_HH=4 # 4 layers of wire for each HH coil
 L_MOT=0.6 # relevant length of MOT field
-z0_HH = 1.0  # center of the HH coils (not approved as the distance MOT-slower is missing)
+z0_HH = 0.87  # center of the HH coils (not approved as the distance MOT-slower is missing)
 
 pos=np.linspace(-dist,L_field-dist,num=num)
 #plt.plot(pos,B_coil(pos,*I_coil),label="Real field of length {}m".format(round(L_field,2)))
@@ -111,11 +111,11 @@ for zpos in pos:
     file.write("{};{}\n".format(zpos-0.5+dist, B_tot[i]*1e4))
     i+=1
 file.close()
-with open("B(z)_slower_MOT.txt", "r") as f:
+with open("fields/example_magnetic_field.txt", "r") as f:
     lines = f.readlines()
     x = np.asarray([float(line.split(";")[0]) for line in lines])
     y = np.asarray([float(line.split(";")[1]) for line in lines])
-    #ax.plot(x+0.5, y*1e4, label="measurement", color="green")
+    ax.plot(x+0.5, y, label="measurement", color="green")
 
 plt.xlabel("Position in m", fontsize=22)
 plt.ylabel("Magnetic field in Gauss", fontsize=22)

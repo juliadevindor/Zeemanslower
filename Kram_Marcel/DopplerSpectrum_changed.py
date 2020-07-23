@@ -119,7 +119,7 @@ for run in range(10):
 
 ax1 = plt.subplot(1,1,1)
 ax1.plot( xx, V, "k", label="No Zeeman laser")
-ax1.plot( xx[:-minAt], V_slowed[minAt:] , color="darkorange", label="Laser on")
+#ax1.plot( xx[:-minAt], V_slowed[minAt:] , color="darkorange", label="Laser on")
 ax1.spines["top"].set_visible(False)
 ax1.set_xlabel(r"$\Delta\nu$ [-MHz]", fontsize=15)
 ax1.set_ylabel("Intensity [A.U.]", fontsize=15)
@@ -177,50 +177,49 @@ laser_sat_intensity=sat
 init_freq= np.array([446799978232118.25 , 446799978232118.25-228e6])#excitation_frequency -freq_shift_splitting[current_groundstate]-->0 oder -228E6
 nu0 = 446799978232118.25 #2*math.pi*446799900000000 #in Hz
 Gamma = natural_line_width #in Hz
-nu = np.linspace(nu0 - 60*Gamma , nu0 + 100*Gamma , len(xx))
+nu = np.linspace(nu0 - 60*Gamma , nu0 + 80*Gamma , len(xx))
 spectrum = np.zeros(nu.size)
 
 #ax4 = ax1.twiny()
 
-j=4.468405424956707 #alpha in degrees
+j=3.9#4.468405424956707 #alpha in degrees
+for jj in range(0,1):
+    #j=3+0.1*jj
+    spectrum_simple = np.zeros(nu.size)
+    spectrum_simple_s = np.zeros(nu.size)
+    alpha_0=-j*math.pi/180 #degree to rad
+    for i in range(len(vx)):
+        nu_shifted_simple=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i])
+        prob_simple = Probability(nu_shifted_simple, init_freq[gs[i]], Gamma, sat, sat)
+        spectrum_simple += prob_simple
+        nu_shifted_simple_s = Dopplershift_simple(nu, alpha_0, vx2[i], vy2[i], vz2[i])
+        prob_simple_s = Probability(nu_shifted_simple_s, init_freq[gs2[i]], Gamma, sat, sat)
+        spectrum_simple_s += prob_simple_s
 
-spectrum_simple = np.zeros(nu.size)
-spectrum_simple_s = np.zeros(nu.size)
-alpha_0=-j*math.pi/180 #degree to rad
-for i in range(len(vx)):
-    nu_shifted_simple=Dopplershift_simple(nu,alpha_0,vx[i],vy[i],vz[i])
-    prob_simple = Probability(nu_shifted_simple, init_freq[gs[i]], Gamma, sat, sat)
-    spectrum_simple += prob_simple
-    nu_shifted_simple_s = Dopplershift_simple(nu, alpha_0, vx2[i], vy2[i], vz2[i])
-    prob_simple_s = Probability(nu_shifted_simple_s, init_freq[gs2[i]], Gamma, sat, sat)
-    spectrum_simple_s += prob_simple_s
+    max1=np.where(spectrum_simple==np.amax(spectrum_simple[:int(len(spectrum_simple)/2)]))
+    max2=np.where(spectrum_simple==np.amax(spectrum_simple[int(len(spectrum_simple)/2)+1:]))
+    max1_old=np.where(V==np.amax(V[:int(len(V)/2)-10000]))
+    max2_old=np.where(V==np.amax(V))
+    max1_old_ind=max1_old[0][1]
+    max2_old_ind=max2_old[0][1]
 
-max1=np.where(spectrum_simple==np.amax(spectrum_simple[:int(len(spectrum_simple)/2)]))
-max2=np.where(spectrum_simple==np.amax(spectrum_simple[int(len(spectrum_simple)/2)+1:]))
-max1_old=np.where(V==np.amax(V[:int(len(V)/2)-10000]))
-max2_old=np.where(V==np.amax(V))
-max1_old_ind=max1_old[0][1]
-max2_old_ind=max2_old[0][1]
+    #print("max simu_old",xx[max1],xx[max2],xx[max1]-xx[max2])
+    #print("max data_old",xx[max1_old_ind],xx[max2_old_ind],xx[max1_old_ind]-xx[max2_old_ind])
+    #print("max simu_nu",nu[max1]*1e-12,nu[max2]*1e-12,(nu[max1]-nu[max2])*1e-6)
 
-print("max simu_old",xx[max1],xx[max2],xx[max1]-xx[max2])
-print("max data_old",xx[max1_old_ind],xx[max2_old_ind],xx[max1_old_ind]-xx[max2_old_ind])
-print("max simu_nu",nu[max1]*1e-12,nu[max2]*1e-12,(nu[max1]-nu[max2])*1e-6)
+    xxnew=[0.0]#xx*(228.00051256/504.18579242)
 
-xxnew=[0.0]#xx*(228.00051256/504.18579242)
-
-for i in range(len(xx)-1):
-    if i<len(xx[int(max1[0]):]):
-        xxnew.append(xx[int(max1[0])+i])
-    else:
+    for i in range(len(xx)):
         xxnew.append(xxnew[i-1]+0.01)
 
-xxnew = xxnew[::-1]
-print("NEW")
-#print("max simu_new",xxnew[max1],xxnew[max2],xxnew[max1]-xxnew[max2])
-print("max simu_new_NU",nu[max1]*1e-12,nu[max2]*1e-12,(nu[max1]-nu[max2])*1e-6)
+    xxnew = xxnew[1:]
+    xxnew = xxnew[::-1]
+    print("NEW")
+        #print("max simu_new",xxnew[max1],xxnew[max2],xxnew[max1]-xxnew[max2])
+    print("max simu_new_NU",nu[max1]*1e-12,nu[max2]*1e-12,(nu[max1]-nu[max2])*1e-6)
 
-ax1.plot(xxnew,spectrum_simple/spectrum_simple.max(),".",label="unslowed beam for alpha={}°".format(j))
-#ax1.plot(xxnew,spectrum_simple_s/spectrum_simple.max(),label="slowed beam for alpha={}°".format(j))
+    ax1.plot(xxnew,spectrum_simple/spectrum_simple.max(),label="unslowed beam for alpha={}°".format(j))
+#ax1.plot(xxnew,spectrum_simple_s/spectrum_simple.max(),".",label="slowed beam for alpha={}°".format(j))
 
 #ax4.plot(xx,totalSpectrum(xx, popt[0], popt[1], popt[2], 0, 1),label="FIT")
 

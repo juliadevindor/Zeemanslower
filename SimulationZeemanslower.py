@@ -291,9 +291,15 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                     y_pos += y_velocity * atom_time_step
                     z_pos += z_velocity * atom_time_step
 
-                    x_velocity=x_velocity_new
-                    y_velocity=y_velocity_new
+                    if z_pos>=target_center_z-0.01 and MOT_field==1: #1cm before MOT center: not transverse heating
+                        x_velocity=0.0
+                        y_velocity=0.0
+                    else:
+                        x_velocity=x_velocity_new
+                        y_velocity=y_velocity_new
+
                     z_velocity=z_velocity_new
+
                     if atom_count < cutoff_number: #hier geht er nicht rein
                         if z_pos - z_pos_before >= z_step:
                             #excitation_probability_development.append(excitation_probability)
@@ -404,6 +410,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
 
 
 Debug_flag=0 #0:aus 1:an
+MOT_field=1 #1: with MOT field; 0: without
 
 if __name__ == '__main__':
 
@@ -470,7 +477,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.5 #0.93 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.872 #0.93 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -479,7 +486,7 @@ if __name__ == '__main__':
 
     # laser properties
     #repumper=on/off
-    laser_det = -370e6 #-1012e6#-1010e6 #(sim_param_data["slower_laser_detuning"])
+    laser_det = -870e6 #-1012e6#-1010e6 #(sim_param_data["slower_laser_detuning"])
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -504,13 +511,13 @@ if __name__ == '__main__':
     #slicing_positions[21]=target_center_z-0.005
     #slicing_positions[22]=target_center_z-0.001
 
-    slicing_positions[8]=0.4
-    slicing_positions[9]=0.41
-    slicing_positions[10]=0.42
-    slicing_positions[11]=0.43
-    slicing_positions[12]=target_center_z-0.05
-    slicing_positions[13]=target_center_z-0.005
-    slicing_positions[14]=target_center_z-0.001
+    slicing_positions[16]=0.8
+    slicing_positions[17]=0.82
+    slicing_positions[18]=0.83
+    slicing_positions[19]=0.84
+    slicing_positions[20]=target_center_z-0.05
+    slicing_positions[21]=target_center_z-0.005
+    slicing_positions[22]=target_center_z-0.001
 
     magnetic_field_cutoff = sim_param_data['B_field_cutoff']
     capture_vel = sim_param_data['capture_velocity']
