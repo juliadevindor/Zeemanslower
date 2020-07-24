@@ -455,7 +455,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 10000 #sim_param_data['particle_number']
+    n = 100 #sim_param_data['particle_number']
     allgs=1 #0=gs5 only, 1=all gs
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
@@ -477,7 +477,7 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.872 #0.93 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.901 #0.93 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # total length of experimental setup
     #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
@@ -486,7 +486,7 @@ if __name__ == '__main__':
 
     # laser properties
     #repumper=on/off
-    laser_det = -870e6 #-1012e6#-1010e6 #(sim_param_data["slower_laser_detuning"])
+    laser_det = -875e6 #-1012e6#-1010e6 #(sim_param_data["slower_laser_detuning"])
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -512,9 +512,9 @@ if __name__ == '__main__':
     #slicing_positions[22]=target_center_z-0.001
 
     slicing_positions[16]=0.8
-    slicing_positions[17]=0.82
-    slicing_positions[18]=0.83
-    slicing_positions[19]=0.84
+    slicing_positions[17]=0.805
+    slicing_positions[18]=0.81
+    slicing_positions[19]=0.82
     slicing_positions[20]=target_center_z-0.05
     slicing_positions[21]=target_center_z-0.005
     slicing_positions[22]=target_center_z-0.001

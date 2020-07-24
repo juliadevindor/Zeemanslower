@@ -182,9 +182,9 @@ spectrum = np.zeros(nu.size)
 
 #ax4 = ax1.twiny()
 
-j=3.9#4.468405424956707 #alpha in degrees
-for jj in range(0,1):
-    #j=3+0.1*jj
+j=4.5#4.468405424956707 #alpha in degrees
+for jj in range(0,6):
+    j=3.0+0.3*jj
     spectrum_simple = np.zeros(nu.size)
     spectrum_simple_s = np.zeros(nu.size)
     alpha_0=-j*math.pi/180 #degree to rad
@@ -203,19 +203,20 @@ for jj in range(0,1):
     max1_old_ind=max1_old[0][1]
     max2_old_ind=max2_old[0][1]
 
-    #print("max simu_old",xx[max1],xx[max2],xx[max1]-xx[max2])
-    #print("max data_old",xx[max1_old_ind],xx[max2_old_ind],xx[max1_old_ind]-xx[max2_old_ind])
-    #print("max simu_nu",nu[max1]*1e-12,nu[max2]*1e-12,(nu[max1]-nu[max2])*1e-6)
+    print("max simu_old",xx[max1],xx[max2],xx[max1]-xx[max2])
+    print("max data_old",xx[max1_old_ind],xx[max2_old_ind],xx[max1_old_ind]-xx[max2_old_ind])
+    print("max simu_nu",nu[max1]*1e-12,nu[max2]*1e-12,(nu[max1]-nu[max2])*1e-6)
 
     xxnew=[0.0]#xx*(228.00051256/504.18579242)
 
     for i in range(len(xx)):
-        xxnew.append(xxnew[i-1]+0.01)
+        xxnew.append(xx[i])
 
     xxnew = xxnew[1:]
     xxnew = xxnew[::-1]
     print("NEW")
-        #print("max simu_new",xxnew[max1],xxnew[max2],xxnew[max1]-xxnew[max2])
+    print(max1)
+    print("max simu_new",xxnew[int(max1[0])],xxnew[int(max2[0])],xxnew[int(max1[0])]-xxnew[int(max2[0])])
     print("max simu_new_NU",nu[max1]*1e-12,nu[max2]*1e-12,(nu[max1]-nu[max2])*1e-6)
 
     ax1.plot(xxnew,spectrum_simple/spectrum_simple.max(),label="unslowed beam for alpha={}°".format(j))
