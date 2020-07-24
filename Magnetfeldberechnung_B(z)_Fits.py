@@ -86,6 +86,7 @@ pos=np.linspace(0,L_field,num=num)
 
 popt, pcov = curve_fit(B_coil, xnew+0.5, ynew,method="trf",bounds=(0,24.5)) #fit
 
+print("Current in A trough the individual coils:")
 for i in range(coils):
     print(round(popt[i],3),end=",")
 print(" ")

@@ -1,15 +1,14 @@
-# scipy.constants provides physical constants needed, e.g. vacuum velocity c, atomic mass unit u,...
-import scipy.constants as scc
-# import spline interpolator from scipy
-from scipy.interpolate import InterpolatedUnivariateSpline
-# math functions
-import math
+####################################################################
+# Positions of the shifted Energy lines for Lithium transitions    #
+####################################################################
 
+import math
 from numba import jit, jitclass
 
 @jit(nopython=True)
 def Position(GS,ES,pol,B):
     Position=0.0
+
     #SIGMIN
     if pol==0:
         if GS==0 and ES==2: #1
@@ -135,7 +134,7 @@ def Position(GS,ES,pol,B):
                 Position=17358.7533237524/(1.22600241823802 - 14718089378.4039*(B)) - 76749937.4293769 - 14017227974.772*(B)
 
     #SIGPLS
-    elif pol==2: #SIGMA PLUS
+    elif pol==2:
         if GS==2 and ES==8: #Fit 1 10
             if B>= 10e-4:
                 Position = 76129274.057864 + 23354722688.8005 * ((-B)) + 291966.431479273 / ((-B)) + 2319581.63246271 * (
@@ -391,5 +390,5 @@ def Position(GS,ES,pol,B):
     if Position!=0:
         return 2*math.pi*(Position+446.799677e12) #Base frequency of D2 line from Gehm writeup
     else:
-        return Position
+        return Position #return 0 
 

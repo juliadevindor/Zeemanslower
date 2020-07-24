@@ -132,26 +132,17 @@ if __name__ == '__main__':
     h_Planck = h_bar*2*np.pi
     i=0
 
-    Brange_gs = np.arange(0, 160e-4, 10e-4) #range of Bfield for ground state
     Jgs=1/2
     Igs=1
     gjgs=2.002
     AFgs=150e6
     BFgs=0.0e6
 
-    Brange_es = np.arange(0, 6e-4, 0.05e-4)
     Jes=3/2
     Ies=1
     gjes=1.335
     AFes=-1.15e6
     BFes=-0.1e6
-
-    Brange_es2 = np.arange(0, 60e-4, 0.1e-4)
-    Jes2=1/2
-    Ies2=1
-    gjes2=0.668
-    AFes2=17.35e6
-    BFes2=0.0e6
 
     if state=="gs":
         J=Jgs
@@ -159,21 +150,13 @@ if __name__ == '__main__':
         gj=gjgs
         AF=AFgs
         BF=BFgs
-        Brange = Brange_gs
+
     if state == "es":
         J = Jes
         I = Ies
         gj = gjes
         AF = AFes
         BF = BFes
-        Brange = Brange_es
-    if state == "es2":
-        J = Jes2
-        I = Ies2
-        gj = gjes2
-        AF = AFes2
-        BF = BFes2
-        Brange = Brange_es2
 
     position=np.empty([6,12]) #(2J+1)*(2I+1)
     intensity=np.empty([3,6,12]) #(2J+1)*(2I+1)
@@ -184,7 +167,6 @@ if __name__ == '__main__':
     Bfieldarray = np.concatenate((Bfieldarray, Bfieldarray3), axis=0) #np.linspace(-1e-2,1e-2,num=500)#
     num_lines_exc=12
     num_lines_gs=6
-
 
     q=0
     numberarray=np.empty(len(Bfieldarray))

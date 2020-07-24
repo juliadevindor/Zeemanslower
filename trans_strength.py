@@ -1,10 +1,8 @@
-# scipy.constants provides physical constants needed, e.g. vacuum velocity c, atomic mass unit u,...
-import scipy.constants as scc
-# import spline interpolator from scipy
-from scipy.interpolate import InterpolatedUnivariateSpline
-# math functions
-import math
+############################################################################################
+# Transition strength of all possible transitions of the Lithium D2 line (all others are 0 #
+############################################################################################
 
+import math
 from numba import jit, jitclass
 
 @jit(nopython=True)
