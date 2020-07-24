@@ -5,8 +5,11 @@ from sympy.physics.wigner import wigner_6j
 from numpy import linalg as LA
 import scipy.constants as scc
 import matplotlib.pyplot as plt
-import numpy.polynomial.polynomial as poly
-import math
+
+#######################################################################################################################
+# This code gives the energy of the ground and the excited states for an element. All properties of this element      #
+# (here: Lithium) are specified in the main, as well as which state (gs or es) should be plotted.                     #
+#######################################################################################################################
 
 def trunc(x): #cut float after 2nd dec. place
     return print("{0:.2f}".format(x))
@@ -46,11 +49,11 @@ def Index(MI,MJ,I,J):
 
 def SetMatrix(I,J,AF,BF,B,gj): #Set values of interaction Hamiltonian matrix
     NMAX = int((2*J+1)*(2*I+1)) #size of matrix
-    h_bar = scc.hbar #Plank constant/2pi
+    #h_bar = scc.hbar #Plank constant/2pi
     mb = scc.physical_constants['Bohr magneton'][0] #Bohr magneton
     Hint=np.empty([NMAX,NMAX])
-    AF = AF * h_bar * 2 * np.pi # magnetic dipole constant
-    BF = BF * h_bar * 2 * np.pi # electric quadrupole constant
+    AF = AF * h_Planck # magnetic dipole constant in freq terms (nu not omega!!)
+    BF = BF * h_Planck # electric quadrupole constant
     sj = wigner_6j(1, J, J, J, 1, 2) * wigner_6j(1, I, I, I, 1, 2)
     m = 0
     n = 0
@@ -112,16 +115,22 @@ def Linien(I,Jg,Ja,Ag,Aa,Bg,Ba,gJa,gJg,B,hauf,isover): # Line positions (deviati
                         if z!=0:
                             Summe+=Minus(Ja-mj)*wigner_3j(Ja,1,Jg,-mj,(q-1),mj-(q-1))*z
                 intensity[q][k2][k1]=(Summe)**2*hauf
-                pos[k2][k1]=(ea[k1]-eg[k2])/h_bar/2/np.pi+isover
+                pos[k2][k1]=(ea[k1]-eg[k2])/h_Planck+isover
+                #print(intensity[q][k2][k1])
                 zaehler+=1
-                #k2+=1
+                k2+=1
+
         anz[q]=zaehler
     return pos, intensity
 
 if __name__ == '__main__':
-    h_bar = 1.05457266e-34  #Plank constant/2pi
+    #######CHOOSE#######
+    state="gs" #state, whose energy levels one wants to plot
+    #######CHOOSE#######
+
+    h_bar = scc.hbar  #Plank constant/2pi
+    h_Planck = h_bar*2*np.pi
     i=0
-    state="es" #state, whose energy levels one wants to plot
 
     Brange_gs = np.arange(0, 160e-4, 10e-4) #range of Bfield for ground state
     Jgs=1/2
@@ -168,11 +177,11 @@ if __name__ == '__main__':
 
     position=np.empty([6,12]) #(2J+1)*(2I+1)
     intensity=np.empty([3,6,12]) #(2J+1)*(2I+1)
-    Bfieldarray1 = np.linspace(0,1e-4,num=2000) #np.linspace(0,1e-4,num=100)#
-    Bfieldarray2 = np.linspace(1e-4,10e-4,num=2000) #np.linspace(1e-4,10e-4,num=100) #
-    Bfieldarray3 = np.linspace(10e-4,0.1,num=2000) #np.linspace(10e-4,0.5,num=100) #
-    Bfieldarray = np.linspace(0,1e-4,num=2000) #np.concatenate((Bfieldarray1,Bfieldarray2),axis=0)##np.linspace(0,2e-4,num=500)
-   # Bfieldarray = np.concatenate((Bfieldarray, Bfieldarray3), axis=0) #np.linspace(-1e-2,1e-2,num=500)#
+    Bfieldarray1 = np.linspace(0, 1e-4, num=200)  # np.linspace(0,1e-4,num=100)#
+    Bfieldarray2 = np.linspace(1e-4, 10e-4, num=200)  # np.linspace(1e-4,10e-4,num=100) #
+    Bfieldarray3 = np.linspace(10e-4, 0.1, num=200)  # np.linspace(10e-4,0.5,num=100) #
+    Bfieldarray = np.concatenate((Bfieldarray1, Bfieldarray2), axis=0) #np.linspace(-1e-2,1e-2,num=500)#
+    Bfieldarray = np.concatenate((Bfieldarray, Bfieldarray3), axis=0) #np.linspace(-1e-2,1e-2,num=500)#
     num_lines_exc=12
     num_lines_gs=6
 
@@ -191,32 +200,68 @@ if __name__ == '__main__':
         dg = round((2 * Jgs + 1) * (2 * I + 1))
         da = round((2 * Jes + 1) * (2 * I + 1))
 
-        for k1 in range(0,da):
-            Ees[k1][q]=ea[k1]/h_bar/2/np.pi
+        for k1 in range(0, da):
+            Ees[k1][q] = ea[k1] / h_bar / 2 / np.pi
         for k2 in range(0, dg):
-            Egs[k2][q]=eg[k2]/h_bar/2/np.pi
+            Egs[k2][q] = eg[k2] / h_bar / 2 / np.pi
 
-        numberarray[q]=Bfield
-        q+=1
+        numberarray[q] = Bfield
+        q += 1
 
-    colors = ["black", "red", "green", "yellow", "blue", "orange", "brown", "grey", "cyan", "pink", "violet", "purple",
+    findpt_all=[0]
+    indexpt_all=[0]
+
+    kk=0
+    k=0
+
+    if state=="gs":
+        num=6
+        E=Egs
+    if state=="es":
+        num=12
+        E=Ees
+
+    for line in range(0,num):
+        findpt = np.empty(len(numberarray))
+        diff = np.empty(num)
+
+
+        for j in range(0,len(numberarray)): #loop over Bfield
+            if j<3:
+                findpt[0] = E[line][0]
+                findpt[1] = E[line][1]
+                findpt[2] = E[line][2]
+                steigung = (findpt[2] - findpt[1]) / (numberarray[2] - numberarray[1])
+                achsenab = findpt[1]
+            if j>=3:
+                steigung = (findpt[j-1]-findpt[1])/(numberarray[j-1]-numberarray[1])
+                findpt[j] = steigung * numberarray[j] + achsenab
+                for i in range(0,num):
+                    diff[i] = np.abs(findpt[j] - E[i][j])
+                findpt[j] = E[np.argmin(diff)][j]
+        findpt_all.append(findpt)
+
+
+
+    colors = ["black", "red", "green", "yellow", "blue", "orange", "brown", "grey", "peru", "navy", "violet", "purple",
               "pink", "olive", "goldenrod", "cyan"]
     fig, ax = plt.subplots()
 
-    for line_exc in range(0,12):
-        ax.plot(1e4*numberarray,1e-9*Ees[line_exc])#,".",markersize=1)#,color="black")
-        #plt.plot(numberarray,yval[line_exc],color=colors[line_exc])
+    if state=="es": #Excited state
+        for line_exc in range(1, 13):
+            ax.plot(1e4 * numberarray, 1e-9 * findpt_all[line_exc],color=colors[line_exc], label="Excited state {}".format(line_exc-1))
 
-    #for line_gs in range(num_lines_gs):
-    #    ax.plot(1e4*numberarray,1e-9*Egs[line_gs], color="black")
+    if state=="gs": #Ground state
+        for line_gs in range(1,7):
+            ax.plot(1e4 * numberarray, 1e-9 * findpt_all[line_gs],color=colors[line_gs], label="Ground state {}".format(line_gs-1))
 
-    #plt.legend()
     plt.grid()
-    plt.rcParams.update({'font.size': 22})
+    plt.rcParams.update({'font.size': 17})
     xticks = ax.xaxis.get_major_ticks()
     xticks[1].set_visible(False)
     plt.xticks(fontsize=22)
     plt.yticks(fontsize=22)
     plt.xlabel("B in Gauss", fontsize=22)
     plt.ylabel("E in GHz", fontsize=22)
+    plt.legend()
     plt.show()

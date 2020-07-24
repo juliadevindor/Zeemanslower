@@ -273,7 +273,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                     #print(z_pos)#print(target_center_z, maximum_distance)
                     #if i==1: print("zpos",z_pos-target_center_z,"B",1e4*spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z))
                     z_velocity_new,y_velocity_new,x_velocity_new,excitation_time_step, GS_quantum_number, current_groundstate,counter,atom_path_length=\
-                        Excitation(Debug_flag,current_groundstate,counter,mass_lithium_6, GS_quantum_number, spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z), z_pos, zeeman_distance,
+                        Excitation(current_groundstate,counter,mass_lithium_6, GS_quantum_number, spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z), z_pos, zeeman_distance,
                                    mean_free_path_bigger, max_step_fit_function, target_center_z, maximum_distance, x_velocity, y_velocity,
                                    z_velocity, wavevector_x, wavevector_y, wavevector_z, wavelength, pol, excitation_counter, mean_free_path_smaller,
                                    laser_frequency, x_y_pos_component_squared, intensity, laser_detuning, natural_line_width, threshold)
@@ -409,7 +409,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
 
 
 
-Debug_flag=0 #0:aus 1:an
 MOT_field=1 #1: with MOT field; 0: without
 
 if __name__ == '__main__':
