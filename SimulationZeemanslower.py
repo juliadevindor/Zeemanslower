@@ -43,7 +43,7 @@ random.seed(10)
 @jit(nopython=True)
 def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max, x_min, x_max, y_min, y_max, wavelength,
              laser_beam_radius, zeeman_distance, target_center_z, spline_fit,target_radius, intensity, max_step_fit_function,
-             slicing_position_array, capture_velocity, ground_state_quantum_numbers_array,quantum_numbers_excited_state):
+             slicing_position_array, ground_state_quantum_numbers_array,quantum_numbers_excited_state):
     if atom_count<2000:
         z_step=0.000000001
     else:
@@ -76,13 +76,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
     excitation_counter = 0
 
     capture_count_z_vel = 0
-    count_vel_z_below_0 = 0
-    count_vel_z_0_50 = 0
-    count_vel_z_51_100 = 0
-    count_vel_z_101_150 = 0
-    count_vel_z_151_200 = 0
-    count_vel_z_201_250 = 0
-    count_vel_z_251_300 = 0
     wavevector_x = 0
     wavevector_y = 0
     wavevector_z = -1
@@ -103,11 +96,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
     dead_atoms_vy=[]
     dead_atoms_vz=[]
 
-    #reduced_freq_array=[0.0]
-    #atom_freq_array=[0.0]
-    #delta_array=[0.0]
-    #zpos_array=[0.0]
-    #zvel_array=[0.0]
     z_histogram=[[0.0],[0.0],[0.0],[0.0],[0.0],[0.0]]
     vel_z_histo=[[[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]], [[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0]]]
     # initializing lists with 1 for observing several variables. Needed for compiling through Numba
@@ -128,12 +116,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
     print(atom_count)
     # for every atom do the simulation steps
     counter=0
-    GS_0_counter=0
-    GS_1_counter=0
-    GS_2_counter=0
-    GS_3_counter=0
-    GS_4_counter=0
-    GS_5_counter=0
 
     counter_dead=0
 
@@ -142,8 +124,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0,0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0,0.0],
                        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0,0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0,0.0]]
 
-        #print("counter", counter)
-        #print("atom",i)
         counter=0
         if i % 1000 == 0:
             print("Atom number", i)
@@ -160,13 +140,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
         y_velocity = 0.0
         if atom_count>100:
             z_velocity = number_sampling(1, p_max, v_min, v_max, mass_lithium_6, temperature)
-            ###z_velocity<=1000m/s###
-            #while 0!=1: #try as long as "break" is reached
-            #    z_velocity_try=number_sampling(1, p_max, v_min, v_max, mass_lithium_6, temperature)
-            #    if z_velocity_try<=1450: #5000
-            #        z_velocity=z_velocity_try
-            #        break
-
 
         else:
             z_velocity=2000-i*20
@@ -243,8 +216,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                 dead_atoms_vx.append(x_velocity)
                 dead_atoms_vy.append(y_velocity)
                 dead_atoms_vz.append(z_velocity)
-                #print("atom dead: z_pos=", z_pos," x_vel=", x_velocity," y_vel=", y_velocity," z_vel=", z_velocity)
-                #print("here",z_pos,x_y_pos_component_squared > light_beam_radius_squared, z_pos > target_center_z+0.12, z_pos < 0.0, z_velocity < 0.0)
                 # set the index to 0 (=dead)
                 atom_dead = 0
                 counter_dead+=1
@@ -263,25 +234,18 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
             if z_pos < target_center_z + target_radius:
                 # check if atom is inside the beam of the laser and if the frequency for exciting the atom is equal to the frequency of the laser
                 if x_y_pos_component_squared < light_beam_radius_squared:
-                    excitation_index=0 #muss noch irgendwie gesetzt werden
-                    reduced_freq_1,atom_freq_1,delta_1=lorentzian_probability_TEST(1.0,2,5,11,spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z),Position(5, 11, 2, spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z)), laser_frequency, laser_detuning,natural_line_width,laser_intensity_gauss(x_y_pos_component_squared,z_pos, intensity), x_velocity,y_velocity,z_velocity,wavevector_x,wavevector_y,wavevector_z, wavelength)
-                    #reduced_freq_array.append(reduced_freq_1)
-                    #atom_freq_array.append(atom_freq_1)
-                    #delta_array.append(delta_1)
-                    #zpos_array.append(z_pos)
-                    #zvel_array.append(z_velocity)
-                    #print(z_pos)#print(target_center_z, maximum_distance)
-                    #if i==1: print("zpos",z_pos-target_center_z,"B",1e4*spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z))
+                    excitation_index=0
+
                     z_velocity_new,y_velocity_new,x_velocity_new,excitation_time_step, GS_quantum_number, current_groundstate,counter,atom_path_length=\
-                        Excitation(current_groundstate,counter,mass_lithium_6, GS_quantum_number, spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z), z_pos, zeeman_distance,
+                        Excitation(repumper,current_groundstate,counter,mass_lithium_6, GS_quantum_number, spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z), z_pos, zeeman_distance,
                                    mean_free_path_bigger, max_step_fit_function, target_center_z, maximum_distance, x_velocity, y_velocity,
                                    z_velocity, wavevector_x, wavevector_y, wavevector_z, wavelength, pol, excitation_counter, mean_free_path_smaller,
-                                   laser_frequency, x_y_pos_component_squared, intensity, laser_detuning, natural_line_width, threshold)
+                                   laser_frequency, x_y_pos_component_squared, intensity, laser_detuning, natural_line_width)
+
                     if z_pos==0.0 or z_pos>=z_pos_histo_binning+0.005:
                         z_histogram[GS_quantum_number].append(z_pos)
                         z_pos_histo_binning=z_pos
                     if z_pos>=pos_value and z_pos_histo[GS_quantum_number][pos_index]==0.0:
-                        #print(GS_quantum_number,pos_index,pos_value,z_velocity_new)
                         z_pos_histo[GS_quantum_number][pos_index]=pos_value
                         vel_z_histo[GS_quantum_number][pos_index].append(z_velocity_new)
                         if pos_index+1<len(plane_slice_pos): pos_index+=1
@@ -302,7 +266,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
 
                     if atom_count < cutoff_number: #hier geht er nicht rein
                         if z_pos - z_pos_before >= z_step:
-                            #excitation_probability_development.append(excitation_probability)
                             ground_state_quantum_numbers.append(current_groundstate)
                             excited_state_quantum_numbers.append(quantum_numbers_excited_state[excitation_index] + 4)
                             excitation_freq_development.append(current_excitation_freq[excitation_index])
@@ -350,66 +313,19 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                     observing_z_pos.append(-1)
                     observing_z_vel.append(-1)
 
-                if z_velocity < capture_velocity:
-                    capture_count_z_vel += 1
-
-                if z_velocity < 0:
-                    count_vel_z_below_0 += 1
-                if 0 < z_velocity < 51:
-                    count_vel_z_0_50 += 1
-                if 51 < z_velocity < 101:
-                    count_vel_z_51_100 += 1
-                if 101 < z_velocity < 151:
-                    count_vel_z_101_150 += 1
-                if 151 < z_velocity < 201:
-                    count_vel_z_151_200 += 1
-                if 201 < z_velocity < 251:
-                    count_vel_z_201_250 += 1
-                if 251 < z_velocity < 301:
-                    count_vel_z_251_300 += 1
-
                 atom_dead = 0
                 continue
 
-        if GS_quantum_number==0:
-            GS_0_counter+=1
-        if GS_quantum_number==1:
-            GS_1_counter+=1
-        if GS_quantum_number==2:
-            GS_2_counter+=1
-        if GS_quantum_number==3:
-            GS_3_counter+=1
-        if GS_quantum_number==4:
-            GS_4_counter+=1
-        if GS_quantum_number==5:
-            GS_5_counter+=1
     print("counter",counter)
     print("Number of atoms in lower groundstate", len(vel_z_atoms_in_mot_lower_groundstate))
-    print("Excitations per distance: ", excitation_counter / z_pos)
-    print("Excitations:", excitation_counter)
-    print("Capture count z vel:", capture_count_z_vel)
-    print("Below 0: ", count_vel_z_below_0, "0-50:  ", count_vel_z_0_50, "  51-100:  ", count_vel_z_51_100,
-          "  101-150:  ", count_vel_z_101_150, "  151-200:  ", count_vel_z_151_200, "  201-250:  ", count_vel_z_201_250,
-          "  251-300:  ", count_vel_z_251_300)
-    print("Mean free path smaller than mag:", mean_free_path_smaller, "Bigger:", mean_free_path_bigger)
-    print("atoms in GS 0",GS_0_counter,"GS 1",GS_1_counter,"GS 2",GS_2_counter,"GS3",GS_3_counter,"GS4",GS_4_counter,"GS5",GS_5_counter)
-    a = 0
-    b = 0
-    for p in range(len(plane_slice_lower_groundstate)):
-        a += len(plane_slice_lower_groundstate[p])
-
-    for p in range(len(plane_slice_upper_groundstate)):
-        b += len(plane_slice_upper_groundstate[p])
-
-    print(a + b)
-
     print("dead atoms in lower and upper gs:",counter_dead)
 
-    return dead_atoms_pos,dead_atoms_vx,dead_atoms_vy,dead_atoms_vz,start_x_vel,start_y_vel,start_z_vel,groundstate_upper_lower_start,groundstate_upper_lower,z_histogram, vel_z_histo, atoms_in_mot, excitation_counter, capture_velocity, capture_count_z_vel, observing_z_pos, observing_magnetic_field, excitation_freq_development, excitation_probability_development, observing_z_vel, vel_x_atoms_in_mot, vel_y_atoms_in_mot, vel_z_atoms_in_mot, vel_z_atoms_in_mot_upper_groundstate, vel_z_atoms_in_mot_lower_groundstate, start_z_vel_atoms_in_mot, start_z_vel_upper_state_atoms_in_mot, start_z_vel_lower_state_atoms_in_mot, zeeman_shift, loop_counter, start_z_vel, ground_state_quantum_numbers, quantum_numbers_excited_state, plane_slice_upper_groundstate, plane_slice_lower_groundstate, dead_atoms_upper_groundstate, dead_atoms_lower_groundstate
+    return dead_atoms_pos,dead_atoms_vx,dead_atoms_vy,dead_atoms_vz,start_x_vel,start_y_vel,start_z_vel,groundstate_upper_lower_start,groundstate_upper_lower,z_histogram, vel_z_histo, atoms_in_mot, excitation_counter, capture_count_z_vel, observing_z_pos, observing_magnetic_field, excitation_freq_development, excitation_probability_development, observing_z_vel, vel_x_atoms_in_mot, vel_y_atoms_in_mot, vel_z_atoms_in_mot, vel_z_atoms_in_mot_upper_groundstate, vel_z_atoms_in_mot_lower_groundstate, start_z_vel_atoms_in_mot, start_z_vel_upper_state_atoms_in_mot, start_z_vel_lower_state_atoms_in_mot, zeeman_shift, loop_counter, start_z_vel, ground_state_quantum_numbers, quantum_numbers_excited_state, plane_slice_upper_groundstate, plane_slice_lower_groundstate, dead_atoms_upper_groundstate, dead_atoms_lower_groundstate
 
 
 
 MOT_field=1 #1: with MOT field; 0: without
+repumper="off" # on / off
 
 if __name__ == '__main__':
 
@@ -430,18 +346,6 @@ if __name__ == '__main__':
                                                                                                                                            args.atom_params_file,
                                                                                                                                            args.raw_magnetic_field_data,
                                                                                                                                            args.max_step_size)
-
-    '''
-    sim_param_data, exp_param_data, atomic_data, spline_fit, file_name_magnetic_field, max_step_length_file, maximum_distance = load_files(
-        "C:/Users/ACW/Documents/JGU/NawiInf/Kurse/MA/Code/particle_simulation_ma/JSONs/sim_parameter_test_1.json",
-        "C:/Users/ACW/Documents/JGU/NawiInf/Kurse/MA/Code/particle_simulation_ma/JSONs/exp_setup_test_1.json",
-        "C:/Users/ACW/Documents/JGU/NawiInf/Kurse/MA/Code/particle_simulation_ma/JSONs/atom_parameter_test_1.json",
-        "C:/Users/ACW/Documents/JGU/NawiInf/Kurse/MA/Code/particle_simulation_ma/magnetic_field_measurement/MinusFitListtxt.txt",
-        "C:/Users/ACW/Documents/JGU/NawiInf/Kurse/MA/Code/particle_simulation_ma/magnetic_field_measurement/maximum_step_length_MinusFitListtxt.txt")
-    '''
-    #plt.plot(spline_fit)
-    #plt.show()
-
     # mass of observed atom
     mass_lithium_6 = Lithium_6.mass_lithium_six
     # necessary excitment wavelength of the atom to excite it from ground to excited state
@@ -476,16 +380,14 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.901 #0.93 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.901 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
-    # total length of experimental setup
-    #total_length = exp_param_data["mot_distance"] + exp_param_data["mot_radius"]
     # educated guessing
     bin_count = 80
 
     # laser properties
     #repumper=on/off
-    laser_det = -875e6 #-1012e6#-1010e6 #(sim_param_data["slower_laser_detuning"])
+    laser_det = -875e6 #(sim_param_data["slower_laser_detuning"])
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -496,20 +398,11 @@ if __name__ == '__main__':
     area_atom = math.pi * Lithium_6.radius_atom ** 2
     laser_beam_radius = sim_param_data['slower_laser_diameter'] / 2
     probe_laser_angle = sim_param_data['probe_laser_angle']
-    #slicing_positions = [0.0, 0.1, 0.3, 0.35, target_center_z-0.1,target_center_z-0.05,target_center_z-0.01,target_center_z-0.005,target_center_z-0.002]#sim_param_data['positions_for_slicing']
-    #slicing_positions = [0.0, 0.05, 0.1,0.15,0.2,0.25, 0.3, 0.35, 0.4,0.45,0.5,0.55,0.6,0.65,0.695,0.7,0.704]
+    #slicing_positions = sim_param_data['positions_for_slicing']
+    ###
     slicing_positions = [0.0]
     for i in range(0,22):
         slicing_positions.append(slicing_positions[i]+0.05)
-
-    #slicing_positions[16]=0.4
-    #slicing_positions[17]=0.41
-    #slicing_positions[18]=0.42
-    #slicing_positions[19]=0.43
-    #slicing_positions[20]=target_center_z-0.05
-    #slicing_positions[21]=target_center_z-0.005
-    #slicing_positions[22]=target_center_z-0.001
-
     slicing_positions[16]=0.8
     slicing_positions[17]=0.805
     slicing_positions[18]=0.81
@@ -517,33 +410,25 @@ if __name__ == '__main__':
     slicing_positions[20]=target_center_z-0.05
     slicing_positions[21]=target_center_z-0.005
     slicing_positions[22]=target_center_z-0.001
-
-    magnetic_field_cutoff = sim_param_data['B_field_cutoff']
-    capture_vel = sim_param_data['capture_velocity']
+    ###
 
     # properties of the atom
     lande_factors_exc_state = atomic_data['lande_factor_excited_state']
     lande_factors_ground_state = atomic_data['lande_factor_ground_state']
-    #freq_offset = atomic_data['frequency_offset_ground_state']
     ground_state_quantum_numbers = atomic_data['mf_ground_state_quantum_numbers']
     exc_state_quantum_numbers = atomic_data['mf_excited_state_quantum_numbers']
 
     # test area, new JSON parameters read in
-    print(sim_param_data['capture_velocity'])
-    print(slicing_positions)
-    print(sim_param_data['laser_polarisation'])
-    print(sim_param_data['B_field_cutoff'])
-    print("Lande factors", atomic_data['lande_factor_excited_state'], atomic_data['lande_factor_ground_state'])
+    print("slicing positions",slicing_positions)
+    print("laser polarisation", sim_param_data['laser_polarisation'])
     print("Frequency offset", atomic_data['frequency_offset_ground_state'])
-    print("Quantum numbers ground state", atomic_data['mf_ground_state_quantum_numbers'])
-    print("Quantum numbers excited state", atomic_data['mf_excited_state_quantum_numbers'])
 
     p_max = calculate_p_max(n, v_min, v_max, mass_lithium_6, temperature)
     # function call of timestep
     startTime = datetime.now()
 
     # line breaks used for better readability
-    dead_pos,dead_vx,dead_vy,dead_vz,start_vx,start_vy,start_vz,gs_upper_lower_start,gs_upper_lower,z_histo,v_z_histo,atoms_in_mot, excitation_counter, capture_velocity, capture_count_z_velocity, observing_z_position, \
+    dead_pos,dead_vx,dead_vy,dead_vz,start_vx,start_vy,start_vz,gs_upper_lower_start,gs_upper_lower,z_histo,v_z_histo,atoms_in_mot, excitation_counter, capture_count_z_velocity, observing_z_position, \
     observing_magnetic_field, excitation_freq_development, excitation_probability_development, observing_z_velocity, \
     vel_x_atoms_in_mot, vel_y_atoms_in_mot, vel_z_atoms_in_mot, vel_upper_groundstate, vel_lower_groundstate, \
     start_z_vel_atoms_in_mot, start_vel_upper_state, start_vel_lower_state, zeeman_shift, loop_Counter, start_vel_z, \
@@ -551,16 +436,31 @@ if __name__ == '__main__':
     vel_dead_atoms_lower = timestep(laser_pol,laser_freq,laser_det, n, p_max, v_min, v_max, x_min, x_max, y_min, y_max,
                                     wavelength, laser_beam_radius, zeeman_distance, target_center_z,
                                     spline_fit, target_radius, intensity,max_step_length_file, slicing_positions,
-                                    capture_vel, ground_state_quantum_numbers, exc_state_quantum_numbers)
+                                    ground_state_quantum_numbers, exc_state_quantum_numbers)
 
-    #line_plotting(observing_z_position, observing_z_velocity, 'z position', 'z velocity', 0.0,
-    #        target_center_z+0.005,0.0, 2000.0, startTime, False)
+    runtime = datetime.now() - startTime
+    print("runtime", runtime)
+
+    print("Plotting...")
+    # create output folder or if folder already exists, create log folder for simulation run
+    create_log_file(file_name_magnetic_field, atoms_in_mot, excitation_counter, start_vel_z,
+                    capture_count_z_velocity, exp_param_data, sim_param_data, runtime, startTime,
+                    bin_count, v_max)
+    print("Writing velocity distribution in trap to file")
+    pathlib.Path('simulation_results/' + str(startTime.strftime("%Y_%m_%d %H_%M_%S"))).mkdir(parents=True,
+                                                                                             exist_ok=True)
+    with open('simulation_results/' + str(startTime.strftime("%Y_%m_%d %H_%M_%S")) + '/mot_vel_distribution.txt',
+              'w') as mot_file:
+        for i in range(len(vel_x_atoms_in_mot)):
+            mot_file.write(
+                str(vel_x_atoms_in_mot[i]) + ";" + str(vel_y_atoms_in_mot[i]) + ";" + str(vel_z_atoms_in_mot[i]) + "\n")
+
+    line_plotting(observing_z_position, observing_z_velocity, 'z position', 'z velocity', 0.0,target_center_z+0.005,0.0, 2000.0, startTime, False)
 
     #plot dead atoms
     fig, ax = plt.subplots()
     ax.hist(dead_pos, bins=100)
     print("number of dead atoms", len(dead_pos))
-    #plt.ylim(0, 100)
     plt.xlim(target_center_z-0.5,target_center_z+0.001)
     plt.xlabel("Position in m", fontsize=22)
     plt.ylabel("Number of dead atoms", fontsize=22)
@@ -573,8 +473,6 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
     labels = ["v_x", "v_y", "v_z"]
     ax.hist([dead_vx,dead_vy,dead_vz], bins=100, stacked=True, label=labels)
-    #plt.ylim(0, 500)
-    #plt.xlim(0,100)
     plt.legend(loc="upper right", fontsize=22)
     plt.xlabel("Velocity in m/s", fontsize=22)
     plt.ylabel("Number of dead atoms", fontsize=22)
@@ -586,46 +484,30 @@ if __name__ == '__main__':
     ax.yaxis.get_major_ticks()[0].label1.set_visible(False)
     plt.show()
 
-    file = open("velocity_atom_start.txt", "w+")  # open file
-    for vel in range(len(vel_x_atoms_in_mot)):
-        file.write(str(start_vx[vel]))
-        file.write("\t")
-        file.write(str(start_vy[vel]))
-        file.write("\t")
-        file.write(str(start_vz[vel]))
-        file.write("\t")
-        file.write(str(gs_upper_lower_start[vel]))
-        file.write("\n")
-    file.close()
-
-    file = open("velocity_atom.txt", "w+")  # open file
-    for vel in range(len(vel_x_atoms_in_mot)):
-        file.write(str(vel_x_atoms_in_mot[vel]))
-        file.write("\t")
-        file.write(str(vel_y_atoms_in_mot[vel]))
-        file.write("\t")
-        file.write(str(vel_z_atoms_in_mot[vel]))
-        file.write("\t")
-        file.write(str(gs_upper_lower[vel]))
-        file.write("\n")
-    file.close()
-
-    pathlib.Path('simulation_results/GS_distr').mkdir(parents=True, exist_ok=True)
-    for GS in range(0,6):
-        z_histo[GS]=z_histo[GS][1:]
-        plt.hist(z_histo[GS], bins=100, facecolor='green', edgecolor='black', linewidth=1.2)
-        #plt.ylim(0, 7500)
-        plt.xlim(0, target_center_z)
-        plt.xlabel("z in m", fontsize=22)
-        plt.ylabel("Atoms in GS", fontsize=22)
-        #plt.ylabel("Atoms in GS", fontsize=12)
-        plt.title("Atoms in GS{}".format(GS),fontsize=22)
-        plt.xticks(fontsize=22)
-        plt.yticks(fontsize=22)
-        figure = plt.gcf()  # get current figure
-        figure.set_size_inches(13.66, 6.71)
-        plt.savefig('simulation_results/' + "GS_distr" + "/" + "z" + "_Histo_pos" + "_GS" + str(GS) + ".png")
-        plt.close()
+    #####
+    #file = open("velocity_atom_start.txt", "w+")  # open file
+    #for vel in range(len(vel_x_atoms_in_mot)):
+    #    file.write(str(start_vx[vel]))
+    #    file.write("\t")
+    #    file.write(str(start_vy[vel]))
+    #    file.write("\t")
+    #    file.write(str(start_vz[vel]))
+    #    file.write("\t")
+    #    file.write(str(gs_upper_lower_start[vel]))
+    #    file.write("\n")
+    #file.close()
+    #file = open("velocity_atom.txt", "w+")  # open file
+    #for vel in range(len(vel_x_atoms_in_mot)):
+    #    file.write(str(vel_x_atoms_in_mot[vel]))
+    #    file.write("\t")
+    #    file.write(str(vel_y_atoms_in_mot[vel]))
+    #    file.write("\t")
+    #    file.write(str(vel_z_atoms_in_mot[vel]))
+    #    file.write("\t")
+    #    file.write(str(gs_upper_lower[vel]))
+    #    file.write("\n")
+    #file.close()
+    #####
 
     pathlib.Path('simulation_results/v_distr').mkdir(parents=True, exist_ok=True)
     positions=slicing_positions
@@ -634,7 +516,6 @@ if __name__ == '__main__':
     count1=0
     count2=0
     for pos in positions:
-        #plt.figure()
         fig, ax = plt.subplots()
         labels=["GS 0","GS 1","GS 2","GS 3","GS 4","GS 5"]
         colors=["red","cyan","orange","blue","green","purple"]
@@ -653,7 +534,6 @@ if __name__ == '__main__':
             print(np.amax(res[5]))
         if pos==target_center_z-0.001 or pos==0.929:
             print(res[5][0]+res[5][1]+res[5][2])
-            #print(res[5][0]+res[5][1]+res[5][2]+res[5][3]+res[5][4]+res[5][5])
 
         plt.legend(loc="upper right",fontsize=22)
         plt.xlabel("v_z in m/s", fontsize=22)
@@ -664,95 +544,14 @@ if __name__ == '__main__':
         plt.yticks(fontsize=22)
         ax.spines['left'].set_position('zero')
         ax.spines['bottom'].set_position('zero')
-        #ax.yaxis.get_major_ticks()[0].label1.set_visible(False)
         figure = plt.gcf()  # get current figure
-        ##print(plt.rcParams.get('figure.figsize'))
         figure.set_size_inches(13.66, 6.71)
-        plt.ylim(0,400)#4000)#350)
-        #plt.show()
+        plt.ylim(0,400)
         v_z_histo[5][pos_i].sort()
         print(pos)
-        #print(v_z_histo[5][pos_i])
         plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,3)).replace('.', '_') + "_allGS" + ".png")
         plt.close()
         pos_i+=1
-
-   # for GS in range(0,6):
-   #     pos_i = 0
-   #     for pos in positions:
-   #         plt.hist(v_z_histo[GS][pos_i],bins=100,facecolor='green', edgecolor='black', linewidth=1.2)
-   #         #print(GS,pos_i)
-   #         #print(v_z_histo[GS][pos_i])
-    #        plt.ylim(0,2500)
-    #        plt.xlim(0,1010)
-    #        plt.xlabel("v_z in m/s",fontsize=15)
-    #        plt.ylabel("Atoms in GS",fontsize=15)
-    #        plt.title("Atoms in GS{} at z={}m".format(GS,pos))
-    #        plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(pos).replace('.', '_') + "_GS" + str(GS) + ".png")
-    #        plt.close()
-    #        pos_i+=1
-
-    runtime = datetime.now() - startTime
-    print(runtime)
-    print("Number of total loops:", loop_Counter)
-    # create output folder or if folder already exists, create log folder for simulation run
-    create_log_file(file_name_magnetic_field, atoms_in_mot, excitation_counter, capture_velocity, start_vel_z,
-                    capture_count_z_velocity, exp_param_data, sim_param_data, runtime, startTime,
-                    bin_count, v_max)
-    print("Writing velocity distribution in trap to file")
-    pathlib.Path('simulation_results/' + str(startTime.strftime("%Y_%m_%d %H_%M_%S"))).mkdir(parents=True,
-                                                                                             exist_ok=True)
-    with open('simulation_results/' + str(startTime.strftime("%Y_%m_%d %H_%M_%S")) + '/mot_vel_distribution.txt',
-              'w') as mot_file:
-        for i in range(len(vel_x_atoms_in_mot)):
-            mot_file.write(
-                str(vel_x_atoms_in_mot[i]) + ";" + str(vel_y_atoms_in_mot[i]) + ";" + str(vel_z_atoms_in_mot[i]) + "\n")
-    print("Plotting...")
-
-    #distance=distance[1:]
-    #red_freq=red_freq[1:]
-    #atom_freq=atom_freq[1:]
-    #delta_freq=delta_freq[1:]
-    #zpos=zpos[1:]
-    #zvel=zvel[1:]
-    #f1 = plt.figure(1)
-    #plt.plot(zpos,red_freq,".")
-    #plt.title("reduced freq")
-    #f2 = plt.figure(2)
-    #plt.plot(zpos,atom_freq,".")
-    #plt.title("atom freq")
-    #f3 = plt.figure(3)
-    #plt.plot(zpos, delta_freq, ".")
-    #plt.title("delta")
-    #f4 = plt.figure(4)
-    #plt.plot(zpos, zvel, ".")
-    #plt.title("zvel")
-    #plt.show()
-    #f5 = plt.figure(5)
-    #plt.plot(zpos, distance, ".")
-    #plt.title("distance for v=200m/s")
-    #plt.show()
-
-    g = plt.figure(7)
-    #plt.rcParams.update({'font.size': 22})
-    print("target center", target_center_z)
-    #if n<=100:
-    line_plotting(observing_z_position, observing_z_velocity, 'z position', 'z velocity', 0.0,
-            target_center_z+0.005,0.0, 2000.0, startTime, False)
-
-    #elif n>100:
-    #slice_plotting(slicing_positions, vel_z_plane_slices_upper_gs, vel_z_plane_slices_lower_gs, v_min, v_max,
-    #            n, bin_count, startTime)
-
-
-    #hist_plotting('Upper groundstate vs lower groundstate', 'velocity', 'count', 0, 8000, 0, 0.1 * n, bin_count,
-    #              ["Upper state", "Lower state"], start_vel_upper_state, start_vel_lower_state, startTime,
-    #              vel_upper_groundstate, vel_lower_groundstate)
-    #state_occupation_development_plot(ground_state_m_J, excited_state_m_J, excitation_probability_development, startTime)
-
-    #line_plotting(observing_z_position, excitation_probability_development, 'z position', 'excitation probability', 0.0,
-    #              0.7, 0.0, 0.55, startTime, False)
-
 
     pickle_path=os.listdir("./sim_setup/")
     for file in pickle_path:

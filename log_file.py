@@ -2,7 +2,7 @@
 import pathlib
 
 
-def create_log_file(file_name, atoms_in_mot, excitation_counter, capture_velocity, start_vel_z_mean,
+def create_log_file(file_name, atoms_in_mot, excitation_counter, start_vel_z_mean,
                capture_count_z_velocity, exp_param_config, sim_param_config, running_time, starting_time,
                number_of_bins, max_velocity):
     '''
@@ -11,7 +11,6 @@ def create_log_file(file_name, atoms_in_mot, excitation_counter, capture_velocit
     :param atoms_in_mot: Integer, the number of atoms in the MOT.
     :param excitation_counter: Integer, a counter to provide an information about the total number of
     excitation loops in the simulation run.
-    :param capture_velocity: Float, below this velocity atoms are assumed to be caught.
     :param start_vel_z_mean: Float, the mean value of the starting velocity of the atoms..
     :param capture_count_z_velocity: Integer,
     :param exp_param_config: Dictionary,
@@ -55,7 +54,6 @@ def create_log_file(file_name, atoms_in_mot, excitation_counter, capture_velocit
         # log_file.write("At least once excited: " + str(len(excitment_list_x)) + "\n")
         # write the total number of excitments into the log file
         log_file.write("Total count of excitments: " + str(excitation_counter) + '\n')
-        log_file.write("Given capturing velocity: " + str(capture_velocity) + '\n')
         log_file.write(
             "Number of atoms with z-velocity below capture velocity: " + str(capture_count_z_velocity) + '\n')
         # log_file.write("Mean velocity of start distribution: " + str(start_vel_mean) + '\n')
