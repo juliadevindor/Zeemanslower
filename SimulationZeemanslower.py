@@ -16,8 +16,6 @@ rcParams.update({'figure.autolayout': True})
 
 # import of self written modules, first one handles the needed calculations around the Maxwell Boltzmann disribution
 from distributions import number_sampling
-# module for handling the interaction of the laser light with the atoms
-from light_atom_interaction import laser_intensity_gauss,lorentzian_probability_TEST
 # atomic material module holds informations (energy gap between ground and excited state, mass, einstein coefficents,...) about the used atom sorts
 from atomic_material import Lithium_6
 # util contains all functions which are needed in some special case but do not belong to any superordinate topic
@@ -31,13 +29,11 @@ from log_file import create_log_file
 # module for loading all settings
 from load_settings import load_files
 import os
+# module for excitation and de-excitation processes
 from Exciting_atoms import Excitation
-from Position import Position
 
 # import numba for JIT compiling
 from numba import jit, int32, float64, void, cuda
-
-random.seed(10)
 
 # timestep function does the simulation steps for discrete time steps
 @jit(nopython=True)
@@ -64,7 +60,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
     dead_atoms_lower_groundstate = []
 
     plane_slice_pos = slicing_position_array
-    print("len",len(plane_slice_pos))
     plane_slice_flags = []
     plane_slice_upper_groundstate = [[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0]]
     plane_slice_lower_groundstate = [[0.0],[0.0],[0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0],[0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0]]
@@ -82,7 +77,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
 
     groundstate_upper_lower_start=[]
     groundstate_upper_lower=[]
-    observing_specific_atoms = []
     start_x_vel_atoms_in_mot = []
     start_x_vel = []
     start_y_vel_atoms_in_mot = []
@@ -113,7 +107,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
     threshold = 1E-35
     mean_free_path_bigger = 0
     mean_free_path_smaller = 0
-    print(atom_count)
     # for every atom do the simulation steps
     counter=0
 
@@ -140,7 +133,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
         y_velocity = 0.0
         if atom_count>100:
             z_velocity = number_sampling(1, p_max, v_min, v_max, mass_lithium_6, temperature)
-
         else:
             z_velocity=2000-i*20
 
@@ -156,30 +148,15 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
 
         random_ground_state = random.random()  # choose GS (all equally likely)
         if allgs==1:
-            if random_ground_state < 1 / 6:
-                current_groundstate = 0
-                initial_state = 0
-                GS_quantum_number = 0
-            elif random_ground_state < 2 / 6 and random_ground_state >= 1 / 6:
-                current_groundstate = 1
-                initial_state = 1
-                GS_quantum_number = 1
-            elif random_ground_state < 3 / 6 and random_ground_state >= 2 / 6:
-                current_groundstate = 0
-                initial_state = 0
-                GS_quantum_number = 2
-            elif random_ground_state < 4 / 6 and random_ground_state >= 3 / 6:
-                current_groundstate = 1
-                initial_state = 1
-                GS_quantum_number = 3
-            elif random_ground_state < 5 / 6 and random_ground_state >= 4 / 6:
-                current_groundstate = 1
-                initial_state = 1
-                GS_quantum_number = 4
-            if random_ground_state <= 1 and random_ground_state >= 5 / 6:
-                current_groundstate = 1
-                initial_state = 1
-                GS_quantum_number = 5
+            for state in range(0,7):
+                if random_ground_state<(state+1)/6 and random_ground_state>=(state)/6:
+                    if state==0 or state==2:
+                        current_groundstate=0
+                        initial_state=0
+                    else:
+                        current_groundstate=1
+                        initial_state=1
+                    GS_quantum_number=state
 
         elif allgs==0:
             initial_state=1
@@ -187,9 +164,6 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
             GS_quantum_number=5
 
         groundstate_upper_lower_start.append(current_groundstate)
-
-        if i == 3:
-            observing_specific_atoms.append(z_velocity)
 
         pos_value = 0.0
         pos_index = 0
@@ -236,6 +210,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                 if x_y_pos_component_squared < light_beam_radius_squared:
                     excitation_index=0
 
+                    # Excitation and De-excitation
                     z_velocity_new,y_velocity_new,x_velocity_new,excitation_time_step, GS_quantum_number, current_groundstate,counter,atom_path_length=\
                         Excitation(repumper,current_groundstate,counter,mass_lithium_6, GS_quantum_number, spline_fit_field_function(spline_fit, z_pos - target_center_z,maximum_distance,target_center_z), z_pos, zeeman_distance,
                                    mean_free_path_bigger, max_step_fit_function, target_center_z, maximum_distance, x_velocity, y_velocity,
@@ -250,6 +225,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
                         vel_z_histo[GS_quantum_number][pos_index].append(z_velocity_new)
                         if pos_index+1<len(plane_slice_pos): pos_index+=1
                     atom_time_step=atom_path_length/(math.sqrt(z_velocity**2+y_velocity**2+x_velocity**2+1e-30))
+
                     # position updating for all atoms before calculating new velocity depending of effects occuring
                     x_pos += x_velocity * atom_time_step
                     y_pos += y_velocity * atom_time_step
@@ -264,7 +240,7 @@ def timestep(pol,laser_frequency,laser_detuning, atom_count, p_max, v_min, v_max
 
                     z_velocity=z_velocity_new
 
-                    if atom_count < cutoff_number: #hier geht er nicht rein
+                    if atom_count < cutoff_number:
                         if z_pos - z_pos_before >= z_step:
                             ground_state_quantum_numbers.append(current_groundstate)
                             excited_state_quantum_numbers.append(quantum_numbers_excited_state[excitation_index] + 4)
@@ -386,7 +362,6 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    #repumper=on/off
     laser_det = -875e6 #(sim_param_data["slower_laser_detuning"])
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
@@ -470,6 +445,7 @@ if __name__ == '__main__':
     plt.yticks(fontsize=22)
     plt.show()
 
+    #plot velocity of dead atoms
     fig, ax = plt.subplots()
     labels = ["v_x", "v_y", "v_z"]
     ax.hist([dead_vx,dead_vy,dead_vz], bins=100, stacked=True, label=labels)
@@ -509,12 +485,10 @@ if __name__ == '__main__':
     #file.close()
     #####
 
+    #plot velocity distributions for different ground states
     pathlib.Path('simulation_results/v_distr').mkdir(parents=True, exist_ok=True)
     positions=slicing_positions
-
     pos_i=0
-    count1=0
-    count2=0
     for pos in positions:
         fig, ax = plt.subplots()
         labels=["GS 0","GS 1","GS 2","GS 3","GS 4","GS 5"]
@@ -525,16 +499,14 @@ if __name__ == '__main__':
         N = int((max_edge-min_edge)/bin_size)
         bin_list = np.linspace(min_edge, max_edge, N+1)
         res, bins, patches=ax.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=bin_list, stacked=True,color=colors, label=labels)
-
-        if (pos>=0.54 and pos<0.56) or (pos>=0.75 and pos<0.76) or (pos>=0.8 and pos<0.81):
-            flat = res[5].flatten()
-            flat.sort()
-            print(pos, np.amax(res[5])+flat[-2])
-        else:
-            print(np.amax(res[5]))
-        if pos==target_center_z-0.001 or pos==0.929:
-            print(res[5][0]+res[5][1]+res[5][2])
-
+        #if (pos>=0.54 and pos<0.56) or (pos>=0.75 and pos<0.76) or (pos>=0.8 and pos<0.81):
+        #    flat = res[5].flatten()
+        #    flat.sort()
+        #    print(pos, np.amax(res[5])+flat[-2])
+        #else:
+        #    print(np.amax(res[5]))
+        #if pos==target_center_z-0.001 or pos==0.929:
+        #    print(res[5][0]+res[5][1]+res[5][2])
         plt.legend(loc="upper right",fontsize=22)
         plt.xlabel("v_z in m/s", fontsize=22)
         plt.ylabel("Atoms in GS", fontsize=22)
@@ -548,11 +520,11 @@ if __name__ == '__main__':
         figure.set_size_inches(13.66, 6.71)
         plt.ylim(0,400)
         v_z_histo[5][pos_i].sort()
-        print(pos)
         plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,3)).replace('.', '_') + "_allGS" + ".png")
         plt.close()
         pos_i+=1
 
+    # delete pickle-files
     pickle_path=os.listdir("./sim_setup/")
     for file in pickle_path:
         if file.endswith(".pickle"):
