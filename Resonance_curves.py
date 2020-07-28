@@ -25,7 +25,8 @@ for line_gs in range(0,6):
             line_gs == 5 and line_exc == 11 or line_gs == 2 and line_exc == 8:
             det = -1000e6
             for i in range(num):
-                exc_prob[i]=(lorentzian_probability(2,line_gs,line_exc,Bfield,Position(line_gs,line_exc,2,Bfield),446799900000000, det, 2 * math.pi * 5.87E6,10,0,0,0,0,0,-1,scc.c /446799900000000))
+                exc_prob[i]=(lorentzian_probability(2,line_gs,line_exc,Bfield,Position(line_gs,line_exc,2,Bfield), 446799685000000 , det, 2 * math.pi * 5.87E6,10,0,0,0,0,0,-1,scc.c /446799900000000))
+                #446799900000000
                 det_array[i]=det
                 det+=2000e6/num
 
@@ -53,5 +54,5 @@ plt.legend(fontsize=17)
 plt.rcParams.update({'font.size': 22})
 plt.xticks(fontsize=22)
 plt.yticks(fontsize=22)
-#plt.grid()
+plt.grid()
 plt.show()
