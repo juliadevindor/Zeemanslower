@@ -26,7 +26,6 @@ for line_gs in range(0,6):
             det = -1000e6
             for i in range(num):
                 exc_prob[i]=(lorentzian_probability(2,line_gs,line_exc,Bfield,Position(line_gs,line_exc,2,Bfield), 446799685000000 , det, 2 * math.pi * 5.87E6,10,0,0,0,0,0,-1,scc.c /446799900000000))
-                #446799900000000
                 det_array[i]=det
                 det+=2000e6/num
 
@@ -38,14 +37,6 @@ exc_prob_2=np.empty(num)
 det_array_2=np.empty(num)
 shift=[-228e6,0.0]
 label=["lower GS", "upper GS"]
-
-#for a in range(0,2):
-#    det_2 = -200e6
-#    for i in range(num):
-#        exc_prob_2[i]=(lorentzian_probability_2(446799978232118.25-shift[a], 446799900000000, det_2, 2 * math.pi * 5.87E6, 0.11, 0.11/5))
-#        det_array_2[i]=det_2
-#        det_2+=350e6/num
-#    plt.plot(det_array_2*1e-6,exc_prob_2,label=label[a])
 
 plt.xlabel("Detuning in MHz", fontsize=22)
 plt.ylabel("Excitation rate in a.u.", fontsize=22)

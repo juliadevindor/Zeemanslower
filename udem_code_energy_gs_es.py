@@ -125,7 +125,7 @@ def Linien(I,Jg,Ja,Ag,Aa,Bg,Ba,gJa,gJg,B,hauf,isover): # Line positions (deviati
 
 if __name__ == '__main__':
     #######CHOOSE#######
-    state="gs" #state, whose energy levels one wants to plot
+    state="es" #state, whose energy levels one wants to plot
     #######CHOOSE#######
 
     h_bar = scc.hbar  #Plank constant/2pi
@@ -163,7 +163,7 @@ if __name__ == '__main__':
     Bfieldarray1 = np.linspace(0, 1e-4, num=200)
     Bfieldarray2 = np.linspace(1e-4, 10e-4, num=200)
     Bfieldarray3 = np.linspace(10e-4, 0.1, num=200)
-    Bfieldarray =  np.concatenate((Bfieldarray1, Bfieldarray2), axis=0)
+    Bfieldarray = np.concatenate((Bfieldarray1, Bfieldarray2), axis=0)
     Bfieldarray = np.concatenate((Bfieldarray, Bfieldarray3), axis=0)
     num_lines_exc=12
     num_lines_gs=6
@@ -224,18 +224,16 @@ if __name__ == '__main__':
         findpt_all.append(findpt)
 
     colors=["red", "cyan", "orange", "blue", "green", "purple", "black","brown", "grey", "peru", "navy", "violet"]
-    #colors = ["black", "red", "green", "yellow", "blue", "orange", "brown", "grey", "peru", "navy", "violet", "purple",
-    #          "pink", "olive", "goldenrod", "cyan"]
 
     fig, ax = plt.subplots()
 
     if state=="es": #Excited state
         for line_exc in range(1, 13):
-            ax.plot(1e4 * numberarray, 1e-9 * findpt_all[line_exc],color=colors[line_exc-1], label="Excited state {}".format(line_exc-1))
+            ax.plot(1e4 * numberarray, 1e-9 * findpt_all[line_exc],color=colors[line_exc-1], label="ES {}".format(line_exc-1))
 
     if state=="gs": #Ground state
         for line_gs in range(1,7):
-            ax.plot(1e4 * numberarray, 1e-9 * findpt_all[line_gs],color=colors[line_gs-1], label="Ground state {}".format(line_gs-1))
+            ax.plot(1e4 * numberarray, 1e-9 * findpt_all[line_gs],color=colors[line_gs-1], label="GS {}".format(line_gs-1))
 
     plt.grid()
     plt.rcParams.update({'font.size': 19})

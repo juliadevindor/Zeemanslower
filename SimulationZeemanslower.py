@@ -334,7 +334,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 100 #sim_param_data['particle_number']
+    n = 100000 #sim_param_data['particle_number']
     allgs=1 #0=gs5 only, 1=all gs
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
@@ -362,7 +362,7 @@ if __name__ == '__main__':
     bin_count = 80
 
     # laser properties
-    laser_det = -875e6 #(sim_param_data["slower_laser_detuning"])
+    laser_det = -1000e6 #(sim_param_data["slower_laser_detuning"])
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -499,14 +499,14 @@ if __name__ == '__main__':
         N = int((max_edge-min_edge)/bin_size)
         bin_list = np.linspace(min_edge, max_edge, N+1)
         res, bins, patches=ax.hist([v_z_histo[0][pos_i], v_z_histo[1][pos_i], v_z_histo[2][pos_i],v_z_histo[3][pos_i], v_z_histo[4][pos_i], v_z_histo[5][pos_i]], bins=bin_list, stacked=True,color=colors, label=labels)
-        #if (pos>=0.54 and pos<0.56) or (pos>=0.75 and pos<0.76) or (pos>=0.8 and pos<0.81):
-        #    flat = res[5].flatten()
-        #    flat.sort()
-        #    print(pos, np.amax(res[5])+flat[-2])
-        #else:
-        #    print(np.amax(res[5]))
-        #if pos==target_center_z-0.001 or pos==0.929:
-        #    print(res[5][0]+res[5][1]+res[5][2])
+        if (pos>=0.54 and pos<0.56) or (pos>=0.75 and pos<0.76) or (pos>=0.8 and pos<0.81):
+            flat = res[5].flatten()
+            flat.sort()
+            print(pos, np.amax(res[5])+flat[-2])
+        else:
+            print(np.amax(res[5]))
+        if pos==target_center_z-0.001 or pos==0.9:
+            print(res[5][0]+res[5][1]+res[5][2])
         plt.legend(loc="upper right",fontsize=22)
         plt.xlabel("v_z in m/s", fontsize=22)
         plt.ylabel("Atoms in GS", fontsize=22)
@@ -518,7 +518,7 @@ if __name__ == '__main__':
         ax.spines['bottom'].set_position('zero')
         figure = plt.gcf()  # get current figure
         figure.set_size_inches(13.66, 6.71)
-        plt.ylim(0,400)
+        plt.ylim(0,4000)
         v_z_histo[5][pos_i].sort()
         plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,3)).replace('.', '_') + "_allGS" + ".png")
         plt.close()
