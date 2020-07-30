@@ -40,4 +40,4 @@ This project is licensed under the GNU License - see the [LICENSE.md](LICENSE.md
 * Marcel Willig, Institute of Physics, University of Mainz
 * Jan Haack, Institute of Physics, University of Mainz
 * Thomas Udem
-"# Zeemanslower" 
+
