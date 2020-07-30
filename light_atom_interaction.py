@@ -49,39 +49,10 @@ def lorentzian_probability(pol, GS, a, Bfield, atom_freq, laser_frequency, laser
                 wavevector_x * abs(velocity_x) + wavevector_y * abs(velocity_y) + wavevector_z * abs(
             velocity_z)) * 2 * (math.pi / wavelength)  # Doppler shift
     delta = reduced_freq - atom_freq
-    ##### FACTOR OF 10 in SQRT is necessary but needs to be explained
-    omega = 2 * math.pi * 1e6 * 11.925*trans_strength(GS, a, pol, Bfield) * 4.37 * math.sqrt(0.1*laser_intensity) # Rabi frequency mit 11.925Debye
+    omega = 2 * math.pi * 1e6 * 11.925*trans_strength(GS, a, pol, Bfield) * 4.37 * math.sqrt(0.1*laser_intensity) # Rabi frequency mit 11.925Debye. Formula in SI units from the GEHM write-up
     s_val = 0.5 * omega ** 2 / (delta ** 2 + (natural_line_width ** 2) / 4)
     excitation_rate = s_val / (2 * (1 + s_val))
     return excitation_rate
-
-# lorentzian probability distribution for calculating the probability of excitment
-@jit(nopython=True)
-def lorentzian_probability_TEST(polarization, pol, GS, a, Bfield, atom_freq, laser_frequency, laser_detuning,
-                                natural_line_width, laser_intensity, velocity_x, velocity_y, velocity_z, wavevector_x,
-                                wavevector_y, wavevector_z, wavelength): #just for testing stuff
-    '''
-    :param atom_freq: Float, the Doppler shifted freuqency of the atom.
-    :param laser_frequency: Float, the frequency of the laser.
-    :param laser_detuning: Float, the detuning of the laser.
-    :param natural_line_width: Float, the natural line width of the excited state.
-    :param laser_intensity: Float, the intensity of the laser at the current position of the atom.
-    :param laser_sat_intensity: Float, the saturation intensity of the atom.
-    :return: Float, excitation probability of the atom.
-
-    Calculates the scatter rate using the lorentzian probability.
-    '''
-    laser_freq_modus = 2 * math.pi * laser_frequency + 2 * math.pi * laser_detuning
-    reduced_freq = laser_freq_modus - (
-                wavevector_x * abs(velocity_x) + wavevector_y * abs(velocity_y) + wavevector_z * abs(
-            velocity_z)) * 2 * (math.pi / wavelength)  # doppler shift
-    delta = reduced_freq - atom_freq
-    omega = 2 * math.pi * 1e6 * trans_strength(GS, a, pol, Bfield) * 4.37 * math.sqrt(laser_intensity)
-    s_val = 0.5 * omega ** 2 / (delta ** 2 + (natural_line_width ** 2) / 4)
-    excitation_probability = s_val / (2 * (1 + s_val))
-
-    return reduced_freq, atom_freq, delta
-
 
 @jit(nopython=True)
 def lorentzian_probability_2(atom_freq, laser_frequency, laser_detuning, natural_line_width, laser_intensity,

@@ -62,7 +62,7 @@ fig, ax = plt.subplots()
 print("plotting")
 
 ##### Enter all parameters here #####
-coils = 19 #number of coils
+coils = 19 #number of coils. The number of Fitparameters I need to be adjusted in the function B_coil!
 L = np.array([0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05]) #lengths of the coils
 N_coil=np.array([320,290,260,260,270,260,250,250,240,230,220,190,190,160,160,140,130,130,100]) #windings of the coils
 L_field=1.15 # length of the field (not of the slower!)
@@ -75,7 +75,7 @@ dist_coils_large = 0.004 #distance of coils (large)
 
 mu_0=4*np.pi*1e-7 # magnetic field constant
 
-with open("fields/B(z)_1_0m_full_B.txt", "r") as g:  # plot ideal magnetic field
+with open("magnetic_fields/Decreasing_field/B(z)_1_0m.txt", "r") as g:  # plot ideal magnetic field
     lines = g.readlines()
     xnew = np.asarray([float(line.split(";")[0]) for line in lines])
     ynew = np.asarray([float(line.split(";")[1]) for line in lines])

@@ -15,6 +15,7 @@ from magnetic_field import max_step_length_fit_field_function
 def Excitation(repumper,current_groundstate,counter,mass_lithium_6,GS_quantum_number,Bfield, z_pos, zeeman_distance, mean_free_path_bigger, max_step_fit_function, target_center_z, maximum_dist, vx,vy,vz,kx,ky,kz,wavelength,polarization,excitation_counter,mean_free_path_smaller,laser_frequency,x_y_pos_component_squared,laser_intensity,laser_detuning,natural_line_width):
     Bfield+=1e-30 #to avoid nan
     h_bar = scc.hbar
+    #initialize arrays
     deex_rate = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     excitation_rate = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     rho_ex = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -28,8 +29,7 @@ def Excitation(repumper,current_groundstate,counter,mass_lithium_6,GS_quantum_nu
             for pol in range(0, 3):  # loop over all polarizations: 0: sigmin; 1:pi; 2:sigplus
                 rho_ex[a]=polarization[pol]*lorentzian_probability(pol,GS,a,Bfield,Position(GS, a, pol, Bfield), laser_frequency, laser_detuning,natural_line_width,laser_intensity_gauss(x_y_pos_component_squared,z_pos, laser_intensity), vx, vy, vz, kx, ky, kz, wavelength)
 
-                if repumper=="on":
-                    ### repumper laser ###
+                if repumper=="on": # repumper laser
                     rho_ex[a]+=polarization[pol]*lorentzian_probability(pol,GS,a,Bfield,Position(GS, a, pol, Bfield), laser_frequency, laser_detuning+1020e6,natural_line_width,laser_intensity_gauss(x_y_pos_component_squared,z_pos, laser_intensity), vx, vy, vz, kx, ky, kz, wavelength)
 
                 excitation_rate[a]+=rho_ex[a]*natural_line_width #Gamma_i
