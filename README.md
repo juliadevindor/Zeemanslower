@@ -3,6 +3,7 @@ The main components of this simulation program were developed as a master thesis
 at the University of Mainz. One project of the group aims at decelerating Lithium atoms using a Zeeman slower and 
 catch the slowed atoms in a magneto-optical trap (MOT). Therefor, the atom species, simulation parameters and experiental 
 setup used in this repository as an example are those of the Lithium experiment.
+The current simulation is a revised version of the old simulation. The improvement of the simulation was again the focus of a master thesis.
 
 ## Getting Started
 
@@ -26,6 +27,7 @@ pip install requirements.txt
 ## Authors
 
 * **Andreas Wieltsch** - [anwielts](https://github.com/anwielts)
+* **Julia Daum** - [juliadevindor](https://github.com/juliadevindor)
 
 ## License
 
@@ -37,4 +39,5 @@ This project is licensed under the GNU License - see the [LICENSE.md](LICENSE.md
 * Dr. Stefan Schmidt, Institute of Physics, University of Mainz
 * Marcel Willig, Institute of Physics, University of Mainz
 * Jan Haack, Institute of Physics, University of Mainz
+* Thomas Udem
 "# Zeemanslower" 
