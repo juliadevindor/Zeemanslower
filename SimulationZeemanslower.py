@@ -334,7 +334,7 @@ if __name__ == '__main__':
     # temperature at which atom species vaporises
     temperature = sim_param_data['temperature']
     # number of observed atoms
-    n = 100000 #sim_param_data['particle_number']
+    n = 10000 #sim_param_data['particle_number']
     allgs=1 #0=gs5 only, 1=all gs
     # minimal considered velocity
     v_min = sim_param_data['velocity_min']
@@ -356,13 +356,13 @@ if __name__ == '__main__':
     zeeman_distance = exp_param_data["zeeman_slower_distance"]
     target_center_x = exp_param_data["center_atomic_source"]
     target_center_y = exp_param_data["center_atomic_source"]
-    target_center_z = 0.901 #exp_param_data["mot_distance"] #equal to length of the slower
+    target_center_z = 0.93 #exp_param_data["mot_distance"] #equal to length of the slower
     target_radius = exp_param_data["mot_radius"]
     # educated guessing
     bin_count = 80
 
     # laser properties
-    laser_det = -1000e6 #(sim_param_data["slower_laser_detuning"])
+    laser_det = -1012e6 #(sim_param_data["slower_laser_detuning"])
     laser_freq = (sim_param_data["slower_laser_frequency"])  # 446799923264221.4 #Frequenz in 1/s (c/lambda)
     laser_pol = [0.0,0.0,1.0] #(sim_param_data["laser_polarisation"])  # laser pol: sigminus, pi, sigplus
     wavelength = scc.c / laser_freq  # change wavelength, as its connected to f
@@ -378,13 +378,13 @@ if __name__ == '__main__':
     slicing_positions = [0.0]
     for i in range(0,22):
         slicing_positions.append(slicing_positions[i]+0.05)
-    slicing_positions[16]=0.8
-    slicing_positions[17]=0.805
-    slicing_positions[18]=0.81
-    slicing_positions[19]=0.82
-    slicing_positions[20]=target_center_z-0.05
-    slicing_positions[21]=target_center_z-0.005
-    slicing_positions[22]=target_center_z-0.001
+    slicing_positions[16]=0.92
+    slicing_positions[17]=0.922
+    slicing_positions[18]=0.925
+    slicing_positions[19]=0.929
+    slicing_positions[20]=0.97#target_center_z-0.05
+    slicing_positions[21]=0.98#target_center_z-0.005
+    slicing_positions[22]=0.99#target_center_z-0.001
     ###
 
     # properties of the atom
@@ -510,7 +510,7 @@ if __name__ == '__main__':
         plt.legend(loc="upper right",fontsize=22)
         plt.xlabel("v_z in m/s", fontsize=22)
         plt.ylabel("Atoms in GS", fontsize=22)
-        plt.title("Atoms at z={}m".format(round(pos,3)),fontsize=22)
+        plt.title("Atoms at z={}m".format(0.929),fontsize=22)
         plt.rcParams.update({'font.size': 22})
         plt.xticks(fontsize=22)
         plt.yticks(fontsize=22)
@@ -518,9 +518,9 @@ if __name__ == '__main__':
         ax.spines['bottom'].set_position('zero')
         figure = plt.gcf()  # get current figure
         figure.set_size_inches(13.66, 6.71)
-        plt.ylim(0,4000)
+        plt.ylim(0,350)
         v_z_histo[5][pos_i].sort()
-        plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,3)).replace('.', '_') + "_allGS" + ".png")
+        plt.savefig('simulation_results/' + "v_distr" + "/" + "vz" + "_Histo_pos" + str(round(pos,5)).replace('.', '_') + "_allGS" + ".png")
         plt.close()
         pos_i+=1
 
